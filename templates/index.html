@@ -52,18 +52,16 @@
         function attachInfoWindow(marker, station) {
             var infoWindow = new google.maps.InfoWindow({
                 content: `
-                    <div>
-                        <strong>${station.code}</strong><br>
-                        Location: ${station.location}<br>
-                        Latitude: ${station.latitude}<br>
-                        Longitude: ${station.longitude}<br>
-                        Elevation: ${station.elevation}<br>
-                        Open Date: ${station.openDate}<br>
-                        Close Date: ${station.closeDate}<br>
-                        Type: ${station.type}<br>
-                        Show: ${station.show}<br>
-                        Last Editor: ${station.lastEditor}<br>
-                        Last Edit Time: ${station.lastEditTime}
+                    <div class="text-center">
+                        <strong>კოდი: ${station.tStCode}</strong><br>
+                        ქსელის კოდი: ${station.tStNetworkCode}<br>
+                        ადგილმდებარეობა: ${station.tStLocation}<br>
+                        განედი: ${station.tStLatitude}<br>
+                        გრძედი: ${station.tStLongitude}<br>
+                        სიმაღლე(მ): ${station.tStElevation}<br>
+                        გახსნის დღე: ${station.tStOpenDate}<br>
+                        დახურვის დღე: ${station.tStCloseDate}<br>
+                        ტიპი: ${station.tStType}<br>
                     </div>`
             });
             marker.addListener('click', function() {
@@ -76,15 +74,41 @@
             initMap();
         });
     </script>
-    <div class="w-100 h-50">
-        <div id="map" 
-            style="width: 100%; height:100%;border:  1px solid #CCC;margin-top:0px;">
+    <style>
+        .filterMapDiv {
+            display: flex;
+            flex-direction: row;
+            height: 50%;
+            width: 100%;
+        }
+        .filterDiv {
+            width: 50%;
+        }
+        @media (max-width: 992px) {
+            .filterMapDiv {
+                flex-direction: column;
+                width: 100%;
+                height: 50%;
+            }
+            .filterDiv {
+                width: 100%;
+            }
+        }
+    </style>
+    <div class="filterMapDiv">
+        <div class="card filterDiv">
+            <p>dwafawwfawfwafaw</p>
+            <p>dwafawwfawfwafaw</p>
+        </div>
+        <div class="card w-100 h-100">
+            <div id="map" 
+                style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
+            </div>
         </div>
     </div>
 
-
     <a class="btn btn-primary mb-2" href="#">Add Station</a>
-    <div class="table-responsive-xxl">
+    <div class="table-responsive-xxl text-center" style="font-size: x-small;">
         <table class="table align-middle table-bordered border-muted mb-0 bg-white table-striped">
             <thead class="table-primary">
                 <tr>
