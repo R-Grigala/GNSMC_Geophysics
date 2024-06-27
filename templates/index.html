@@ -1,105 +1,38 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Quick Quiz - Main
+    IesData - Projects
 {% endblock %}
 
 {% block body %}
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&callback=initMap" async defer></script>
-    <script>
-        var stations = [];
-
-        function initMap() {
-            var latlng = new google.maps.LatLng(42.264, 43.322);
-            var myOptions = {
-                zoom: 7,
-                center: latlng,
-                panControl: false,
-                streetViewControl: false,
-                mapTypeControl: true,
-                mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
-                mapTypeId: google.maps.MapTypeId.HYBRID,
-                zoomControl: true,
-                zoomControlOptions: {style: google.maps.ZoomControlStyle.SMALL}
-            };
-            var map = new google.maps.Map(document.getElementById("map"), myOptions);
-            fetchAndSetMarkers(map);
-        }
-
-        function fetchAndSetMarkers(map) {
-            fetch('/api/data')
-                .then(response => response.json())
-                .then(data => {
-                    stations = data;
-                    // console.log(stations);
-                    setMarkers(map);
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
-
-        function setMarkers(map) {
-            for (var i = 0; i < stations.length; i++) {
-                var station = stations[i];
-                var marker = new google.maps.Marker({
-                    position: {lat: parseFloat(station.tStLatitude), lng: parseFloat(station.tStLongitude)},
-                    map: map,
-                    title: station.tStCode
-                });
-                attachInfoWindow(marker, station);
-            }
-        }
-
-        function attachInfoWindow(marker, station) {
-            var infoWindow = new google.maps.InfoWindow({
-                content: `
-                    <div class="text-center">
-                        <strong>კოდი: ${station.tStCode}</strong><br>
-                        ქსელის კოდი: ${station.tStNetworkCode}<br>
-                        ადგილმდებარეობა: ${station.tStLocation}<br>
-                        განედი: ${station.tStLatitude}<br>
-                        გრძედი: ${station.tStLongitude}<br>
-                        სიმაღლე(მ): ${station.tStElevation}<br>
-                        გახსნის დღე: ${station.tStOpenDate}<br>
-                        დახურვის დღე: ${station.tStCloseDate}<br>
-                        ტიპი: ${station.tStType}<br>
-                    </div>`
-            });
-            marker.addListener('click', function() {
-                infoWindow.open(map, marker);
-            });
-        }
-
-        // Initialize the map when the page loads
-        document.addEventListener("DOMContentLoaded", function() {
-            initMap();
-        });
-    </script>
-    <style>
-        .filterMapDiv {
-            display: flex;
-            flex-direction: row;
-            height: 50%;
-            width: 100%;
-        }
-        .filterDiv {
-            width: 50%;
-        }
-        @media (max-width: 992px) {
-            .filterMapDiv {
-                flex-direction: column;
-                width: 100%;
-                height: 50%;
-            }
-            .filterDiv {
-                width: 100%;
-            }
-        }
-    </style>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&callback=initMap" async></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}" defer></script>
     <div class="filterMapDiv">
-        <div class="card filterDiv">
-            <p>dwafawwfawfwafaw</p>
-            <p>dwafawwfawfwafaw</p>
+        <div class="filterDiv">
+            <div class="card">
+                <p>dwafawwfawfwafaw</p>
+                <p>dwafawwfawfwafaw</p>
+            </div>
+            <div class="card">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr class="text-center">
+                            <td class="text-end"><img src="../static/img/green.png" width="17" height="17"></td>
+                            <td class="text-start">მოქმედი სეისმური სადგური</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td class="text-end"><img src="../static/img/yellow.png" width="17" height="17"></td>
+                            <td class="text-start">დროებითი სეისმური სადგური</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td class="text-end"><img src="../static/img/red.png" width="17" height="17"></td>
+                            <td class="text-start">შეჩერებული სეისმური სადგური</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
         <div class="card w-100 h-100">
             <div id="map" 
                 style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
@@ -107,7 +40,8 @@
         </div>
     </div>
 
-    <a class="btn btn-primary mb-2" href="#">Add Station</a>
+    <a class="btn btn-primary mt-1 mb-1" href="#">Add Station</a>
+    
     <div class="table-responsive-xxl text-center" style="font-size: x-small;">
         <table class="table align-middle table-bordered border-muted mb-0 bg-white table-striped">
             <thead class="table-primary">
