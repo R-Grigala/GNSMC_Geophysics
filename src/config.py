@@ -1,5 +1,4 @@
 from os import path, sep, pardir
-from datetime import timedelta
 
 
 class Config(object):
