@@ -14,7 +14,7 @@
 
 <body>
     {% include "navbar.html" %}
-    <section style="background-color: #eee; overflow-y: auto; font-size: small;">
+    <section style="background-color: #eee; overflow-y: auto; font-size: small; height: 100vh;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
