@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+    IesData - Projects
+{% endblock %}
+
+{% block body %}
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&callback=initMap" async></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/stationTable.js') }}" defer></script>
+    <div class="filterMapDiv">
+        {% include "filter.html" %}
+
+        <div class="card" style="width: 100%; height: 28.5rem">
+            <div id="map" 
+                style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
+            </div>
+        </div>
+    </div>
+    <ul class="list-group list-group-light">
+        <li class="list-group-item px-3 border-0"><a class="btn btn-sm btn-primary" href="/create_project">სადგურის დამატება</a></li>
+    </ul>
+    
+    <div class="table-responsive-xxl text-center" style="font-size: x-small;">
+        <table class="table align-middle table-bordered border-muted mb-0 bg-white table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>tStStatuse</th>
+                    <th>tStCode</th>
+                    <th>tStNetworkCode</th>
+                    <th>tStLocation</th>
+                    <th>tStLatitude</th>
+                    <th>tStLongitude</th>
+                    <th>tStElevation</th>
+                    <th>tStOpenDate</th>
+                    <th>tStCloseDate</th>
+                    <th>tStType</th>
+                    <th>tStShow</th>
+                    <th>tStLastEditor</th>
+                    <th>tStLastEditTime</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="stationTableBody">
+                <!-- Data will be populated dynamically here -->
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

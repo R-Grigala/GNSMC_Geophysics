@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+    IesData - Projects
+{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center pt-5">
+        <h2>ახალი პროექტის დამატება</h2>
+    </div>
+
+<!-- <form id="addProjectForm" action="/api/add_project" method="POST"> -->
+    <form id="addProjectForm" action="#" method="POST">
+        <div class="form-group">
+            <label for="projectName">პროექტის სახელი:</label>
+            <input type="text" class="form-control" id="projectName" name="project_name" required>
+        </div>
+        <div class="form-group">
+            <label for="projectDescription">პროექტის აღწერა:</label>
+            <textarea class="form-control" id="projectDescription" name="project_description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="projectManager">პროექტის ხელმძღვანელი:</label>
+            <input type="text" class="form-control" id="projectManager" name="project_manager">
+        </div>
+        <div class="form-group">
+            <label for="projectStatus">პროექტის სტატუსი:</label>
+            <select class="form-control" id="projectStatus" name="project_status">
+                <option value="Ongoing">მიმდინარე</option>
+                <option value="Completed">დასრულებული</option>
+            </select>
+        </div>
+        <div class="d-flex justify-content-center align-items-center mt-3">
+            <button type="submit" class="btn btn-primary me-2">პროექტის დამატება</button>
+            <a class="btn btn-info" href="/view_projects">ყველა პროექტი</a>
+        </div>
+    </form>
+    
+{% endblock %}
