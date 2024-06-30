@@ -3,6 +3,6 @@ from os import path, sep, pardir
 
 class Config(object):
     SECRET_KEY = "mysecretkey"
-    BASE_DIR = path.abspath(path.dirname(__file__) + sep + pardir)
+    BASE_DIRECTORY = path.abspath(path.dirname(__file__))
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(BASE_DIR, 'db.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(BASE_DIRECTORY, 'db.sqlite')

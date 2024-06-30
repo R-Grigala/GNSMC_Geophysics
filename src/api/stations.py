@@ -21,81 +21,6 @@ data_list = [
         "tStShow": "0",
         "tStLastEditor": "roma grigalashvili",
         "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "41.6832",
-        "tStLongitude": "44.7988",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "40.1132",
-        "tStLongitude": "44.7988",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-        {
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "41.1232",
-        "tStLongitude": "40.1288",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "41.6832",
-        "tStLongitude": "44.2188",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "40.6832",
-        "tStLongitude": "43.7988",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
     }
 ]
 
@@ -103,9 +28,8 @@ data_list = [
 @station_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
 class ViewStationsAPI(Resource):
 
-    @station_ns.marshal_list_with(station_model)
     def get(self):
-        stations = Stations.query.all()
+        stations = data_list
 
         return stations, 200
     
