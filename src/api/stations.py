@@ -99,30 +99,15 @@ data_list = [
     }
 ]
 
-@station_ns.route('/view_stations')
+@station_ns.route('/stations')
 @station_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
-class ViewStationsAPI(Resource):
+class StationsListAPI(Resource):
 
     def get(self):
         stations = data_list
 
         return stations, 200
     
-@station_ns.route('/view_station/<int:id>')
-@station_ns.doc(responses={200: 'OK', 404: 'Station not found'})
-class ViewStationAPI(Resource):
-    @station_ns.marshal_with(station_model)
-    def get(self, id):
-        station = Stations.query.get(id)
-        if not station:
-            raise NotFound("Station not found")
-        
-        return station, 200
-    
-@station_ns.route('/create_station')
-@station_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
-class CreateStationAPI(Resource):
-
     @station_ns.expect(station_parser)
     def post(self):
         parser = station_parser.parse_args()
@@ -135,11 +120,18 @@ class CreateStationAPI(Resource):
         new_station.create()
 
         return {"message": "Successfully created Station"}, 200
-
-@station_ns.route('/edit_station/<int:id>')
-@station_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
-class EditStationAPI(Resource):
-
+    
+@station_ns.route('/station/<int:id>')
+@station_ns.doc(responses={200: 'OK', 404: 'Station not found'})
+class StationAPI(Resource):
+    @station_ns.marshal_with(station_model)
+    def get(self, id):
+        station = Stations.query.get(id)
+        if not station:
+            raise NotFound("Station not found")
+        
+        return station, 200
+    
     @station_ns.expect(station_parser)
     def put(self, id):
         parser = station_parser.parse_args()
@@ -153,11 +145,6 @@ class EditStationAPI(Resource):
             return {"message": "Successfully updated Station"}, 200
         else:
             raise NotFound("Station not found")
-    
-
-@station_ns.route('/delete_station/<int:id>')
-@station_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
-class DeleteStationAPI(Resource):
 
     def delete(self, id):
         station = Stations.query.get(id)
@@ -166,3 +153,4 @@ class DeleteStationAPI(Resource):
             return {"message": "Successfully deleted Station"}, 200
         else:
             raise NotFound("Station not found")
+

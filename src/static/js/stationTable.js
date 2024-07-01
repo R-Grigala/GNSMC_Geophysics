@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Fetch data from API endpoint
-    fetch('/api/view_stations')
+    fetch('/api/stations')
         .then(response => response.json())
         .then(data => {
             // Populate table with data
