@@ -53,6 +53,7 @@ function attachInfoWindow(marker, station) {
                 გახსნის დღე: ${station.tStOpenDate}<br>
                 დახურვის დღე: ${station.tStCloseDate}<br>
                 ტიპი: ${station.tStType}<br>
+                <a href="/edit_project/${station.id}">დეტალურად</a>
             </div>`
     });
     marker.addListener('click', function() {
