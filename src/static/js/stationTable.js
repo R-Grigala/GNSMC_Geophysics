@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch('/api/stations')
         .then(response => response.json())
         .then(data => {
-            // Populate table with data
+
             const stationTableBody = document.getElementById('stationTableBody');
             data.forEach(station => {
                 const row = `
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${station.tStLastEditor}</td>
                         <td>${station.tStLastEditTime}</td>
                         <td>
-                            <a class="btn btn-info" href="#">Edit</a>
+                            <a class="btn btn-info" href="/edit_project/${station.id}">Edit</a>
                         </td>
                         <td>
                             <form action="#" method="POST" style="display:inline;">

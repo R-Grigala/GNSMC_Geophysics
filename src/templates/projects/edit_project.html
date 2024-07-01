@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 
 {% block title %}
-    IesData - Projects
+    IesData - Edit Project
 {% endblock %}
 
 {% block body %}
     <div class="d-flex justify-content-center align-items-center pt-5">
-        <h2>პროექტის ნახვა</h2>
+        <h2>პროექტის რედაქტირება</h2>
     </div>
 
-<!-- <form id="addProjectForm" action="/api/add_project" method="POST"> -->
-    <form id="addProjectForm" action="#" method="POST">
+    <div id="projectId" data-project-id="{{ project_id }}"></div>
+
+    <form id="editProjectForm" method="POST">
         <div class="form-group">
             <label for="projectName">პროექტის სახელი:</label>
             <input type="text" class="form-control" id="projectName" name="project_name" required>
@@ -26,14 +27,57 @@
         <div class="form-group">
             <label for="projectStatus">პროექტის სტატუსი:</label>
             <select class="form-control" id="projectStatus" name="project_status">
-                <option value="Ongoing">მიმდინარე</option>
-                <option value="Completed">დასრულებული</option>
+                <option value="0">მიმდინარე</option>
+                <option value="1">დასრულებული</option>
             </select>
         </div>
         <div class="d-flex justify-content-center align-items-center mt-3">
-            <button type="submit" class="btn btn-primary me-2">პროექტის დამატება</button>
-            <a class="btn btn-info" href="/view_projects">ყველა პროექტი</a>
+            <button type="submit" class="btn btn-primary me-2">რედაქტირება</button>
+            <a class="btn btn-info" href="/projects">ყველა პროექტი</a>
         </div>
     </form>
-    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const projectIdElement = document.getElementById("projectId");
+            const projectId = projectIdElement.getAttribute("data-project-id"); // Get project_id from data attribute
+            const form = document.getElementById("editProjectForm");
+
+            fetch(`/api/station/${projectId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("projectName").value = data.project_name;
+                    document.getElementById("projectDescription").value = data.project_desc;
+                    document.getElementById("projectManager").value = data.project_manager;
+                    document.getElementById("projectStatus").value = data.project_status;
+                })
+                .catch(error => console.error('Error fetching project data:', error));
+
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                
+                const updatedProject = {
+                    project_name: form.project_name.value,
+                    project_desc: form.project_description.value,
+                    project_manager: form.project_manager.value,
+                    project_status: form.project_status.value,
+                };
+
+                fetch(`/api/station/${projectId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(updatedProject),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    window.location.href = "/projects";
+                })
+                .catch(error => console.error('Error updating project:', error));
+            });
+        });
+    </script>
 {% endblock %}

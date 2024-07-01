@@ -18,7 +18,7 @@ function initMap() {
 }
 
 function fetchAndSetMarkers(map) {
-    fetch('/api/view_stations')
+    fetch('/api/stations')
         .then(response => response.json())
         .then(data => {
             stations = data;

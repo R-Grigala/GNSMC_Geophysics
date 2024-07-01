@@ -8,6 +8,7 @@ from src.models import Stations
 
 data_list = [
     {
+        "id":1,
         "tStStatuse": "1",
         "tStCode": "BTNK",
         "tStNetworkCode": "GO",
@@ -23,6 +24,7 @@ data_list = [
         "tStLastEditTime": "2019-02-22 11:00:28",
     },
     {
+        "id":2,
         "tStStatuse": "1",
         "tStCode": "BTNK",
         "tStNetworkCode": "GO",
@@ -38,6 +40,7 @@ data_list = [
         "tStLastEditTime": "2019-02-22 11:00:28",
     },
     {
+        "id":3,
         "tStStatuse": "1",
         "tStCode": "BTNK",
         "tStNetworkCode": "GO",
@@ -52,7 +55,8 @@ data_list = [
         "tStLastEditor": "roma grigalashvili",
         "tStLastEditTime": "2019-02-22 11:00:28",
     },
-        {
+    {
+        "id":4,
         "tStStatuse": "1",
         "tStCode": "BTNK",
         "tStNetworkCode": "GO",
@@ -68,6 +72,7 @@ data_list = [
         "tStLastEditTime": "2019-02-22 11:00:28",
     },
     {
+        "id":5,
         "tStStatuse": "1",
         "tStCode": "BTNK",
         "tStNetworkCode": "GO",
@@ -83,6 +88,7 @@ data_list = [
         "tStLastEditTime": "2019-02-22 11:00:28",
     },
     {
+        "id":6,
         "tStStatuse": "1",
         "tStCode": "BTNK",
         "tStNetworkCode": "GO",
@@ -96,6 +102,16 @@ data_list = [
         "tStShow": "0",
         "tStLastEditor": "roma grigalashvili",
         "tStLastEditTime": "2019-02-22 11:00:28",
+    }
+]
+
+
+project_data = [
+    {
+        "project_name": "Alpha Home",
+        "project_desc": "Alpha Home in Digomi",
+        "project_manager": "Dimitri Akubardia",
+        "project_status":0
     }
 ]
 
@@ -124,9 +140,8 @@ class StationsListAPI(Resource):
 @station_ns.route('/station/<int:id>')
 @station_ns.doc(responses={200: 'OK', 404: 'Station not found'})
 class StationAPI(Resource):
-    @station_ns.marshal_with(station_model)
     def get(self, id):
-        station = Stations.query.get(id)
+        station = project_data[id-1]
         if not station:
             raise NotFound("Station not found")
         

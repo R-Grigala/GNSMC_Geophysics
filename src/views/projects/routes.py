@@ -15,6 +15,6 @@ def projects():
 def create_project():
     return render_template("create_project.html")
 
-@projects_blueprint.route('/edit_project', methods=['GET', 'POST'])
-def edit_project():
-    return render_template("edit_project.html")
+@projects_blueprint.route('/edit_project/<int:id>', methods=['GET', 'POST'])
+def edit_project(id):
+    return render_template("edit_project.html", project_id=id)
