@@ -10,17 +10,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     <tr>
                         <td>${station.tStStatuse}</td>
                         <td>${station.tStCode}</td>
-                        <td>${station.tStNetworkCode}</td>
-                        <td>${station.tStLocation}</td>
-                        <td>${station.tStLatitude}</td>
-                        <td>${station.tStLongitude}</td>
-                        <td>${station.tStElevation}</td>
                         <td>${station.tStOpenDate}</td>
                         <td>${station.tStCloseDate}</td>
-                        <td>${station.tStType}</td>
+                        <td>${station.tStNetworkCode}</td>
+                        <td>${station.tStLocation}</td>
+                        <td>${station.tStElevation}</td>
+                        <td>${station.tStLatitude}</td>
+                        <td>${station.tStLongitude}</td>
                         <td>${station.tStShow}</td>
-                        <td>${station.tStLastEditor}</td>
-                        <td>${station.tStLastEditTime}</td>
+                        <td>${station.tStShow}</td>
+                        <td>${station.tStShow}</td>
+                        <td>${station.tStShow}</td>
                         <td>
                             <a class="btn btn-info" href="/edit_project/${station.id}">Edit</a>
                         </td>

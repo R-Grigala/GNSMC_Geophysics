@@ -9,4 +9,4 @@ stations_blueprint = Blueprint("stations", __name__, template_folder=TEMPLATES_F
 
 @stations_blueprint.route("/stations")
 def index():
-    return render_template("index.html")
+    return render_template("stations.html")
