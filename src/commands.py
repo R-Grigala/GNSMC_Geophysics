@@ -1,5 +1,6 @@
 from flask.cli import with_appcontext
 import click
+from datetime import datetime
 
 from src.extensions import db
 from src.models import Projects
@@ -16,10 +17,19 @@ def init_db():
 @click.command("populate_db")
 @with_appcontext
 def populate_db():
-    click.echo("Creating First Station")
-    new_station = Projects(
-        station_code="CHBG",
-        station_lat=43.0129,
-        station_long=42.085
-        )
-    new_station.create()
+    click.echo("Creating First Project")
+    new_project = Projects(
+        projects_name="New Project",
+        contract_number=12345,
+        start_time=datetime.strptime('2024-01-23', '%Y-%m-%d').date(),
+        end_time=datetime.strptime('2024-03-03', '%Y-%m-%d').date(),
+        proj_location="Example Location",
+        proj_latitude=42.1234,
+        proj_longitude=12.5678,
+        geological_study=True,
+        geophysycal_study=False,
+        hazard_study=True,
+        geodetic_study=True,
+        other_study=False
+    )
+    new_project.create()

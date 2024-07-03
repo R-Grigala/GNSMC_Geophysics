@@ -22,4 +22,4 @@ class Projects(db.Model, BaseModel):
 
 
     def __repr__(self):
-        return f'{self.station_code}'
+        return f'{self.projects_name}'

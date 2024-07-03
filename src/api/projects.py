@@ -1,6 +1,7 @@
 from flask_restx import Resource
-from flask import render_template
 from werkzeug.exceptions import NotFound
+from datetime import datetime
+
 
 from src.extensions import api
 from src.api.nsmodels import projects_ns, projects_model, projects_parser
@@ -106,15 +107,6 @@ data_list = [
 ]
 
 
-project_data = [
-    {
-        "project_name": "Alpha Home",
-        "project_desc": "Alpha Home in Digomi",
-        "project_manager": "Dimitri Akubardia",
-        "project_status":0
-    }
-]
-
 @projects_ns.route('/projects')
 @projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
 class ProjectsListAPI(Resource):
@@ -126,24 +118,41 @@ class ProjectsListAPI(Resource):
     
     @projects_ns.expect(projects_parser)
     def post(self):
-        parser = projects_parser.parse_args()
+        args = projects_parser.parse_args()
+        
+        try:
+            start_time = datetime.strptime(args['start_time'], '%Y-%m-%d').date()
+            end_time = datetime.strptime(args['end_time'], '%Y-%m-%d').date()
+        except ValueError:
+            return {"message": "Invalid date format. Use YYYY-MM-DD."}, 400
 
-        # new_station = Stations(
-        #     station_code=parser["station_code"],
-        #     station_lat=parser["station_lat"],
-        #     station_long=parser["station_long"]
-        # )
-        # new_station.create()
+        new_project = Projects(
+            projects_name=args['projects_name'],
+            contract_number=args['contract_number'],
+            start_time=start_time,
+            end_time=end_time,
+            proj_location=args['proj_location'],
+            proj_latitude=args['proj_latitude'],
+            proj_longitude=args['proj_longitude'],
+            geological_study=args['geological_study'],
+            geophysycal_study=args['geophysycal_study'],
+            hazard_study=args['hazard_study'],
+            geodetic_study=args['geodetic_study'],
+            other_study=args['other_study']
+        )
+        new_project.create()
 
-        return {"message": "Successfully created Station"}, 200
+        return {"message": "Successfully created Project"}, 200
     
 @projects_ns.route('/project/<int:id>')
-@projects_ns.doc(responses={200: 'OK', 404: 'Station not found'})
+@projects_ns.doc(responses={200: 'OK', 404: 'Project not found'})
 class ProjectAPI(Resource):
+
+    @projects_ns.marshal_with(projects_model)
     def get(self, id):
-        project = project_data[id-1]
+        project = Projects.query.get(id)
         if not project:
-            raise NotFound("Station not found")
+            raise NotFound("Project not found")
         
         return project, 200
     
@@ -157,15 +166,15 @@ class ProjectAPI(Resource):
             station.station_lat = parser["station_lat"]
             station.station_long = parser["station_long"]
             station.save()  
-            return {"message": "Successfully updated Station"}, 200
+            return {"message": "Successfully updated Project"}, 200
         else:
-            raise NotFound("Station not found")
+            raise NotFound("Project not found")
 
     def delete(self, id):
         station = Projects.query.get(id)
         if station:
             station.delete()
-            return {"message": "Successfully deleted Station"}, 200
+            return {"message": "Successfully deleted Project"}, 200
         else:
-            raise NotFound("Station not found")
+            raise NotFound("Project not found")
 

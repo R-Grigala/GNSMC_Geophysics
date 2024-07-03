@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Fetch data from API endpoint
-    fetch('/api/stations')
+    fetch('/api/projects')
         .then(response => response.json())
         .then(data => {
 
