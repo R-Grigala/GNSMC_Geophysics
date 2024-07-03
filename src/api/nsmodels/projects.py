@@ -4,6 +4,7 @@ from src.extensions import api
 projects_ns = api.namespace('Projects', description='API endpoint for Projects related operations', path='/api')
 
 projects_model = projects_ns.model('Projects', {
+    'id': fields.Integer(required=True, description='Project id', example=1),
     'projects_name': fields.String(required=True, description='Project name', example='New Project'),
     'contract_number': fields.Integer(required=True, description='Contract number', example=12345),
     'start_time': fields.Date(required=True, description='Start time (YYYY-MM-DD)', example='2024-01-23'),

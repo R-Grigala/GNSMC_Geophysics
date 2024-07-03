@@ -22,7 +22,7 @@ function fetchAndSetMarkers(map) {
         .then(response => response.json())
         .then(data => {
             projects = data;
-            // console.log(stations);
+            console.log(projects);
             setMarkers(map);
         })
         .catch(error => console.error('Error fetching data:', error));
