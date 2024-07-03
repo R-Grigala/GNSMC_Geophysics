@@ -1,2 +1,2 @@
 from src.extensions import api
-from src.api.stations import StationsListAPI, StationAPI
+from src.api.projects import ProjectsListAPI, ProjectAPI

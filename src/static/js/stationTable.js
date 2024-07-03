@@ -6,9 +6,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const stationTableBody = document.getElementById('stationTableBody');
             data.forEach(station => {
+                
+                const tStShow = station.tStShow == 1 ? "კი" : "არა";
                 const row = `
                     <tr>
-                        <td>${station.tStStatuse}</td>
+                        <td>${station.tStLocation}</td>
                         <td>${station.tStCode}</td>
                         <td>${station.tStOpenDate}</td>
                         <td>${station.tStCloseDate}</td>
@@ -17,10 +19,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${station.tStElevation}</td>
                         <td>${station.tStLatitude}</td>
                         <td>${station.tStLongitude}</td>
-                        <td>${station.tStShow}</td>
-                        <td>${station.tStShow}</td>
-                        <td>${station.tStShow}</td>
-                        <td>${station.tStShow}</td>
+                        <td>${tStShow}</td>
+                        <td>${tStShow}</td>
+                        <td>${tStShow}</td>
+                        <td>${tStShow}</td>
                         <td>
                             <a class="btn btn-info" href="/edit_project/${station.id}">Edit</a>
                         </td>

@@ -1,1 +1,1 @@
-from src.api.nsmodels.stations import station_ns, station_model, station_parser
+from src.api.nsmodels.projects import projects_ns, projects_model, projects_parser

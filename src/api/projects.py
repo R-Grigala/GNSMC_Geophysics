@@ -3,8 +3,8 @@ from flask import render_template
 from werkzeug.exceptions import NotFound
 
 from src.extensions import api
-from src.api.nsmodels import station_ns, station_model, station_parser
-from src.models import Stations
+from src.api.nsmodels import projects_ns, projects_model, projects_parser
+from src.models import Projects
 
 data_list = [
     {
@@ -115,43 +115,43 @@ project_data = [
     }
 ]
 
-@station_ns.route('/stations')
-@station_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
-class StationsListAPI(Resource):
+@projects_ns.route('/projects')
+@projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
+class ProjectsListAPI(Resource):
 
     def get(self):
-        stations = data_list
+        projects = data_list
 
-        return stations, 200
+        return projects, 200
     
-    @station_ns.expect(station_parser)
+    @projects_ns.expect(projects_parser)
     def post(self):
-        parser = station_parser.parse_args()
+        parser = projects_parser.parse_args()
 
-        new_station = Stations(
-            station_code=parser["station_code"],
-            station_lat=parser["station_lat"],
-            station_long=parser["station_long"]
-        )
-        new_station.create()
+        # new_station = Stations(
+        #     station_code=parser["station_code"],
+        #     station_lat=parser["station_lat"],
+        #     station_long=parser["station_long"]
+        # )
+        # new_station.create()
 
         return {"message": "Successfully created Station"}, 200
     
-@station_ns.route('/station/<int:id>')
-@station_ns.doc(responses={200: 'OK', 404: 'Station not found'})
-class StationAPI(Resource):
+@projects_ns.route('/project/<int:id>')
+@projects_ns.doc(responses={200: 'OK', 404: 'Station not found'})
+class ProjectAPI(Resource):
     def get(self, id):
-        station = project_data[id-1]
-        if not station:
+        project = project_data[id-1]
+        if not project:
             raise NotFound("Station not found")
         
-        return station, 200
+        return project, 200
     
-    @station_ns.expect(station_parser)
+    @projects_ns.expect(projects_parser)
     def put(self, id):
-        parser = station_parser.parse_args()
+        parser = projects_parser.parse_args()
 
-        station = Stations.query.get(id)
+        station = Projects.query.get(id)
         if station:
             station.station_code = parser["station_code"]
             station.station_lat = parser["station_lat"]
@@ -162,7 +162,7 @@ class StationAPI(Resource):
             raise NotFound("Station not found")
 
     def delete(self, id):
-        station = Stations.query.get(id)
+        station = Projects.query.get(id)
         if station:
             station.delete()
             return {"message": "Successfully deleted Station"}, 200

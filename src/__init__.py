@@ -4,10 +4,10 @@ from src.config import Config
 from src.api import api
 from src.extensions import db, api 
 from src.commands import init_db, populate_db
-from src.views import stations_blueprint, projects_blueprint
+from src.views import projects_blueprint
 
 
-BLUEPRINTS = [stations_blueprint, projects_blueprint]
+BLUEPRINTS = [projects_blueprint]
 COMMANDS = [init_db, populate_db]
 
 
