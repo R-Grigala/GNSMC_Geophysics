@@ -7,112 +7,14 @@ from src.extensions import api
 from src.api.nsmodels import projects_ns, projects_model, projects_parser
 from src.models import Projects
 
-data_list = [
-    {
-        "id":1,
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "41.6832",
-        "tStLongitude": "40.7988",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "id":2,
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "41.6832",
-        "tStLongitude": "44.7988",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "id":3,
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "40.1132",
-        "tStLongitude": "44.7988",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "id":4,
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "41.1232",
-        "tStLongitude": "40.1288",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "id":5,
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "41.6832",
-        "tStLongitude": "44.2188",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    },
-    {
-        "id":6,
-        "tStStatuse": "1",
-        "tStCode": "BTNK",
-        "tStNetworkCode": "GO",
-        "tStLocation": "Botanical Garden (Tbilisi)",
-        "tStLatitude": "40.6832",
-        "tStLongitude": "43.7988",
-        "tStElevation": "570",
-        "tStOpenDate": "2011-12-27",
-        "tStCloseDate": "0000-00-00",
-        "tStType": "Permanent",
-        "tStShow": "0",
-        "tStLastEditor": "roma grigalashvili",
-        "tStLastEditTime": "2019-02-22 11:00:28",
-    }
-]
-
 
 @projects_ns.route('/projects')
 @projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
 class ProjectsListAPI(Resource):
 
+    @projects_ns.marshal_list_with(projects_model)
     def get(self):
-        projects = data_list
+        projects = Projects.query.all()
 
         return projects, 200
     
@@ -131,6 +33,7 @@ class ProjectsListAPI(Resource):
             contract_number=args['contract_number'],
             start_time=start_time,
             end_time=end_time,
+            contractor=args['contractor'],
             proj_location=args['proj_location'],
             proj_latitude=args['proj_latitude'],
             proj_longitude=args['proj_longitude'],
@@ -158,22 +61,37 @@ class ProjectAPI(Resource):
     
     @projects_ns.expect(projects_parser)
     def put(self, id):
-        parser = projects_parser.parse_args()
+        args = projects_parser.parse_args()
+        try:
+            start_time = datetime.strptime(args['start_time'], '%Y-%m-%d').date()
+            end_time = datetime.strptime(args['end_time'], '%Y-%m-%d').date()
+        except ValueError:
+            return {"message": "Invalid date format. Use YYYY-MM-DD."}, 400
 
-        station = Projects.query.get(id)
-        if station:
-            station.station_code = parser["station_code"]
-            station.station_lat = parser["station_lat"]
-            station.station_long = parser["station_long"]
-            station.save()  
+        project = Projects.query.get(id)
+        if project:
+            project.projects_name = args["projects_name"]
+            project.contract_number = args["contract_number"]
+            project.start_time = start_time
+            project.end_time = end_time
+            project.contractor=args['contractor']
+            project.proj_location = args["proj_location"]
+            project.proj_latitude = args["proj_latitude"]
+            project.proj_longitude = args["proj_longitude"]
+            project.geological_study = args["geological_study"]
+            project.geophysycal_study = args["geophysycal_study"]
+            project.hazard_study = args["hazard_study"]
+            project.geodetic_study = args["geodetic_study"]
+            project.other_study = args["other_study"]
+            project.save()  
             return {"message": "Successfully updated Project"}, 200
         else:
             raise NotFound("Project not found")
 
     def delete(self, id):
-        station = Projects.query.get(id)
-        if station:
-            station.delete()
+        project = Projects.query.get(id)
+        if project:
+            project.delete()
             return {"message": "Successfully deleted Project"}, 200
         else:
             raise NotFound("Project not found")

@@ -5,26 +5,24 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
 
             const stationTableBody = document.getElementById('stationTableBody');
-            data.forEach(station => {
-                
-                const tStShow = station.tStShow == 1 ? "კი" : "არა";
+            data.forEach(project => {
                 const row = `
                     <tr>
-                        <td>${station.tStLocation}</td>
-                        <td>${station.tStCode}</td>
-                        <td>${station.tStOpenDate}</td>
-                        <td>${station.tStCloseDate}</td>
-                        <td>${station.tStNetworkCode}</td>
-                        <td>${station.tStLocation}</td>
-                        <td>${station.tStElevation}</td>
-                        <td>${station.tStLatitude}</td>
-                        <td>${station.tStLongitude}</td>
-                        <td>${tStShow}</td>
-                        <td>${tStShow}</td>
-                        <td>${tStShow}</td>
-                        <td>${tStShow}</td>
+                        <td>${project.projects_name}</td>
+                        <td>${project.contract_number}</td>
+                        <td>${project.start_time}</td>
+                        <td>${project.end_time}</td>
+                        <td>${project.contractor}</td>
+                        <td>${project.proj_location}</td>
+                        <td>${project.proj_latitude}</td>
+                        <td>${project.proj_longitude}</td>
+                        <td>${project.geological_study ? "Yes" : "No"}</td>
+                        <td>${project.geophysycal_study ? "Yes" : "No"}</td>
+                        <td>${project.hazard_study ? "Yes" : "No"}</td>
+                        <td>${project.geodetic_study ? "Yes" : "No"}</td>
+                        <td>${project.other_study ? "Yes" : "No"}</td>
                         <td>
-                            <a class="btn btn-info" href="/edit_project/${station.id}">Edit</a>
+                            <a class="btn btn-info" href="/edit_project/${project.id}">Edit</a>
                         </td>
                         <td>
                             <form action="#" method="POST" style="display:inline;">

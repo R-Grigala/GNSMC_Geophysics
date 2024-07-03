@@ -21,7 +21,7 @@ function fetchAndSetMarkers(map) {
     fetch('/api/projects')
         .then(response => response.json())
         .then(data => {
-            stations = data;
+            projects = data;
             // console.log(stations);
             setMarkers(map);
         })
@@ -29,31 +29,29 @@ function fetchAndSetMarkers(map) {
 }
 
 function setMarkers(map) {
-    for (var i = 0; i < stations.length; i++) {
-        var station = stations[i];
+    for (var i = 0; i < projects.length; i++) {
+        var project = projects[i];
         var marker = new google.maps.Marker({
-            position: {lat: parseFloat(station.tStLatitude), lng: parseFloat(station.tStLongitude)},
+            position: {lat: parseFloat(project.proj_latitude), lng: parseFloat(project.proj_longitude)},
             map: map,
-            title: station.tStCode
+            title: project.projects_name
         });
-        attachInfoWindow(marker, station);
+        attachInfoWindow(marker, project);
     }
 }
 
-function attachInfoWindow(marker, station) {
+function attachInfoWindow(marker, project) {
     var infoWindow = new google.maps.InfoWindow({
         content: `
             <div class="text-center">
-                <strong>კოდი: ${station.tStCode}</strong><br>
-                ქსელის კოდი: ${station.tStNetworkCode}<br>
-                ადგილმდებარეობა: ${station.tStLocation}<br>
-                განედი: ${station.tStLatitude}<br>
-                გრძედი: ${station.tStLongitude}<br>
-                სიმაღლე(მ): ${station.tStElevation}<br>
-                გახსნის დღე: ${station.tStOpenDate}<br>
-                დახურვის დღე: ${station.tStCloseDate}<br>
-                ტიპი: ${station.tStType}<br>
-                <a href="/edit_project/${station.id}">დეტალურად</a>
+                <strong>პროექტის სახელი: ${project.projects_name}</strong><br>
+                ხელშეკრულების ნომერი: ${project.contract_number}<br>
+                დაწყების დღე: ${project.start_time}<br>
+                დასრულების დღე: ${project.end_time}<br>
+                დამკვეთი: ${project.contractor}<br>
+                განედი: ${project.proj_latitude}<br>
+                გრძედი: ${project.proj_longitude}<br>
+                <a href="/edit_project/${project.id}">დეტალურად</a>
             </div>`
     });
     marker.addListener('click', function() {

@@ -11,6 +11,7 @@ class Projects(db.Model, BaseModel):
     contract_number = db.Column(db.Integer, nullable=False)
     start_time = db.Column(db.Date, nullable=False)
     end_time = db.Column(db.Date, nullable=False)
+    contractor = db.Column(db.String, nullable=False)
     proj_location = db.Column(db.String, nullable=False)
     proj_latitude = db.Column(db.Float, nullable=False)
     proj_longitude = db.Column(db.Float, nullable=False)
