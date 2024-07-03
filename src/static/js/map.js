@@ -51,7 +51,7 @@ function attachInfoWindow(marker, project) {
                 დამკვეთი: ${project.contractor}<br>
                 განედი: ${project.proj_latitude}<br>
                 გრძედი: ${project.proj_longitude}<br>
-                <a href="/edit_project/${project.id}">დეტალურად</a>
+                <a style="display:block; margin-top:20px" href="/edit_project/${project.id}">დეტალურად</a>
             </div>`
     });
     marker.addListener('click', function() {

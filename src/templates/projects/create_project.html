@@ -9,31 +9,85 @@
         <h2>ახალი პროექტის დამატება</h2>
     </div>
 
-<!-- <form id="addProjectForm" action="/api/add_project" method="POST"> -->
-    <form id="addProjectForm" action="#" method="POST">
+    <form class="row" id="addProjectForm" action="/api/projects" method="POST">
         <div class="form-group">
             <label for="projectName">პროექტის სახელი:</label>
-            <input type="text" class="form-control" id="projectName" name="project_name" required>
+            <input type="text" class="form-control" id="projectName" name="projects_name" required>
         </div>
         <div class="form-group">
-            <label for="projectDescription">პროექტის აღწერა:</label>
-            <textarea class="form-control" id="projectDescription" name="project_description" rows="3"></textarea>
+            <label for="contractNumber">ხელშეკრულების ნომერი:</label>
+            <input type="number" class="form-control" id="contractNumber" name="contract_number" required>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="startTime">დაწყების დღე:</label>
+                <input type="date" class="form-control" id="startTime" name="start_time" required>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="endTime">დასრულების დღე:</label>
+                <input type="date" class="form-control" id="endTime" name="end_time" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="contractor">დამკვეთი:</label>
+            <input type="text" class="form-control" id="contractor" name="contractor" required>
         </div>
         <div class="form-group">
-            <label for="projectManager">პროექტის ხელმძღვანელი:</label>
-            <input type="text" class="form-control" id="projectManager" name="project_manager">
+            <label for="projLocation">პროექტის მდებარეობა:</label>
+            <input type="text" class="form-control" id="projLocation" name="proj_location" required>
         </div>
         <div class="form-group">
-            <label for="projectStatus">პროექტის სტატუსი:</label>
-            <select class="form-control" id="projectStatus" name="project_status">
-                <option value="0">მიმდინარე</option>
-                <option value="1">დასრულებული</option>
-            </select>
+            <label for="projLatitude">განედი:</label>
+            <input type="number" step="any" class="form-control" id="projLatitude" name="proj_latitude" required>
         </div>
-        <div class="d-flex justify-content-center align-items-center mt-3">
+        <div class="form-group mb-3">
+            <label for="projLongitude">გრძედი:</label>
+            <input type="number" step="any" class="form-control" id="projLongitude" name="proj_longitude" required>
+        </div>
+        <div>
+            <p>მონიშნეთ თუ არი კვლევა პროექტზე:</p>
+        </div>
+        <div class="col form-group">
+            <div class="form-check">
+                <input type="hidden" name="geological_study" value="false">
+                <input class="form-check-input" type="checkbox" id="geologicalStudy" name="geological_study" value="true">
+                <label class="form-check-label" for="geologicalStudy">გეოლოგიური კვლევა</label>
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="form-check">
+                <input type="hidden" name="geophysycal_study" value="false">
+                <input class="form-check-input" type="checkbox" id="geophysycalStudy" name="geophysycal_study" value="true">
+                <label class="form-check-label" for="geophysycalStudy">გეოფიზიკური კვლევა</label>
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="form-check">
+                <input type="hidden" name="hazard_study" value="false">
+                <input class="form-check-input" type="checkbox" id="hazardStudy" name="hazard_study" value="true">
+                <label class="form-check-label" for="hazardStudy">საფრთხის კვლევა</label>
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="form-check">
+                <input type="hidden" name="geodetic_study" value="false">
+                <input class="form-check-input" type="checkbox" id="geodeticStudy" name="geodetic_study" value="true">
+                <label class="form-check-label" for="geodeticStudy">გეოდეზიური კვლევა</label>
+            </div>
+        </div>
+        <div class="col form-group">
+            <div class="form-check">
+                <input type="hidden" name="other_study" value="false">
+                <input class="form-check-input" type="checkbox" id="otherStudy" name="other_study" value="true">
+                <label class="form-check-label" for="otherStudy">სხვა კვლევა</label>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center align-items-center mt-5">
             <button type="submit" class="btn btn-primary me-2">პროექტის დამატება</button>
             <a class="btn btn-info" href="/projects">ყველა პროექტი</a>
         </div>
     </form>
-    
 {% endblock %}
