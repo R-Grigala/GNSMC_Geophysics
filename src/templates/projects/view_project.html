@@ -5,13 +5,10 @@
 {% endblock %}
 
 {% block body %}
-    <div class="d-flex justify-content-center align-items-center pt-5">
-        <h2>პროექტის ნახვა</h2>
-    </div>
-
+    <script type="text/javascript" src="{{ url_for('static', filename='js/view_project.js') }}" defer></script>
     <div id="projectId" data-project-id="{{ project_id }}"></div>
-    <div class="" style="display: flex; flex-direction: row; height: 50%;">
-        <div class="card mt-4 w-50">
+    <div style="display: flex; flex-direction: row; height: 50%;">
+        <div class="card mt-2 w-50">
             <table class="table table-striped">
                 <tbody>
                     <tr>
@@ -50,11 +47,37 @@
             </table>
         </div>
         <div class="card mt-2" style="width: 100%; height: 28.5rem">
-            <div id="map" 
+            <div id="project_image" 
                 style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
             </div>
         </div>
+    </div>
 
+    <div class="table-responsive-xxl text-center" style="font-size: x-small;">
+        <table class="table align-middle table-bordered border-muted mb-0 bg-white table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>პროექტის სახელი</th>
+                    <th>ხელშეკრულების ნომერი</th>
+                    <th>დაწყების დღე</th>
+                    <th>დასრულების დღე</th>
+                    <th>დამკვეთი</th>
+                    <th>ადგილმდებარეობა</th>
+                    <th>განედი</th>
+                    <th>გრძედი</th>
+                    <th>გეოლოგიური კვლევა</th>
+                    <th>გეოფიზიკური კვლევა</th>
+                    <th>სეისმური საშიშროების შეფასება</th>
+                    <th>გეოდეზიური კვლევა</th>
+                    <th>სხვა ტიპის კვლევა</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="view_projectTableBody">
+                <!-- Data will be populated dynamically here -->
+            </tbody>
+        </table>
     </div>
 
 

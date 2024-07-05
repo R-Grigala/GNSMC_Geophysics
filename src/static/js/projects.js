@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
 
-            const stationTableBody = document.getElementById('stationTableBody');
+            const projectTableBody = document.getElementById('projectTableBody');
             data.forEach(project => {
                 const row = `
                     <tr>
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </td>
                     </tr>
                 `;
-                stationTableBody.innerHTML += row;
+                projectTableBody.innerHTML += row;
             });
         })
         .catch(error => {
