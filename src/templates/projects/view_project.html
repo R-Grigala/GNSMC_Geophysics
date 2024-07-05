@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+    IesData - View Project
+{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center pt-5">
+        <h2>პროექტის ნახვა</h2>
+    </div>
+
+    <div id="projectId" data-project-id="{{ project_id }}"></div>
+    <div class="" style="display: flex; flex-direction: row; height: 50%;">
+        <div class="card mt-4 w-50">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>პროექტის სახელი:</th>
+                        <td id="projectName"></td>
+                    </tr>
+                    <tr>
+                        <th>ხელშეკრულების ნომერი:</th>
+                        <td id="contractNumber"></td>
+                    </tr>
+                    <tr>
+                        <th>დაწყების დღე:</th>
+                        <td id="startTime"></td>
+                    </tr>
+                    <tr>
+                        <th>დასრულების დღე:</th>
+                        <td id="endTime"></td>
+                    </tr>
+                    <tr>
+                        <th>დამკვეთი:</th>
+                        <td id="contractor"></td>
+                    </tr>
+                    <tr>
+                        <th>პროექტის მდებარეობა:</th>
+                        <td id="projLocation"></td>
+                    </tr>
+                    <tr>
+                        <th>განედი:</th>
+                        <td id="projLatitude"></td>
+                    </tr>
+                    <tr>
+                        <th>გრძედი:</th>
+                        <td id="projLongitude"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card mt-2" style="width: 100%; height: 28.5rem">
+            <div id="map" 
+                style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const projectIdElement = document.getElementById("projectId");
+            const projectId = projectIdElement.getAttribute("data-project-id");
+
+            fetch(`/api/project/${projectId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("projectName").textContent = data.projects_name;
+                    document.getElementById("contractNumber").textContent = data.contract_number;
+                    document.getElementById("startTime").textContent = data.start_time;
+                    document.getElementById("endTime").textContent = data.end_time;
+                    document.getElementById("contractor").textContent = data.contractor;
+                    document.getElementById("projLocation").textContent = data.proj_location;
+                    document.getElementById("projLatitude").textContent = data.proj_latitude;
+                    document.getElementById("projLongitude").textContent = data.proj_longitude;
+                })
+                .catch(error => console.error('Error fetching project data:', error));
+        });
+    </script>
+{% endblock %}
