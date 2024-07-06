@@ -1,22 +1,47 @@
 .filterMapDiv {
     display: flex;
     flex-direction: row;
-    height: 50%;
     width: 100%;
 }
 .filterDiv {
     width: 50%;
-    height: 60%;
+}
+#mapDiv {
+    width: 100%;
+    height: 33rem;
+}
+.projectImageDiv {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.projectDiv {
+    width: 50%;
+}
+.imageProjectDiv {
+    width: 100%;
+    height: 26rem
 }
 @media (max-width: 992px) {
     .filterMapDiv {
         flex-direction: column-reverse;
-        width: 100%;
-        height: 60%;
-        margin-top: 1%;
     }
     .filterDiv {
         width: 100%;
         font-size: x-small;
+    }
+    #mapDiv {
+        width: 100%;
+        height: 25rem;
+    }
+    .projectImageDiv {
+        flex-direction: column-reverse;
+    }
+    .projectDiv {
+        width: 100%;
+    }
+    .imageProjectDiv {
+        width: 100%;
+        height: 20rem
     }
 }
