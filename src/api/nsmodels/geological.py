@@ -1,7 +1,7 @@
 from flask_restx import reqparse, fields
 from src.extensions import api
 
-geological_ns = api.namespace('Geological', description='API endpoint for Projects related operations', path='/api')
+geological_ns = api.namespace('Geological', description='API endpoint for Geological related operations', path='/api')
 
 geological_model = api.model('Geological', {
     'id': fields.Integer(required=True, description='Geological id', example=1),

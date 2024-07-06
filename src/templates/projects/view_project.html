@@ -6,6 +6,7 @@
 
 {% block body %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/geological.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical.js') }}" defer></script>
     <div id="projectId" data-project-id="{{ project_id }}"></div>
     <div style="display: flex; flex-direction: row; height: 50%;">
         <div class="card mt-2 w-50">
@@ -47,15 +48,34 @@
             </table>
         </div>
         <div class="card mt-2" style="width: 100%; height: 28.5rem">
-            <div id="project_image" 
-                style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
-            </div>
+            <img id="projectImage" src="https://storage.googleapis.com/bd-ge-01/buildings-v2/2560x1920/20057.jpg" alt="Project Image" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
     </div>
 
-    <div class="table-responsive-xxl text-center" style="font-size: x-small;">
-        <table class="table align-middle table-bordered border-muted mb-0 bg-white table-striped">
-            <thead class="table-primary">
+    <div class="table-responsive-xxl table-bordered text-center" style="font-size: x-small;">
+        <table class="table align-middle rounded-2 border-muted mb-0 bg-white">
+            <td>
+                <a class="btn btn-sm btn-warning" style="font-size: x-small;" href="#">გეოლოგიური კვლევის დამატება</a>
+            </td>
+            <td>
+                <a class="btn btn-sm btn-success" style="font-size: x-small;" href="#">გეოფიზიკური კვლევის დამატება</a>
+            </td>
+            <td>
+                <a class="btn btn-sm btn-primary" style="font-size: x-small;" href="#">სეისმური საშიშროების შეფასების დამატება</a>
+            </td>
+            <td>
+                <a class="btn btn-sm btn-secondary" style="font-size: x-small;" href="#">გეოდეზიური კვლევის დამატება</a>
+            </td>
+            <td>
+                <a class="btn btn-sm btn-info" style="font-size: x-small;" href="#">სხვა ტიპის კვლევის დამატება</a>
+            </td>
+        </table>
+    </div>
+
+    <!-- for Geological -->
+    <div class="table-responsive-xxl text-center mt-2" style="font-size: x-small;">
+        <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
+            <thead class="table-warning">
                 <tr>
                     <th>გეოლოგიური აგეგმვა</th>
                     <th>ობიექტების რაოდენობა</th>
@@ -76,7 +96,34 @@
         </table>
     </div>
 
+    <!-- for Geophysical -->
+    <div class="table-responsive-xxl text-center mt-2" style="font-size: x-small;">
+        <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
+            <thead class="table-success">
+                <tr>
+                    <th>გეოლოგიური აგეგმვა</th>
+                    <th>ობიექტების რაოდენობა</th>
+                    <th>ჭაბურღილები</th>
+                    <th>ჭაბურღილების რაოდენობა</th>
+                    <th>შურფები</th>
+                    <th>შურფების რაოდენობა</th>
+                    <th>ლაბორატორიული ტესტი</th>
+                    <th>წერტილების რაოდენობა</th>
+                    <th>საარქივო ფაილი</th>
+                    <th>საარქივო ფაილი</th>
+                    <th>საარქივო ფაილი</th>
+                    <th>საარქივო ფაილი</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="geophysicalTableBody">
+                <!-- Data will be populated dynamically here -->
+            </tbody>
+        </table>
+    </div>
 
+    <!-- for Project Data -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const projectIdElement = document.getElementById("projectId");
