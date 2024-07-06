@@ -1,9 +1,7 @@
 from src.extensions import db
 from src.models.base import BaseModel
 
-
 class Projects(db.Model, BaseModel):
-
     __tablename__ = "projects"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -16,11 +14,13 @@ class Projects(db.Model, BaseModel):
     proj_latitude = db.Column(db.Float, nullable=False)
     proj_longitude = db.Column(db.Float, nullable=False)
     geological_study = db.Column(db.Boolean, nullable=False)
-    geophysycal_study = db.Column(db.Boolean, nullable=False)
+    geophysical_study = db.Column(db.Boolean, nullable=False)
     hazard_study = db.Column(db.Boolean, nullable=False)
     geodetic_study = db.Column(db.Boolean, nullable=False)
     other_study = db.Column(db.Boolean, nullable=False)
 
+    geological = db.relationship('Geological', back_populates='project')
 
     def __repr__(self):
-        return f'{self.projects_name}'
+        return f'<Projects {self.id} {self.projects_name}>'
+

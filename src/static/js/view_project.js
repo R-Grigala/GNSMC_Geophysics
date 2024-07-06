@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td>${data.proj_latitude}</td>
                     <td>${data.proj_longitude}</td>
                     <td>${data.geological_study ? "Yes" : "No"}</td>
-                    <td>${data.geophysycal_study ? "Yes" : "No"}</td>
+                    <td>${data.geophysical_study ? "Yes" : "No"}</td>
                     <td>${data.hazard_study ? "Yes" : "No"}</td>
                     <td>${data.geodetic_study ? "Yes" : "No"}</td>
                     <td>${data.other_study ? "Yes" : "No"}</td>

@@ -38,7 +38,7 @@ class ProjectsListAPI(Resource):
             proj_latitude=args['proj_latitude'],
             proj_longitude=args['proj_longitude'],
             geological_study=args['geological_study'],
-            geophysycal_study=args['geophysycal_study'],
+            geophysical_study=args['geophysical_study'],
             hazard_study=args['hazard_study'],
             geodetic_study=args['geodetic_study'],
             other_study=args['other_study']
@@ -79,7 +79,7 @@ class ProjectAPI(Resource):
             project.proj_latitude = args["proj_latitude"]
             project.proj_longitude = args["proj_longitude"]
             project.geological_study = args["geological_study"]
-            project.geophysycal_study = args["geophysycal_study"]
+            project.geophysical_study = args["geophysical_study"]
             project.hazard_study = args["hazard_study"]
             project.geodetic_study = args["geodetic_study"]
             project.other_study = args["other_study"]
