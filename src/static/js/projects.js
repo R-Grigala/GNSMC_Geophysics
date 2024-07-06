@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const projectTableBody = document.getElementById('projectTableBody');
             data.forEach(project => {
                 const row = `
-                    <tr>
+                    <tr data-href="/view_project/${project.id}">
                         <td>${project.projects_name}</td>
                         <td>${project.contract_number}</td>
                         <td>${project.start_time}</td>
@@ -32,6 +32,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     </tr>
                 `;
                 projectTableBody.innerHTML += row;
+            });
+            
+            // Add click event listener to each <tr> to navigate to detailed view
+            const tableRows = projectTableBody.getElementsByTagName('tr');
+            Array.from(tableRows).forEach(row => {
+                row.style.cursor = 'pointer';
+                row.addEventListener('click', function() {
+                    const href = row.getAttribute('data-href');
+                    if (href) {
+                        window.location.href = href;
+                    }
+                });
             });
         })
         .catch(error => {

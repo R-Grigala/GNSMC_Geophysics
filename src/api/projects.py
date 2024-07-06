@@ -2,8 +2,6 @@ from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 from datetime import datetime
 
-
-from src.extensions import api
 from src.api.nsmodels import projects_ns, projects_model, projects_parser
 from src.models import Projects
 

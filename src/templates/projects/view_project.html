@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/view_project.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/geological.js') }}" defer></script>
     <div id="projectId" data-project-id="{{ project_id }}"></div>
     <div style="display: flex; flex-direction: row; height: 50%;">
         <div class="card mt-2 w-50">
@@ -57,24 +57,20 @@
         <table class="table align-middle table-bordered border-muted mb-0 bg-white table-striped">
             <thead class="table-primary">
                 <tr>
-                    <th>პროექტის სახელი</th>
-                    <th>ხელშეკრულების ნომერი</th>
-                    <th>დაწყების დღე</th>
-                    <th>დასრულების დღე</th>
-                    <th>დამკვეთი</th>
-                    <th>ადგილმდებარეობა</th>
-                    <th>განედი</th>
-                    <th>გრძედი</th>
-                    <th>გეოლოგიური კვლევა</th>
-                    <th>გეოფიზიკური კვლევა</th>
-                    <th>სეისმური საშიშროების შეფასება</th>
-                    <th>გეოდეზიური კვლევა</th>
-                    <th>სხვა ტიპის კვლევა</th>
+                    <th>გეოლოგიური აგეგმვა</th>
+                    <th>ობიექტების რაოდენობა</th>
+                    <th>ჭაბურღილები</th>
+                    <th>ჭაბურღილების რაოდენობა</th>
+                    <th>შურფები</th>
+                    <th>შურფების რაოდენობა</th>
+                    <th>ლაბორატორიული ტესტი</th>
+                    <th>წერტილების რაოდენობა</th>
+                    <th>საარქივო ფაილი</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="view_projectTableBody">
+            <tbody id="geologicalTableBody">
                 <!-- Data will be populated dynamically here -->
             </tbody>
         </table>
