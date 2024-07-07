@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${geophysical.georadar ? "Yes" : "No"}</td>
                         <td>${geophysical.archival_material}</td>
                         <td>
-                            <a class="btn btn-info" href="/edit_project/${geophysical.id}">Edit</a>
+                            <a class="btn btn-info" href="#">Edit</a>
                         </td>
                         <td>
                             <form action="#" method="POST" style="display:inline;">

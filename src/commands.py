@@ -35,6 +35,24 @@ def populate_db():
     )
     new_project.create()
 
+    click.echo("Creating Second Project")
+    new_project = Projects(
+        projects_name="Main Project",
+        contract_number=12345,
+        start_time=datetime.strptime('2024-02-23', '%Y-%m-%d').date(),
+        end_time=datetime.strptime('2024-07-03', '%Y-%m-%d').date(),
+        contractor="Main Contractor",
+        proj_location="Example Location",
+        proj_latitude=42.1234,
+        proj_longitude=42.649,
+        geological_study=True,
+        geophysical_study=True,
+        hazard_study=False,
+        geodetic_study=False,
+        other_study=False
+    )
+    new_project.create()
+
     click.echo("Creating First Geological")
     new_geological = Geological(
         project_id = 1,
@@ -46,7 +64,7 @@ def populate_db():
         pits_number = 0,
         laboratory_tests = True,
         points_number = 2,
-        archival_material = "Example archival_material"
+        archival_material = "archival_material.xlsx"
     )
 
     new_geological.create()
@@ -62,7 +80,7 @@ def populate_db():
         pits_number = 0,
         laboratory_tests = True,
         points_number = 20,
-        archival_material = "Example zzzzzzzzzzzzz"
+        archival_material = "example_material.xlsx"
     )
 
     new_geological.create()
@@ -74,7 +92,7 @@ def populate_db():
         seismic_profiles=False,
         profiles_number=0,
         vs30=0,
-        vs30_section="Example Section",
+        vs30_section="example_section.xlsx",
         ground_category_geo="Category GEO",
         ground_category_euro="Euro Category",
         geophysical_logging=False,
@@ -82,7 +100,7 @@ def populate_db():
         electrical_profiles=False,
         point_number=0,
         georadar=False,
-        archival_material="Main Material"
+        archival_material="main_material.xlsx"
     )
 
     new_geophysical.create()

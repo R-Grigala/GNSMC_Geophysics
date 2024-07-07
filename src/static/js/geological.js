@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${geological.points_number}</td>
                         <td>${geological.archival_material}</td>
                         <td>
-                            <a class="btn btn-info" href="/edit_project/${geological.id}">Edit</a>
+                            <a class="btn btn-info" href="#">Edit</a>
                         </td>
                         <td>
                             <form action="#" method="POST" style="display:inline;">
