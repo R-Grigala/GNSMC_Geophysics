@@ -3,7 +3,7 @@ import click
 from datetime import datetime
 
 from src.extensions import db
-from src.models import Projects, Geological, Geophysical
+from src.models import Projects, Geological, Geophysical, GeophysicSeismic
 
 
 @click.command("init_db")
@@ -104,3 +104,20 @@ def populate_db():
     )
 
     new_geophysical.create()
+
+    click.echo("Creating First GeophysicSeismic")
+    new_geophysical_seismic = GeophysicSeismic(
+        geophysical_id=1,
+        longitude=42.1234,
+        latitude=42.549,
+        profile_length=0,
+        archival_img="image.png",
+        archival_excel="test.xlsx",
+        vs30=650,
+        vs30_section="vs30.xlsx",
+        ground_category_geo="Category GEO",
+        ground_category_euro="Category Euro",
+        archival_pdf="testarchve.pdf"
+    )
+
+    new_geophysical_seismic.create()

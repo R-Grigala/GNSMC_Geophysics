@@ -5,92 +5,55 @@
 {% endblock %}
 
 {% block body %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/geological.js') }}" defer></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical.js') }}" defer></script>
-    <div id="projectId" data-project-id="{{ project_id }}"></div>
-    <div class="projectImageDiv">
-        <div class="card mt-2 projectDiv">
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <th>პროექტის სახელი:</th>
-                        <td id="projectName"></td>
-                    </tr>
-                    <tr>
-                        <th>ხელშეკრულების ნომერი:</th>
-                        <td id="contractNumber"></td>
-                    </tr>
-                    <tr>
-                        <th>დაწყების დღე:</th>
-                        <td id="startTime"></td>
-                    </tr>
-                    <tr>
-                        <th>დასრულების დღე:</th>
-                        <td id="endTime"></td>
-                    </tr>
-                    <tr>
-                        <th>დამკვეთი:</th>
-                        <td id="contractor"></td>
-                    </tr>
-                    <tr>
-                        <th>პროექტის მდებარეობა:</th>
-                        <td id="projLocation"></td>
-                    </tr>
-                    <tr>
-                        <th>განედი:</th>
-                        <td id="projLatitude"></td>
-                    </tr>
-                    <tr>
-                        <th>გრძედი:</th>
-                        <td id="projLongitude"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="card mt-2 imageProjectDiv" >
-            <img id="projectImage" src="https://storage.googleapis.com/bd-ge-01/buildings-v2/2560x1920/20057.jpg" alt="Project Image" style="width: 100%; height: 100%; object-fit: cover;">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical/seismic.js') }}" defer></script>
+    <div id="geophysicalId" data-geophysical-id="{{ geophysical_id }}"></div>
+    <div class="filterMapDiv">
+        {% include "filter.html" %}
+
+        <div id="mapDiv" class="card mt-2">
+            <div id="map" 
+                style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
+            </div>
         </div>
     </div>
 
     <div class="table-responsive-xxl table-bordered text-center mt-2" style="font-size: small;">
         <table class="table align-middle rounded-2 border-muted mb-0 bg-white">
             <td>
-                <a class="btn btn-sm btn-warning" style="font-size: x-small;" href="#">გეოლოგიური კვლევის დამატება</a>
+                <a class="btn btn-sm btn-warning" style="font-size: x-small;" href="#">სეისმური პროფილის დამატება</a>
             </td>
             <td>
-                <a class="btn btn-sm btn-success" style="font-size: x-small;" href="#">გეოფიზიკური კვლევის დამატება</a>
+                <a class="btn btn-sm btn-success" style="font-size: x-small;" href="#">გეოფიზიკური კაროტაჟის დამატება</a>
             </td>
             <td>
-                <a class="btn btn-sm btn-primary" style="font-size: x-small;" href="#">სეისმური საშიშროების შეფასების დამატება</a>
+                <a class="btn btn-sm btn-primary" style="font-size: x-small;" href="#">ელექტრული პროფილის დამატება</a>
             </td>
             <td>
-                <a class="btn btn-sm btn-secondary" style="font-size: x-small;" href="#">გეოდეზიური კვლევის დამატება</a>
-            </td>
-            <td>
-                <a class="btn btn-sm btn-info" style="font-size: x-small;" href="#">სხვა ტიპის კვლევის დამატება</a>
+                <a class="btn btn-sm btn-secondary" style="font-size: x-small;" href="#">გეორადარის დამატება</a>
             </td>
         </table>
     </div>
 
-    <!-- for Geological -->
+    <!-- for Seismic profile -->
     <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
         <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
             <thead class="table-warning">
                 <tr>
-                    <th>გეოლოგიური აგეგმვა</th>
-                    <th>ობიექტების რაოდენობა</th>
-                    <th>ჭაბურღილები</th>
-                    <th>ჭაბურღილების რაოდენობა</th>
-                    <th>შურფები</th>
-                    <th>შურფების რაოდენობა</th>
-                    <th>ლაბორატორიული ტესტი</th>
-                    <th>წერტილების რაოდენობა</th>
-                    <th>საარქივო ფაილი</th>
+                    <th>განედი (x)</th>
+                    <th>გრძედი (y)</th>
+                    <th>პროფილის სიგრძე</th>
+                    <th>საარქივო Image</th>
+                    <th>საარქივო Excel</th>
+                    <th>VS30</th>
+                    <th>VS30 ჭრილი ექსელი</th>
+                    <th>გრუნტის კატეგორია ქართული ნორმებით</th>
+                    <th>გრუნტის კატეგორია საერთაშორისო ნორმებით</th>
+                    <th>მოწოდებული მასალები(PDF)</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="geologicalTableBody">
+            <tbody id="GeophysSeismicTable">
                 <!-- Data will be populated dynamically here -->
             </tbody>
         </table>
@@ -103,10 +66,7 @@
                 <tr>
                     <th>სეისმური პროფილები</th>
                     <th>პროფილების რაოდენობა</th>
-                    <th>VS30</th>
-                    <th>VS30 ჭრილი ექსელი</th>
-                    <th>გრუნტის კატეგორია ქართული ნორმებით</th>
-                    <th>გრუნტის კატეგორია საერთაშორისო ნორმებით</th>
+
                     <th>გეოფიზიკური კაროტაჟი</th>
                     <th>წერტილების რაოდენობა</th>
                     <th>ელექტრული პროფილები</th>
