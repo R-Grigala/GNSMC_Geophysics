@@ -7,7 +7,7 @@
 {% block body %}
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&callback=initMap" async></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}" defer></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/projects.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/projects/projects.js') }}" defer></script>
     <div class="filterMapDiv">
         {% include "filter.html" %}
 

@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data.forEach(geophysical => {
             
                 const row = `
-                    <tr>
+                    <tr data-href="/view_geophysical/${geophysical.id}">
                         <td>${geophysical.seismic_profiles ? "Yes" : "No"}</td>
                         <td>${geophysical.profiles_number}</td>
                         <td>${geophysical.vs30}</td>
@@ -34,6 +34,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     </tr>
                 `;
                 geophysicalTableBody.innerHTML += row;
+            });
+            // Add click event listener to each <tr> to navigate to detailed view
+            const tableRows = geophysicalTableBody.getElementsByTagName('tr');
+            Array.from(tableRows).forEach(row => {
+                row.style.cursor = 'pointer';
+                row.addEventListener('click', function() {
+                    const href = row.getAttribute('data-href');
+                    if (href) {
+                        window.location.href = href;
+                    }
+                });
             });
         })
         .catch(error => {
