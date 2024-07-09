@@ -19,7 +19,7 @@ projects_model = projects_ns.model('Projects', {
     'geological_study': fields.Boolean(required=True, description='Geological study', example=True),
     'geophysical_study': fields.Boolean(required=True, description='Geophysical study', example=False),
     'hazard_study': fields.Boolean(required=True, description='Hazard study', example=True),
-    'geodetic_study': fields.Boolean(required=True, description='Geodetic study', example=True),
+    'geodetic_study': fields.Boolean(required=True, description='Geodetic study', example=False),
     'other_study': fields.Boolean(required=True, description='Other study', example=False),
     # 'geological': fields.List(fields.Nested(geological_model))
     # 'geophysical': fields.List(fields.Nested(geophysical_model))

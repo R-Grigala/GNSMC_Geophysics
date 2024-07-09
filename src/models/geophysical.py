@@ -6,7 +6,7 @@ class Geophysical(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     
     seismic_profiles = db.Column(db.Boolean, nullable=False)
     profiles_number = db.Column(db.Integer, nullable=False)

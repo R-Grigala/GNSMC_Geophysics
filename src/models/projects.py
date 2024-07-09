@@ -2,7 +2,7 @@ from src.extensions import db
 from src.models.base import BaseModel
 
 class Projects(db.Model, BaseModel):
-    __tablename__ = "projects"
+    __tablename__ = "project"
 
     id = db.Column(db.Integer, primary_key=True)
     projects_name = db.Column(db.String, nullable=False)
