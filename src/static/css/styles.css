@@ -10,6 +10,10 @@
     width: 100%;
     height: 33rem;
 }
+#geophysic_mapDiv{
+    width: 100%;
+    height: 32rem;
+}
 .projectImageDiv {
     display: flex;
     flex-direction: row;
@@ -31,6 +35,10 @@
         font-size: x-small;
     }
     #mapDiv {
+        width: 100%;
+        height: 25rem;
+    }
+    #geophysic_mapDiv{
         width: 100%;
         height: 25rem;
     }

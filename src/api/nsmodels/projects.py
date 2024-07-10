@@ -1,8 +1,8 @@
-from flask_restx import reqparse, fields
+from flask_restx import reqparse, fields, inputs
 from src.extensions import api
 
 # from src.api.nsmodels.geological import geological_model
-# from src.api.nsmodels.geophysical import geophysical_model
+from src.api.nsmodels.geophysical import geophysical_model
 
 projects_ns = api.namespace('Projects', description='API endpoint for Projects related operations', path='/api')
 
@@ -22,8 +22,18 @@ projects_model = projects_ns.model('Projects', {
     'geodetic_study': fields.Boolean(required=True, description='Geodetic study', example=False),
     'other_study': fields.Boolean(required=True, description='Other study', example=False),
     # 'geological': fields.List(fields.Nested(geological_model))
-    # 'geophysical': fields.List(fields.Nested(geophysical_model))
+    'geophysical': fields.List(fields.Nested(geophysical_model))
 })
+
+def str_to_bool(value):
+    if isinstance(value, bool):
+        return value
+    if value.lower() in ('true', '1'):
+        return True
+    elif value.lower() in ('false', '0'):
+        return False
+    else:
+        raise ValueError('Boolean value expected.')
 
 projects_parser = reqparse.RequestParser()
 
@@ -35,8 +45,8 @@ projects_parser.add_argument("contractor", required=True, type=str, help="Contar
 projects_parser.add_argument("proj_location", required=True, type=str, help="Project location example: Example Location")
 projects_parser.add_argument("proj_latitude", required=True, type=float, help="Latitude example: 42.0163")
 projects_parser.add_argument("proj_longitude", required=True, type=float, help="Longitude example: 43.1412")
-projects_parser.add_argument("geological_study", required=True, type=bool, help="Geological study: true/false")
-projects_parser.add_argument("geophysical_study", required=True, type=bool, help="Geophysical study: true/false")
-projects_parser.add_argument("hazard_study", required=True, type=bool, help="Hazard study: true/false")
-projects_parser.add_argument("geodetic_study", required=True, type=bool, help="Geodetic study: true/false")
-projects_parser.add_argument("other_study", required=True, type=bool, help="Other study: true/false")
+projects_parser.add_argument("geological_study", required=True, type=str_to_bool, help="Geological study: True/False")
+projects_parser.add_argument("geophysical_study", required=True, type=str_to_bool, help="Geophysical study: True/False")
+projects_parser.add_argument("hazard_study", required=True, type=str_to_bool, help="Hazard study: True/False")
+projects_parser.add_argument("geodetic_study", required=True, type=str_to_bool, help="Geodetic study: True/False")
+projects_parser.add_argument("other_study", required=True, type=str_to_bool, help="Other study: True/False")

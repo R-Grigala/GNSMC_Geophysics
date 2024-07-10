@@ -6,11 +6,13 @@
 
 {% block body %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical/seismic.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical/geophysicMap.js') }}" defer></script>
     <div id="geophysicalId" data-geophysical-id="{{ geophysical_id }}"></div>
+    <div id="projectId" data-project-id=""></div>
     <div class="filterMapDiv">
-        {% include "filter.html" %}
+        {% include "filter_geophysical.html" %}
 
-        <div id="mapDiv" class="card mt-2">
+        <div id="geophysic_mapDiv" class="card mt-2">
             <div id="map" 
                 style="width: 100%; height:100%; border: 1px solid #CCC; border-radius: 5px; margin-top:0px;">
             </div>
@@ -66,7 +68,6 @@
                 <tr>
                     <th>სეისმური პროფილები</th>
                     <th>პროფილების რაოდენობა</th>
-
                     <th>გეოფიზიკური კაროტაჟი</th>
                     <th>წერტილების რაოდენობა</th>
                     <th>ელექტრული პროფილები</th>
@@ -86,17 +87,16 @@
     <!-- for Project Data -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const projectIdElement = document.getElementById("projectId");
-            const projectId = projectIdElement.getAttribute("data-project-id");
+            // const projectIdElement = document.getElementById("projectId");
+            // const projectId = projectIdElement.getAttribute("data-project-id");
 
-            fetch(`/api/project/${projectId}`)
+            fetch(`/api/project/1`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("projectName").textContent = data.projects_name;
                     document.getElementById("contractNumber").textContent = data.contract_number;
                     document.getElementById("startTime").textContent = data.start_time;
                     document.getElementById("endTime").textContent = data.end_time;
-                    document.getElementById("contractor").textContent = data.contractor;
                     document.getElementById("projLocation").textContent = data.proj_location;
                     document.getElementById("projLatitude").textContent = data.proj_latitude;
                     document.getElementById("projLongitude").textContent = data.proj_longitude;

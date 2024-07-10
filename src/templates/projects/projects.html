@@ -6,8 +6,9 @@
 
 {% block body %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/projects/projects.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/projects/map.js') }}" defer></script>
     <div class="filterMapDiv">
-        {% include "filter.html" %}
+        {% include "filter_project.html" %}
 
         <div id="mapDiv" class="card mt-2">
             <div id="map" 

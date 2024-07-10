@@ -16,7 +16,7 @@ class ProjectsListAPI(Resource):
 
         return projects, 200
     
-    @projects_ns.expect(projects_parser)
+    @projects_ns.doc(parser=projects_parser)
     def post(self):
         args = projects_parser.parse_args()
         
