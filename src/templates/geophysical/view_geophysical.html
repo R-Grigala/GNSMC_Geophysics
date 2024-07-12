@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical/seismic.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical/geophysic.js') }}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/geophysical/geophysicMap.js') }}" defer></script>
     <div id="geophysicalId" data-geophysical-id="{{ geophysical_id }}"></div>
     <div id="projectId" data-project-id=""></div>
@@ -61,25 +61,91 @@
         </table>
     </div>
 
-    <!-- for Geophysical -->
+    <!-- for Geophysical logging -->
     <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
         <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
             <thead class="table-success">
                 <tr>
-                    <th>სეისმური პროფილები</th>
-                    <th>პროფილების რაოდენობა</th>
-                    <th>გეოფიზიკური კაროტაჟი</th>
-                    <th>წერტილების რაოდენობა</th>
-                    <th>ელექტრული პროფილები</th>
-                    <th>წერტილების რაოდენობა</th>
-                    <th>გეორადარი</th>
-                    <th>საარქივო ფაილი</th>
+                    <th>განედი (x)</th>
+                    <th>გრძედი (y)</th>
+                    <th>პროფილის სიგრძე</th>
+                    <th>საარქივო Image</th>
+                    <th>საარქივო Excel</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="geophysicalTableBody">
+            <tbody id="geophysic_loggingTableBody">
                 <!-- Data will be populated dynamically here -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- for Geophysical electrical -->
+    <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
+        <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>განედი (x)</th>
+                    <th>გრძედი (y)</th>
+                    <th>პროფილის სიგრძე</th>
+                    <th>საარქივო Image</th>
+                    <th>საარქივო Excel</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="geophysic_electricTableBody">
+                <tr>
+                    <td>41.1234</td>
+                    <td>42.549</td>
+                    <td>10</td>
+                    <td>test.png</td>
+                    <td>test.xlsx</td>
+                    <td>
+                        <a class="btn btn-info" href="#">Edit</a>
+                    </td>
+                    <td>
+                        <form action="#" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- for Geophysical georadar -->
+    <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
+        <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
+            <thead class="table-secondary">
+                <tr>
+                    <th>განედი (x)</th>
+                    <th>გრძედი (y)</th>
+                    <th>პროფილის სიგრძე</th>
+                    <th>საარქივო Image</th>
+                    <th>საარქივო Excel</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="geophysic_georadarTableBody">
+                <tr>
+                    <td>41.1234</td>
+                    <td>42.549</td>
+                    <td>10</td>
+                    <td>test.png</td>
+                    <td>test.xlsx</td>
+                    <td>
+                        <a class="btn btn-info" href="#">Edit</a>
+                    </td>
+                    <td>
+                        <form action="#" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

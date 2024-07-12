@@ -1,7 +1,7 @@
 from flask_restx import fields
 from src.extensions import api
 
-from src.api.nsmodels.geophysic_seismic import geophysic_seismic_model
+from src.api.nsmodels.geophysic_details import geophysic_seismic_model, geophysic_logging_model
 
 geophysical_ns = api.namespace('Geophysical', description='API endpoint for Geophysical related operations', path='/api')
 
@@ -20,5 +20,6 @@ geophysical_model = api.model('Geophysical', {
     'point_number': fields.Integer(required=True, description='Number of points'),
     'georadar': fields.Boolean(required=True, description='Whether georadar is included'),
     'archival_material': fields.String(description='Archival material'),
-    'geophysic_seismic': fields.List(fields.Nested(geophysic_seismic_model))
+    'geophysic_seismic': fields.List(fields.Nested(geophysic_seismic_model)),
+    # 'geophysic_logging': fields.List(fields.Nested(geophysic_logging_model))
 })
