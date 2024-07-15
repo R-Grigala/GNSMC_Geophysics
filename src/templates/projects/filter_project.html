@@ -1,97 +1,66 @@
-<div class="filterDiv">
-    <div class="card mt-2">
-        <form method="POST">
-            <table class="table table-borderless mt-2">
-                <tbody>
-                    <tr class="text-center">
-                        <td>კვლევის ტიპი:</td>
-                        <td class="text-start">
-                            <label class="form-check-label me-1" for="CheckWarning">
-                                <input class="form-check-input" type="checkbox" value="" id="CheckWarning" />
-                                <img src="../static/img/warning.png" width="15" height="15">
-                            </label>
-                            <label class="form-check-label me-1" for="CheckSuccess">
-                                <input class="form-check-input" type="checkbox" value="" id="CheckSuccess" />
-                                <img src="../static/img/success.png" width="15" height="15">
-                            </label>
-                            <label class="form-check-label me-1" for="CheckPrimary">
-                                <input class="form-check-input" type="checkbox" value="" id="CheckPrimary" />
-                                <img src="../static/img/primary.png" width="15" height="15">
-                            </label>
-                            <label class="form-check-label me-1" for="CheckSecondary">
-                                <input class="form-check-input" type="checkbox" value="" id="CheckSecondary" />
-                                <img src="../static/img/secondary.png" width="15" height="15">
-                            </label>
-                            <label class="form-check-label me-1" for="CheckInfo">
-                                <input class="form-check-input" type="checkbox" value="" id="CheckInfo" />
-                                <img src="../static/img/info.png" width="15" height="15">
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center pt-3">პროექტის სახელი:</td>
-                        <td>
-                            <label class="form-label" for="form12">
-                                <input type="text" id="form12" class="form-control form-control-sm" />
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center pt-3">ხელშეკრულების ნომერი:</td>
-                        <td>
-                            <label class="form-label" for="form12">
-                                <input type="text" id="form12" class="form-control form-control-sm" />
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center pt-3">თარიღი (დან):</td>
-                        <td>
-                            <label class="form-label" for="form12">
-                                <input type="date" class="form-control form-control-sm" id="startTime" name="start_time" required>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center pt-3">თარიღი (მდე):</td>
-                        <td>
-                            <label class="form-label" for="form12">
-                                <input type="date" class="form-control form-control-sm" id="endTime" name="end_time" required>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-end"><a class="btn btn-sm btn-primary" href="#">გაფილტვრა</a></td>
-                        <td><a class="btn btn-sm btn-primary" href="#">გასუფთავება</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-    <div class="card">
-        <table class="table table-borderless">
+<div class="card mt-2 filterDiv">
+    <form method="POST">
+        <table class="table table-borderless border-bottom mt-2">
             <tbody>
-                <tr class="text-center">
-                    <td class="text-end"><img src="../static/img/warning.png" width="17" height="17"></td>
-                    <td class="text-start">გაკეთდა გეოლოგიური კვლევა</td>
+                <tr>
+                    <td class="text-center pt-3">ხელშეკრულების ნომერი:</td>
+                    <td>
+                        <label class="form-label" for="form12">
+                            <input type="text" id="form12" class="form-control form-control-sm" placeholder=""/>
+                        </label>
+                    </td>
                 </tr>
-                <tr class="text-center">
-                    <td class="text-end"><img src="../static/img/success.png" width="17" height="17"></td>
-                    <td class="text-start">გაკეთდა გეოფიზიკური კვლევა</td>
+                <tr>
+                    <td class="text-center pt-3">VS30 Range:</td>
+                    <td>
+                        <label for="vs30Range" class="form-label">
+                            <div class="col me-1">
+                                <input type="number" id="vs30RangeMin" class="form-control form-control-sm col" placeholder="Min Value" />
+                                <input type="number" id="vs30RangeMax" class="form-control form-control-sm col" placeholder="Max Value" />
+                            </div>
+                        </label>
+                    </td>
                 </tr>
-                <tr class="text-center">
-                    <td class="text-end"><img src="../static/img/primary.png" width="17" height="17"></td>
-                    <td class="text-start">გაკეთდა სეისმური საშიშროების შეფასება</td>
+                <tr>
+                    <td>
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option selected>Open this select PGA</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="5">Five</option>
+                            <option value="7">Seven</option>
+                            <option value="10">Ten</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label for="pgaValue" class="form-label">
+                            <div class="col me-1">
+                                <input type="number" id="pgaValue" class="form-control form-control-sm col" placeholder="Min Value" />
+                            </div>
+                        </label>
+                    </td>
                 </tr>
-                <tr class="text-center">
-                    <td class="text-end"><img src="../static/img/secondary.png" width="17" height="17"></td>
-                    <td class="text-start">გაკეთდა გეოდეზიური კვლევა</td>
+                <tr>
+                    <td class="text-center pt-3">თარიღი (დან):</td>
+                    <td>
+                        <label class="form-label" for="form12">
+                            <input type="date" class="form-control form-control-sm" id="startTime" name="start_time" required>
+                        </label>
+                    </td>
                 </tr>
-                <tr class="text-center">
-                    <td class="text-end"><img src="../static/img/info.png" width="17" height="17"></td>
-                    <td class="text-start">გაკეთდა სხვა ტიპის კვლევა</td>
+                <tr>
+                    <td class="text-center pt-3">თარიღი (მდე):</td>
+                    <td>
+                        <label class="form-label" for="form12">
+                            <input type="date" class="form-control form-control-sm" id="endTime" name="end_time" required>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-end"><a class="btn btn-sm btn-primary" href="#">გაფილტვრა</a></td>
+                    <td><a class="btn btn-sm btn-primary" href="#">გასუფთავება</a></td>
                 </tr>
             </tbody>
         </table>
-    </div>
+    </form>
 </div>

@@ -1,76 +1,34 @@
-<div class="filterDiv">
-    <div class="card mt-2">
-        <table class="table table-striped">
-            <tbody>
-                <tr>
-                    <th>პროექტის სახელი:</th>
-                    <td id="projectName"></td>
-                </tr>
-                <tr>
-                    <th>ხელშეკრულების ნომერი:</th>
-                    <td id="contractNumber"></td>
-                </tr>
-                <tr>
-                    <th>დაწყების დღე:</th>
-                    <td id="startTime"></td>
-                </tr>
-                <tr>
-                    <th>დასრულების დღე:</th>
-                    <td id="endTime"></td>
-                </tr>
-                <tr>
-                    <th>პროექტის მდებარეობა:</th>
-                    <td id="projLocation"></td>
-                </tr>
-                <tr>
-                    <th>განედი:</th>
-                    <td id="projLatitude"></td>
-                </tr>
-                <tr>
-                    <th>გრძედი:</th>
-                    <td id="projLongitude"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="card">
-        <form method="POST">
-            <table class="table table-borderless mt-2">
-                <tbody>
-                    <tr>
-                        <td class="text-center pt-3">VS30 Range:</td>
-                        <td>
-                            <label for="vs30Range" class="form-label">
-                                <div class="row me-1">
-                                    <input type="number" id="vs30RangeMin" class="form-control form-control-sm col" placeholder="Min Value" />
-                                    <input type="number" id="vs30RangeMax" class="form-control form-control-sm col" placeholder="Max Value" />
-                                </div>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center pt-3">თარიღი (დან):</td>
-                        <td>
-                            <label class="form-label" for="form12">
-                                <input type="date" class="form-control form-control-sm" id="startTime" name="start_time" required>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center pt-3">თარიღი (მდე):</td>
-                        <td>
-                            <label class="form-label" for="form12">
-                                <input type="date" class="form-control form-control-sm" id="endTime" name="end_time" required>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-end"><a class="btn btn-sm btn-primary" href="#">გაფილტვრა</a></td>
-                        <td><a class="btn btn-sm btn-primary" href="#">გასუფთავება</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-
+<div class="card mt-2 filterDiv">
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>პროექტის სახელი:</th>
+                <td id="projectName"></td>
+            </tr>
+            <tr>
+                <th>ხელშეკრულების ნომერი:</th>
+                <td id="contractNumber"></td>
+            </tr>
+            <tr>
+                <th>დაწყების დღე:</th>
+                <td id="startTime"></td>
+            </tr>
+            <tr>
+                <th>დასრულების დღე:</th>
+                <td id="endTime"></td>
+            </tr>
+            <tr>
+                <th>პროექტის მდებარეობა:</th>
+                <td id="projLocation"></td>
+            </tr>
+            <tr>
+                <th>განედი:</th>
+                <td id="projLatitude"></td>
+            </tr>
+            <tr>
+                <th>გრძედი:</th>
+                <td id="projLongitude"></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
