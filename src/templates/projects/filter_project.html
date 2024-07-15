@@ -13,29 +13,26 @@
                 <tr>
                     <td class="text-center pt-3">VS30 Range:</td>
                     <td>
-                        <label for="vs30Range" class="form-label">
-                            <div class="col me-1">
-                                <input type="number" id="vs30RangeMin" class="form-control form-control-sm col" placeholder="Min Value" />
-                                <input type="number" id="vs30RangeMax" class="form-control form-control-sm col" placeholder="Max Value" />
-                            </div>
+                        <label class="form-label" for="formVS30">
+                            <input type="text" id="formVS30" class="form-control form-control-sm" placeholder="VS30 Range"/>
                         </label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>Open this select PGA</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="5">Five</option>
-                            <option value="7">Seven</option>
-                            <option value="10">Ten</option>
+                        <select class="form-select form-select-sm text-center" aria-label=".form-select-sm example">
+                            <option selected>Select PGA</option>
+                            <option value="1">1%</option>
+                            <option value="2">2%</option>
+                            <option value="5">5%</option>
+                            <option value="7">7%</option>
+                            <option value="10">10%</option>
                         </select>
                     </td>
                     <td>
                         <label for="pgaValue" class="form-label">
                             <div class="col me-1">
-                                <input type="number" id="pgaValue" class="form-control form-control-sm col" placeholder="Min Value" />
+                                <input type="number" id="pgaValue" class="form-control form-control-sm col" placeholder="PGA number" />
                             </div>
                         </label>
                     </td>
