@@ -1,12 +1,12 @@
 <div class="card mt-2 filterDiv">
     <form method="POST">
-        <table class="table table-borderless border-bottom mt-2">
+        <table class="table table-borderless mt-2">
             <tbody>
                 <tr>
                     <td class="text-center pt-3">ხელშეკრულების ნომერი:</td>
                     <td>
                         <label class="form-label" for="form12">
-                            <input type="text" id="form12" class="form-control form-control-sm" placeholder=""/>
+                            <input type="text" id="form12" class="form-control form-control-sm" placeholder="Number"/>
                         </label>
                     </td>
                 </tr>
@@ -14,7 +14,8 @@
                     <td class="text-center pt-3">VS30 Range:</td>
                     <td>
                         <label class="form-label" for="formVS30">
-                            <input type="text" id="formVS30" class="form-control form-control-sm" placeholder="VS30 Range"/>
+                            <input type="number" id="vs30RangeMin" class="form-control form-control-sm col" placeholder="Min Value" />
+                            <input type="number" id="vs30RangeMax" class="form-control form-control-sm col" placeholder="Max Value" />
                         </label>
                     </td>
                 </tr>
@@ -27,12 +28,14 @@
                             <option value="5">5%</option>
                             <option value="7">7%</option>
                             <option value="10">10%</option>
+                            <option value="20">20%</option>
                         </select>
                     </td>
                     <td>
                         <label for="pgaValue" class="form-label">
                             <div class="col me-1">
-                                <input type="number" id="pgaValue" class="form-control form-control-sm col" placeholder="PGA number" />
+                                <input type="number" id="minPgaValue" class="form-control form-control-sm col" placeholder="Min PGA number" />
+                                <input type="number" id="maxPgaValue" class="form-control form-control-sm col" placeholder="Max PGA number" />
                             </div>
                         </label>
                     </td>
