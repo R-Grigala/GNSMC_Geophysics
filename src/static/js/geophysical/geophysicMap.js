@@ -33,7 +33,11 @@ function setMarkers(map) {
         var marker = new google.maps.Marker({
             position: {lat: parseFloat(project.proj_latitude), lng: parseFloat(project.proj_longitude)},
             map: map,
-            title: project.projects_name
+            title: project.projects_name,
+            icon: {
+                url: 'https://cdn-icons-png.flaticon.com/128/13379/13379300.png',
+                scaledSize: new google.maps.Size(30, 30)
+            }
         });
         attachInfoWindow(marker, project);
     }

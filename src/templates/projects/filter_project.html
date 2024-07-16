@@ -3,6 +3,14 @@
         <table class="table table-borderless mt-2">
             <tbody>
                 <tr>
+                    <td class="text-center pt-3">ადგილმდებარეობა:</td>
+                    <td>
+                        <label class="form-label" for="form1">
+                            <input type="text" id="form1" class="form-control form-control-sm" placeholder="Location"/>
+                        </label>
+                    </td>
+                </tr>                
+                <tr>
                     <td class="text-center pt-3">ხელშეკრულების ნომერი:</td>
                     <td>
                         <label class="form-label" for="form12">
@@ -14,29 +22,29 @@
                     <td class="text-center pt-3">VS30 Range:</td>
                     <td>
                         <label class="form-label" for="formVS30">
-                            <input type="number" id="vs30RangeMin" class="form-control form-control-sm col" placeholder="Min Value" />
-                            <input type="number" id="vs30RangeMax" class="form-control form-control-sm col" placeholder="Max Value" />
+                            <input type="text" id="vs30RangeMin" class="form-control form-control-sm col" placeholder="Min Value" />
+                            <input type="text" id="vs30RangeMax" class="form-control form-control-sm col" placeholder="Max Value" />
                         </label>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <select class="form-select form-select-sm text-center" aria-label=".form-select-sm example">
-                            <option selected>Select PGA</option>
-                            <option value="1">1%</option>
-                            <option value="2">2%</option>
-                            <option value="5">5%</option>
-                            <option value="7">7%</option>
-                            <option value="10">10%</option>
-                            <option value="20">20%</option>
-                        </select>
-                    </td>
-                    <td>
-                        <label for="pgaValue" class="form-label">
-                            <div class="col me-1">
-                                <input type="number" id="minPgaValue" class="form-control form-control-sm col" placeholder="Min PGA number" />
-                                <input type="number" id="maxPgaValue" class="form-control form-control-sm col" placeholder="Max PGA number" />
-                            </div>
+                <tr class="text-center">
+                    <td>Select PGA:</td>
+                    <td class="text-start fs-6">
+                        <label class="form-check-label me-1" for="CheckSuccess">
+                            <input class="form-check-input" type="checkbox" value="" id="CheckSuccess" />
+                            2%
+                        </label>
+                        <label class="form-check-label me-1" for="CheckPrimary">
+                            <input class="form-check-input" type="checkbox" value="" id="CheckPrimary" />
+                            5%
+                        </label>
+                        <label class="form-check-label me-1" for="CheckInfo">
+                            <input class="form-check-input" type="checkbox" value="" id="CheckInfo" />
+                            10%
+                        </label>
+                        <label class="form-check-label me-1" for="CheckDanger">
+                            <input class="form-check-input" type="checkbox" value="" id="CheckDanger" />
+                            20%
                         </label>
                     </td>
                 </tr>
