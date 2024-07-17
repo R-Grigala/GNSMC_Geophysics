@@ -11,7 +11,6 @@ class Geophysical(db.Model, BaseModel):
     seismic_profiles = db.Column(db.Boolean, nullable=False)
     profiles_number = db.Column(db.Integer, nullable=False)
     vs30 = db.Column(db.Integer, nullable=False)
-    vs30_section = db.Column(db.String, nullable=False)
     ground_category_geo = db.Column(db.String, nullable=False)
     ground_category_euro = db.Column(db.String, nullable=False)
     geophysical_logging = db.Column(db.Boolean, nullable=False)

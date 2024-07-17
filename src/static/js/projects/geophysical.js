@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${geophysical.seismic_profiles ? "Yes" : "No"}</td>
                         <td>${geophysical.profiles_number}</td>
                         <td>${geophysical.vs30}</td>
-                        <td>${geophysical.vs30_section}</td>
                         <td>${geophysical.ground_category_geo}</td>
                         <td>${geophysical.ground_category_euro}</td>
                         <td>${geophysical.geophysical_logging ? "Yes" : "No"}</td>
