@@ -2,7 +2,7 @@ from flask import Flask
 
 from src.config import Config
 from src.api import api
-from src.extensions import db, api 
+from src.extensions import db, api, migrate
 from src.commands import init_db, populate_db
 from src.views import projects_blueprint, geophysical_blueprint
 
@@ -26,6 +26,9 @@ def register_extensions(app):
 
     # Flask-SQLAlchemy
     db.init_app(app)
+
+    # Flask-Migrate
+    migrate.init_app(app, db)
 
     # Flask-restX
     api.init_app(app)
