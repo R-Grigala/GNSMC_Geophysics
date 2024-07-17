@@ -28,10 +28,7 @@ def populate_db():
         proj_latitude=42.1234,
         proj_longitude=43.649,
         geological_study=True,
-        geophysical_study=False,
-        hazard_study=True,
-        geodetic_study=True,
-        other_study=False
+        geophysical_study=True
     )
     new_project.create()
 
@@ -44,12 +41,7 @@ def populate_db():
         contractor="Main Contractor",
         proj_location="Example Location",
         proj_latitude=42.1234,
-        proj_longitude=42.649,
-        geological_study=True,
-        geophysical_study=True,
-        hazard_study=False,
-        geodetic_study=False,
-        other_study=False
+        proj_longitude=42.649
     )
     new_project.create()
 
@@ -57,7 +49,7 @@ def populate_db():
     new_geological = Geological(
         project_id = 1,
         geological_survey = True,
-        objects_number = 1,
+        objects_number = 2,
         boreholes = False,
         boreholes_number = 0,
         pits = False,
@@ -89,17 +81,16 @@ def populate_db():
     click.echo("Creating First Geophysical")
     new_geophysical = Geophysical(
         project_id=1,
-        seismic_profiles=False,
-        profiles_number=0,
-        vs30=0,
-        vs30_section="example_section.xlsx",
-        ground_category_geo="Category GEO",
-        ground_category_euro="Euro Category",
-        geophysical_logging=False,
-        logging_number=0,
-        electrical_profiles=False,
-        point_number=0,
-        georadar=False,
+        seismic_profiles=True,
+        profiles_number=2,
+        vs30=600,
+        ground_category_geo="II",
+        ground_category_euro="B",
+        geophysical_logging=True,
+        logging_number=1,
+        electrical_profiles=True,
+        point_number=1,
+        georadar=True,
         archival_material="main_material.xlsx"
     )
 
@@ -115,8 +106,25 @@ def populate_db():
         archival_excel="test.xlsx",
         vs30=650,
         vs30_section="vs30.xlsx",
-        ground_category_geo="Category GEO",
-        ground_category_euro="Category Euro",
+        ground_category_geo="II",
+        ground_category_euro="B",
+        archival_pdf="testarchve.pdf"
+    )
+
+    new_geophysical_seismic.create()
+
+    click.echo("Creating Second GeophysicSeismic")
+    new_geophysical_seismic = GeophysicSeismic(
+        geophysical_id=1,
+        longitude=42.1234,
+        latitude=42.549,
+        profile_length=0,
+        archival_img="image.png",
+        archival_excel="test.xlsx",
+        vs30=550,
+        vs30_section="vs30.xlsx",
+        ground_category_geo="II",
+        ground_category_euro="B",
         archival_pdf="testarchve.pdf"
     )
 

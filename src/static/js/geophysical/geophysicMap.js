@@ -54,6 +54,8 @@ function attachInfoWindow(marker, project) {
                 დამკვეთი: ${project.contractor}<br>
                 განედი: ${project.proj_latitude}<br>
                 გრძედი: ${project.proj_longitude}<br>
+                VS30: 600<br>
+                PGA 10%: 0.25<br>
                 <a style="display:block; margin-top:20px" href="/view_project/${project.id}">დეტალურად</a>
             </div>`
     });
