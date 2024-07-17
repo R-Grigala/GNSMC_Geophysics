@@ -122,6 +122,52 @@
         </table>
     </div>
 
+    <!-- for Hazard -->
+    <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
+        <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>განედი (x)</th>
+                    <th>გრძედი (y)</th>
+                    <th>სქემის აღწერა</th>
+                    <th>PGA (g) 1%</th>
+                    <th>PGA (g) 2%</th>
+                    <th>PGA (g) 5%</th>
+                    <th>PGA (g) 7%</th>
+                    <th>PGA (g) 10%</th>
+                    <th>PGA (g) 20%</th>
+                    <th>საარქივო ფაილი</th>
+                    <th>შენიშვნა</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>41.1234</td>
+                    <td>42.549</td>
+                    <td>scheme description</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td>0.3</td>
+                    <td>--</td>
+                    <td>archival_material.xlsx</td>
+                    <td>Note</td>
+                    <td>
+                        <a class="btn btn-info" href="/edit_project/${project.id}">Edit</a>
+                    </td>
+                    <td>
+                        <form action="#" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <!-- for Project Data -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
