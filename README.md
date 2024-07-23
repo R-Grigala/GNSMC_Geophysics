@@ -15,6 +15,6 @@ pip3 install -r requirements.txt
 for server start
 python3 app.py
 
-# for sqlite
+#for sqlite
 flask init_db
 flask populate_db
