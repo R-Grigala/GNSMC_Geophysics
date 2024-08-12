@@ -7,7 +7,7 @@ from src.models import Geophysical, GeophysicSeismic, GeophysicLogging
 
 @geophysical_ns.route('/geophysical/<int:proj_id>')
 @geophysical_ns.doc(responses={200: 'OK', 404: 'Geophysical not found'})
-class GeophysicalAPI(Resource):
+class GeophysicalListAPI(Resource):
 
     @geophysical_ns.marshal_with(geophysical_model)
     def get(self, proj_id):
