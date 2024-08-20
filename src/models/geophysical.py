@@ -23,6 +23,7 @@ class Geophysical(db.Model, BaseModel):
     project = db.relationship('Projects', back_populates='geophysical')
     geophysic_seismic = db.relationship('GeophysicSeismic', back_populates='geophysical')
     geophysic_logging = db.relationship('GeophysicLogging', back_populates='geophysical')
+    geophysic_electrical = db.relationship('GeophysicElectrical', back_populates='geophysical')
 
     def __repr__(self):
         return f'<Geophysical {self.id}>'
