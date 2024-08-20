@@ -84,9 +84,14 @@
             <td>
                 <a class="btn btn-sm btn-warning" style="font-size: x-small;" href="#">გეოლოგიური კვლევის დამატება</a>
             </td>
+
+            <!-- Button to trigger CreateGeophysicalModal -->
             <td>
-                <a class="btn btn-sm btn-success" style="font-size: x-small;" href="#">გეოფიზიკური კვლევის დამატება</a>
+                <a type="button" class="btn btn-sm btn-success" style="font-size: x-small;" data-bs-toggle="modal" data-bs-target="#CreateGeophysicalModal">
+                    გეოფიზიკური კვლევის დამატება
+                </a>
             </td>
+
             <td>
                 <a class="btn btn-sm btn-primary" style="font-size: x-small;" href="#">სეისმური საშიშროების შეფასების დამატება</a>
             </td>
@@ -98,6 +103,9 @@
             </td>
         </table>
     </div>
+
+    <!-- The CreateGeophysicalModal -->
+    {% include "create_geophysical.html" %}
 
     <!-- for Geological -->
     <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
