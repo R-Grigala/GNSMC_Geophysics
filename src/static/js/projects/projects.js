@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </td>
                         <td>
                             <form action="#" method="POST" style="display:inline;">
-                                <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this project?');">Delete</button>
                             </form>
                         </td>
                     </tr>
