@@ -6,10 +6,10 @@ class Projects(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
     projects_name = db.Column(db.String, nullable=False)
-    contract_number = db.Column(db.Integer, nullable=False)
+    contract_number = db.Column(db.String, nullable=True)
     start_time = db.Column(db.Date, nullable=False)
     end_time = db.Column(db.Date, nullable=False)
-    contractor = db.Column(db.String, nullable=False)
+    contractor = db.Column(db.String, nullable=True)
     proj_location = db.Column(db.String, nullable=False)
     proj_latitude = db.Column(db.Float, nullable=False)
     proj_longitude = db.Column(db.Float, nullable=False)

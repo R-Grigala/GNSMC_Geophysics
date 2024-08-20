@@ -34,12 +34,7 @@ class ProjectsListAPI(Resource):
             contractor=args['contractor'],
             proj_location=args['proj_location'],
             proj_latitude=args['proj_latitude'],
-            proj_longitude=args['proj_longitude'],
-            geological_study=args['geological_study'],
-            geophysical_study=args['geophysical_study'],
-            hazard_study=args['hazard_study'],
-            geodetic_study=args['geodetic_study'],
-            other_study=args['other_study']
+            proj_longitude=args['proj_longitude']
         )
         new_project.create()
 
@@ -76,11 +71,6 @@ class ProjectAPI(Resource):
             project.proj_location = args["proj_location"]
             project.proj_latitude = args["proj_latitude"]
             project.proj_longitude = args["proj_longitude"]
-            project.geological_study = args["geological_study"]
-            project.geophysical_study = args["geophysical_study"]
-            project.hazard_study = args["hazard_study"]
-            project.geodetic_study = args["geodetic_study"]
-            project.other_study = args["other_study"]
             project.save()  
             return {"message": "Successfully updated Project"}, 200
         else:
