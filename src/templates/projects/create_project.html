@@ -1,5 +1,5 @@
 <!-- The Modal -->
-<div class="modal" id="CreateProjectModal">
+<div class="modal" id="createProjectModal">
     <div class="modal-dialog">
         <div class="modal-content">
     
@@ -11,7 +11,7 @@
     
             <!-- Modal body -->
             <div class="modal-body">
-                <form class="row mt-2" id="addProjectForm" action="/api/projects" method="POST">
+                <form class="row mt-2" id="addProjectForm">
                     <div class="mb-2">
                         <label for="projectName"><span class="text-danger me-1">*</span>პროექტის სახელი:</label>
                         <input type="text" class="form-control mt-2" id="projectName" name="projects_name" required>
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="d-flex justify-content-center align-items-center m-2">
-                        <button type="submit" class="btn btn-primary me-2">პროექტის დამატება</button>
+                        <button type="submit" class="btn btn-primary me-2" onclick="createProjectForm()">პროექტის დამატება</button>
                     </div>
                 </form>
             </div>

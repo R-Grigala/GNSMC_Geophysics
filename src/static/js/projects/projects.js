@@ -51,3 +51,39 @@ document.addEventListener("DOMContentLoaded", function() {
             // Handle error scenario, e.g., show an error message on the UI
         });
 });
+
+// Send POST request for create new project
+function createProjectForm() {
+    // Prevent form submission
+    const form = document.getElementById('addProjectForm');
+    
+    // Create form data object
+    const formData = new FormData(form);
+
+    // Convert form data to JSON
+    const jsonData = {};
+    formData.forEach((value, key) => {
+        jsonData[key] = value;
+    });
+
+    // Send POST request using Fetch API
+    fetch('/api/projects', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message); // Show success message
+            // Optionally, you can close the modal or reset the form
+            form.reset();
+            $('#createProjectModal').modal('hide');
+        } else {
+            alert('Error occurred while adding the project.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+};
