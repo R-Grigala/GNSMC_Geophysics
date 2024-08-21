@@ -19,9 +19,9 @@ class Projects(db.Model, BaseModel):
     geodetic_study = db.Column(db.Boolean, nullable=False, default=False)
     other_study = db.Column(db.Boolean, nullable=False, default=False)
 
-    geological = db.relationship('Geological', back_populates='project')
-    geophysical = db.relationship('Geophysical', back_populates='project')
-    images = db.relationship('Images', back_populates='project', lazy='dynamic')
+    geological = db.relationship('Geological', back_populates='project', cascade='all, delete-orphan')
+    geophysical = db.relationship('Geophysical', back_populates='project', cascade='all, delete-orphan')
+    images = db.relationship('Images', back_populates='project', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Projects {self.id} {self.projects_name}>'

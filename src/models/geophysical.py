@@ -21,9 +21,9 @@ class Geophysical(db.Model, BaseModel):
     archival_material = db.Column(db.String, nullable=True)
 
     project = db.relationship('Projects', back_populates='geophysical')
-    geophysic_seismic = db.relationship('GeophysicSeismic', back_populates='geophysical')
-    geophysic_logging = db.relationship('GeophysicLogging', back_populates='geophysical')
-    geophysic_electrical = db.relationship('GeophysicElectrical', back_populates='geophysical')
+    geophysic_seismic = db.relationship('GeophysicSeismic', back_populates='geophysical', cascade='all, delete-orphan')
+    geophysic_logging = db.relationship('GeophysicLogging', back_populates='geophysical', cascade='all, delete-orphan')
+    geophysic_electrical = db.relationship('GeophysicElectrical', back_populates='geophysical', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Geophysical {self.id}>'

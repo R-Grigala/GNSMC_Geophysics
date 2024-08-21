@@ -1,5 +1,6 @@
 from flask_restx import reqparse, fields
 from src.extensions import api
+import werkzeug
 
 # from src.api.nsmodels.geological import geological_model
 # from src.api.nsmodels.geophysical import geophysical_model
@@ -50,3 +51,4 @@ projects_parser.add_argument("contractor", required=False, type=empty_or_none, h
 projects_parser.add_argument("proj_location", required=True, type=str, help="Project location example: Example Location")
 projects_parser.add_argument("proj_latitude", required=True, type=float, help="Latitude example: 42.0163")
 projects_parser.add_argument("proj_longitude", required=True, type=float, help="Longitude example: 43.1412")
+projects_parser.add_argument("images", required=True, type=werkzeug.datastructures.FileStorage, location="files", action="append")

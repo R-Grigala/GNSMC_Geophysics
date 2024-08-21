@@ -3,7 +3,7 @@ from os import path
 
 from src.config import Config
 
-TEMPLATES_FOLDER = path.join(Config.BASE_DIRECTORY, "templates", "geological")
+TEMPLATES_FOLDER = path.join(Config.BASE_DIR, "templates", "geological")
 geological_blueprint = Blueprint("geological", __name__, template_folder=TEMPLATES_FOLDER)
 
 
