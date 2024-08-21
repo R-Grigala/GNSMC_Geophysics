@@ -11,14 +11,14 @@
     
             <!-- Modal body -->
             <div class="modal-body">
-                <form class="row mt-2" id="addProjectForm">
+                <form class="row mt-2" id="addProjectForm" enctype="multipart/form-data">
                     <div class="mb-2">
                         <label for="projectName"><span class="text-danger me-1">*</span>პროექტის სახელი:</label>
                         <input type="text" class="form-control mt-2" id="projectName" name="projects_name" required>
                     </div>
                     <div class="mb-2">
                         <label for="contractNumber">ხელშეკრულების ნომერი:</label>
-                        <input type="number" class="form-control mt-2" id="contractNumber" name="contract_number">
+                        <input type="text" class="form-control mt-2" id="contractNumber" name="contract_number">
                     </div>
                     <div class="col">
                         <label for="startTime"><span class="text-danger me-1">*</span>დაწყების დღე:</label>

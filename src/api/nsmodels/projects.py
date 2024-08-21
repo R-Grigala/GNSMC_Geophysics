@@ -1,4 +1,4 @@
-from flask_restx import reqparse, fields, inputs
+from flask_restx import reqparse, fields
 from src.extensions import api
 
 # from src.api.nsmodels.geological import geological_model
@@ -9,7 +9,7 @@ projects_ns = api.namespace('Projects', description='API endpoint for Projects r
 projects_model = projects_ns.model('Projects', {
     'id': fields.Integer(required=True, description='Project id', example=1),
     'projects_name': fields.String(required=True, description='Project name', example='New Project'),
-    'contract_number': fields.Integer(required=False, description='Contract number', example=12345),
+    'contract_number': fields.String(required=False, description='Contract number', example='1A2345'),
     'start_time': fields.Date(required=True, description='Start time (YYYY-MM-DD)', example='2024-01-23'),
     'end_time': fields.Date(required=True, description='End time (YYYY-MM-DD)', example='2024-03-03'),
     'contractor': fields.String(required=False, description='Contractor', example='New Contractor'),

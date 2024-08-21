@@ -1,148 +1,59 @@
-{% extends "base.html" %}
+<!-- The Modal -->
+<div class="modal fade" id="editProjectModal" tabindex="-1" role="dialog" aria-labelledby="editProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Placeholder for Bootstrap alerts -->
+            <div id="alertPlaceholder" class="container mt-1"></div>
 
-{% block title %}
-    IesData - Edit Project
-{% endblock %}
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="editProjectModalLabel">პროექტის რედაქტირება</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+    
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="row mt-2" id="editProjectForm">
+                    <!-- Form Fields -->
+                    <input type="hidden" id="editProjectId" name="project_id">
+                    <div class="mb-2">
+                        <label for="projectName"><span class="text-danger me-1">*</span>პროექტის სახელი:</label>
+                        <input type="text" class="form-control mt-2" id="editProjectName" name="projects_name" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="contractNumber">ხელშეკრულების ნომერი:</label>
+                        <input type="text" class="form-control mt-2" id="editContractNumber" name="contract_number">
+                    </div>
+                    <div class="col">
+                        <label for="startTime"><span class="text-danger me-1">*</span>დაწყების დღე:</label>
+                        <input type="date" class="form-control mt-2" id="editStartTime" name="start_time" required>
+                    </div>
+                    <div class="col mb-2">
+                        <label for="endTime"><span class="text-danger me-1">*</span>დასრულების დღე:</label>
+                        <input type="date" class="form-control mt-2" id="editEndTime" name="end_time" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="contractor">დამკვეთი:</label>
+                        <input type="text" class="form-control mt-2" id="editContractor" name="contractor">
+                    </div>
+                    <div class="col">
+                        <label for="projLatitude"><span class="text-danger me-1">*</span>განედი:</label>
+                        <input type="number" step="any" class="form-control mt-2" id="editProjLatitude" name="proj_latitude" required>
+                    </div>
+                    <div class="col mb-3">
+                        <label for="projLongitude"><span class="text-danger me-1">*</span>გრძედი:</label>
+                        <input type="number" step="any" class="form-control mt-2" id="editProjLongitude" name="proj_longitude" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="projLocation"><span class="text-danger me-1">*</span>პროექტის მდებარეობა:</label>
+                        <input type="text" class="form-control mt-2" id="editProjLocation" name="proj_location" required>
+                    </div>
 
-{% block body %}
-    <div class="d-flex justify-content-center align-items-center pt-5">
-        <h2>პროექტის რედაქტირება</h2>
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <button type="submit" class="btn btn-primary me-2" onclick="editProjectForm()">რედაქტირება</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div id="projectId" data-project-id="{{ project_id }}"></div>
-
-    <form class="row" id="projectForm">
-        <input type="hidden" id="projectId" name="id">
-        <div class="form-group">
-            <label for="projectName">პროექტის სახელი:</label>
-            <input type="text" class="form-control mt-2" id="projectName" name="projects_name" required>
-        </div>
-        <div class="form-group">
-            <label for="contractNumber">ხელშეკრულების ნომერი:</label>
-            <input type="text" class="form-control mt-2" id="contractNumber" name="contract_number" required>
-        </div>
-        <div class="col">
-            <div class="form-group">
-                <label for="startTime">დაწყების დღე:</label>
-                <input type="date" class="form-control mt-2" id="startTime" name="start_time" required>
-            </div>
-        </div>
-        <div class="col">
-            <div class="form-group">
-                <label for="endTime">დასრულების დღე:</label>
-                <input type="date" class="form-control mt-2" id="endTime" name="end_time" required>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="contractor">დამკვეთი:</label>
-            <input type="text" class="form-control mt-2" id="contractor" name="contractor" required>
-        </div>
-        <div class="form-group">
-            <label for="projLocation">პროექტის მდებარეობა:</label>
-            <input type="text" class="form-control mt-2" id="projLocation" name="proj_location" required>
-        </div>
-        <div class="col form-group">
-            <label for="projLatitude">განედი:</label>
-            <input type="number" step="any" class="form-control mt-2" id="projLatitude" name="proj_latitude" required>
-        </div>
-        <div class="col form-group mb-3">
-            <label for="projLongitude">გრძედი:</label>
-            <input type="number" step="any" class="form-control mt-2" id="projLongitude" name="proj_longitude" required>
-        </div>
-        <div>
-            <p>მონიშნეთ თუ არი კვლევა პროექტზე:</p>
-        </div>
-        <div class="col form-group">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="geologicalStudy" name="geological_study">
-                <label class="form-check-label" for="geologicalStudy">გეოლოგიური კვლევა</label>
-            </div>
-        </div>
-        <div class="col form-group">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="geophysicalStudy" name="geophysical_study">
-                <label class="form-check-label" for="geophysicalStudy">გეოფიზიკური კვლევა</label>
-            </div>
-        </div>
-        <div class="col form-group">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="hazardStudy" name="hazard_study">
-                <label class="form-check-label" for="hazardStudy">საფრთხის კვლევა</label>
-            </div>
-        </div>
-        <div class="col form-group">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="geodeticStudy" name="geodetic_study">
-                <label class="form-check-label" for="geodeticStudy">გეოდეზიური კვლევა</label>
-            </div>
-        </div>
-        <div class="col form-group">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="otherStudy" name="other_study">
-                <label class="form-check-label" for="otherStudy">სხვა კვლევა</label>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center align-items-center mt-5">
-            <button type="button" class="btn btn-primary me-2" onclick="updateProject()">შენახვა</button>
-            <a class="btn btn-info" href="/projects">ყველა პროექტი</a>
-        </div>
-    </form>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const projectIdElement = document.getElementById("projectId");
-            const projectId = projectIdElement.getAttribute("data-project-id"); // Get project_id from data attribute
-            const form = document.getElementById("editProjectForm");
-
-            fetch(`/api/project/${projectId}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('projectId').value = data.id;
-                    document.getElementById('projectName').value = data.projects_name;
-                    document.getElementById('contractNumber').value = data.contract_number;
-                    document.getElementById('startTime').value = data.start_time;
-                    document.getElementById('endTime').value = data.end_time;
-                    document.getElementById('contractor').value = data.contractor;
-                    document.getElementById('projLocation').value = data.proj_location;
-                    document.getElementById('projLatitude').value = data.proj_latitude;
-                    document.getElementById('projLongitude').value = data.proj_longitude;
-                    
-                    document.getElementById('geologicalStudy').checked = data.geological_study;
-                    document.getElementById('geophysicalStudy').checked = data.geophysical_study;
-                    document.getElementById('hazardStudy').checked = data.hazard_study;
-                    document.getElementById('geodeticStudy').checked = data.geodetic_study;
-                    document.getElementById('otherStudy').checked = data.other_study;
-                })
-                .catch(error => console.error('Error:', error));
-
-            });
-            function updateProject() {
-                var projectId = document.getElementById("projectId").value;
-                var method = 'PUT';
-                var url = '/api/project/' + projectId;
-
-                var form = document.getElementById('projectForm');
-                var formData = new FormData(form);
-
-                // Convert checkbox values to boolean
-                formData.set('geological_study', document.getElementById('geologicalStudy').checked);
-                formData.set('geophysical_study', document.getElementById('geophysicalStudy').checked);
-                formData.set('hazard_study', document.getElementById('hazardStudy').checked);
-                formData.set('geodetic_study', document.getElementById('geodeticStudy').checked);
-                formData.set('other_study', document.getElementById('otherStudy').checked);
-                
-                console.log(formData)
-
-                fetch(url, {
-                    method: method,
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    window.location.href = '/projects';
-                })
-                .catch(error => console.error('Error:', error));
-            }
-    </script>
-{% endblock %}
+</div>

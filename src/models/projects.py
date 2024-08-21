@@ -21,6 +21,7 @@ class Projects(db.Model, BaseModel):
 
     geological = db.relationship('Geological', back_populates='project')
     geophysical = db.relationship('Geophysical', back_populates='project')
+    images = db.relationship('Images', back_populates='project', lazy='dynamic')
 
     def __repr__(self):
         return f'<Projects {self.id} {self.projects_name}>'
