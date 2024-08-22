@@ -50,7 +50,15 @@ function createProjectForm(event) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Parse JSON if the response is OK
+        } else {
+            return response.json().then(data => {
+                alert(data.message);
+            });
+        }
+    })
     .then(data => {
         if (data.message) {
             alert(data.message); // Show success message
@@ -115,7 +123,7 @@ function editProjectForm() {
 // Function to confirm and delete a project
 function confirmDelete(button) {
     const projectId = button.getAttribute('data-project-id');
-    const confirmed = confirm('Are you sure you want to delete this project?');
+    const confirmed = confirm('დარწმუნებული ხართ რომ გსურთ ამ პროექტის წაშლა?');
 
     if (confirmed) {
         fetch(`/api/project/${projectId}`, {
@@ -135,29 +143,4 @@ function confirmDelete(button) {
             alert('An error occurred while deleting the project');
         });
     }
-}
-
-
-function showAlert(message, type = 'success') {
-    // Get the alert placeholder element
-    const alertPlaceholder = document.getElementById('alertPlaceholder');
-    
-    // Create a new alert element
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-    alertDiv.role = 'alert';
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-    
-    // Append the alert element to the placeholder
-    alertPlaceholder.appendChild(alertDiv);
-    
-    // Automatically remove the alert after a few seconds
-    setTimeout(() => {
-        alertDiv.classList.remove('show');
-        alertDiv.classList.add('fade');
-        setTimeout(() => alertDiv.remove(), 150);
-    }, 5000); // 5 seconds
 }

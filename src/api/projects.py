@@ -6,7 +6,7 @@ import os
 import uuid
 import mimetypes
 
-from src.api.nsmodels import projects_ns, projects_model, projects_parser
+from src.api.nsmodels import projects_ns, projects_model, projects_parser, projects_img_model, project_img_parser
 from src.models import Projects, Images
 from src.config import Config
 
@@ -83,6 +83,9 @@ class ProjectAPI(Resource):
         if not project:
             raise NotFound("Project not found")
         
+        images = Images.query.filter_by(project_id=id).all()
+        project.images = images
+
         return project, 200
     
     @projects_ns.expect(projects_parser)
@@ -112,8 +115,115 @@ class ProjectAPI(Resource):
     def delete(self, id):
         project = Projects.query.get(id)
         if project:
+            # Delete associated images if they exist
+            images = Images.query.filter_by(project_id=id).all()
+            if images:
+                images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(id))
+                try:
+                    # Delete images from filesystem
+                    for image in images:
+                        image_path = os.path.join(images_directory, image.path)
+                        if os.path.isfile(image_path):
+                            os.remove(image_path)
+                        
+                        # Delete image record from the database
+                        image.delete()
+                    
+                    # Optionally delete the directory if it's empty
+                    if os.path.isdir(images_directory) and not os.listdir(images_directory):
+                        os.rmdir(images_directory)
+                except OSError as e:
+                    return {"message": f"Failed to delete images: {str(e)}"}, 500
+            
+            # Delete the project record from the database
             project.delete()
-            return {"message": "Successfully deleted Project"}, 200
+            return {"message": "Successfully deleted Project and associated images"}, 200
         else:
             raise NotFound("Project not found")
+        
+@projects_ns.route('/project/<int:proj_id>/images')
+@projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 404: 'Not Found'})
+class ProjectImageListAPI(Resource):
+
+    @projects_ns.marshal_with(projects_img_model)
+    def get(self, proj_id):
+
+        # Fetch images associated with the project
+        images = Images.query.filter_by(project_id=proj_id).all()
+        if not images:
+            return {"message": "No images found for this project"}, 404
+        
+        return images, 200
+
+
+    @projects_ns.doc(parser=project_img_parser)
+    def post(self, proj_id):
+        # Ensure the project exists
+        project = Projects.query.get(proj_id)
+        if not project:
+            return {"message": "Project not found"}, 404
+
+        # Parse arguments
+        args = project_img_parser.parse_args()
+        images = args['images']
+        if not images:
+            return {"message": "No images provided"}, 400
+        
+        # Validate image type
+        image_types = ["image/jpeg", "image/png", "image/jpg"]
+
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(proj_id))
+        os.makedirs(images_directory, exist_ok=True)
+
+        try:
+            for image in images:
+                if image.mimetype not in image_types:
+                    return {"message": "Invalid image type."}, 400
+
+                # Save each image
+                extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
+                file_name = str(uuid.uuid4()) + extension
+                image_path = os.path.join(images_directory, file_name)
+                image.save(image_path)
+
+                # Save image record in the database
+                new_image = Images(path=file_name, project_id=proj_id)
+                new_image.create()
+
+            return {"message": "Successfully added image to project"}, 200
+        
+        except OSError as e:
+            return {"message": f"Failed to save image: {str(e)}"}, 500
+
+@projects_ns.route('/project/<int:proj_id>/images/<int:image_id>')
+@projects_ns.doc(responses={200: 'OK', 404: 'Not Found'})
+class ProjectImageAPI(Resource):
+
+    def delete(self, proj_id, image_id):
+        # Find the image record
+        image = Images.query.filter_by(id=image_id, project_id=proj_id).first()
+        if not image:
+            raise NotFound("Image not found")
+
+        # Path to the image file
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(proj_id))
+        image_path = os.path.join(images_directory, image.path)
+        
+        try:
+            # Delete the image file from the filesystem
+            if os.path.isfile(image_path):
+                os.remove(image_path)
+            
+            # Delete the image record from the database
+            image.delete()
+
+            # Optionally, delete the directory if it's empty
+            if os.path.isdir(images_directory) and not os.listdir(images_directory):
+                os.rmdir(images_directory)
+                
+            return {"message": "Successfully deleted image"}, 200
+        
+        except OSError as e:
+            return {"message": f"Failed to delete image: {str(e)}"}, 500
+
 

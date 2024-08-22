@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, send_from_directory
 from os import path
 
 from src.config import Config
@@ -22,3 +22,8 @@ def create_project():
 @projects_blueprint.route('/edit_project/<int:id>', methods=['GET', 'POST'])
 def edit_project(id):
     return render_template("edit_project.html", project_id=id)
+
+@projects_blueprint.route('/images/<int:proj_id>/<filename>')
+def serve_image(proj_id, filename):
+    directory = f'images/{proj_id}'
+    return send_from_directory(directory, filename)

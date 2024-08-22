@@ -7,6 +7,11 @@ import werkzeug
 
 projects_ns = api.namespace('Projects', description='API endpoint for Projects related operations', path='/api')
 
+projects_img_model = projects_ns.model('Image', {
+    'id': fields.Integer(description='Image ID'),
+    'path': fields.String(description='Image path')
+})
+
 projects_model = projects_ns.model('Projects', {
     'id': fields.Integer(required=True, description='Project id', example=1),
     'projects_name': fields.String(required=True, description='Project name', example='New Project'),
@@ -24,6 +29,7 @@ projects_model = projects_ns.model('Projects', {
     'other_study': fields.Boolean(required=False, description='Other study', example=False),
     # 'geological': fields.List(fields.Nested(geological_model))
     # 'geophysical': fields.List(fields.Nested(geophysical_model))
+    # 'images': fields.List(fields.Nested(projects_img_model), description='List of images')
 })
 
 def empty_or_none(value, name):
@@ -52,3 +58,7 @@ projects_parser.add_argument("proj_location", required=True, type=str, help="Pro
 projects_parser.add_argument("proj_latitude", required=True, type=float, help="Latitude example: 42.0163")
 projects_parser.add_argument("proj_longitude", required=True, type=float, help="Longitude example: 43.1412")
 projects_parser.add_argument("images", required=False, type=werkzeug.datastructures.FileStorage, location="files", action="append", help="Upload images (JPEG/PNG/JPG)")
+
+
+project_img_parser = reqparse.RequestParser()
+project_img_parser.add_argument("images", required=True, type=werkzeug.datastructures.FileStorage, location="files", action="append", help="Upload images (JPEG/PNG/JPG)")

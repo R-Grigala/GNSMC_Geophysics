@@ -7,6 +7,7 @@
 {% block body %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/projects/geological.js') }}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/projects/geophysical.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/projects/project_img.js') }}" defer></script>
     <div id="projectId" data-project-id="{{ project_id }}"></div>
     <div class="projectImageDiv">
         <div class="card mt-2 projectDiv">
@@ -46,36 +47,30 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="d-flex justify-content-start">
+                <div class="m-3">
+                    <label for="images" class="form-label">პროექტის სურათები:</label>
+                    <input type="file" class="form-control form-control-sm" id="images" name="images" accept="image/jpeg, image/png, image/jpg" multiple>
+                    <a class="btn btn-sm btn-primary mt-2" id="uploadButton" onclick="uploadImages()">ატვირთვა</a>
+                </div>
+            </div>
         </div>
 
-        <!-- Carusel from Bootstrap5 -->
-
+        <!-- Carousel from Bootstrap5 -->
         <div id="carouselExampleIndicators" class="carousel slide card mt-2" style="width: 100%;" data-bs-ride="true">
-            <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner rounded">
-              <div class="carousel-item active imageProjectDiv">
-                <img id="projectImage" src="../../static/img/alpha_well.png" alt="Project Image" style="width: 100%; height: 100%; object-fit: cover;">
-              </div>
-              <div class="carousel-item rounded imageProjectDiv">
-                <img id="projectImage" src="../../static/img/alpha_home.png" alt="Project Image" style="width: 100%; height: 100%; object-fit: cover;">
-              </div>
-              <div class="carousel-item rounded imageProjectDiv">
-                <img id="projectImage" src="../../static/img/alphahome_pro.png" alt="Project Image" style="width: 100%; height: 100%; object-fit: cover;">
-              </div>
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+            <div class="carousel-inner" id="carouselInner" style="position: relative;">
+                <!-- Carousel items will be inserted here dynamically -->
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
             </button>
-        </div>
+        </div>          
 
     </div>
 
