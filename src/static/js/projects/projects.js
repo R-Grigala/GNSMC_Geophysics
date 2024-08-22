@@ -44,17 +44,10 @@ function createProjectForm() {
     // Prevent form submission
     const form = document.getElementById('addProjectForm');
     const formData = new FormData(form);
-    const jsonData = {};
-    formData.forEach((value, key) => {
-        jsonData[key] = value;
-    });
 
     fetch('/api/projects', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonData)
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
