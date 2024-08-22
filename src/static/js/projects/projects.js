@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // Send POST request for create new project
-function createProjectForm() {
+function createProjectForm(event) {
+    event.preventDefault();
     // Prevent form submission
     const form = document.getElementById('addProjectForm');
     const formData = new FormData(form);
@@ -53,8 +54,7 @@ function createProjectForm() {
     .then(data => {
         if (data.message) {
             alert(data.message); // Show success message
-            form.reset();
-            $('#createProjectModal').modal('hide');
+            window.location.reload();
         } else {
             alert('Error occurred while adding the project.');
         }

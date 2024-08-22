@@ -51,4 +51,4 @@ projects_parser.add_argument("contractor", required=False, type=empty_or_none, h
 projects_parser.add_argument("proj_location", required=True, type=str, help="Project location example: Example Location")
 projects_parser.add_argument("proj_latitude", required=True, type=float, help="Latitude example: 42.0163")
 projects_parser.add_argument("proj_longitude", required=True, type=float, help="Longitude example: 43.1412")
-projects_parser.add_argument("images", required=False, type=werkzeug.datastructures.FileStorage, location="files", action="append")
+projects_parser.add_argument("images", required=False, type=werkzeug.datastructures.FileStorage, location="files", action="append", help="Upload images (JPEG/PNG/JPG)")

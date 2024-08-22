@@ -1,4 +1,5 @@
 from flask_restx import Resource
+from flask import request
 from werkzeug.exceptions import NotFound
 from datetime import datetime
 import os
@@ -44,15 +45,15 @@ class ProjectsListAPI(Resource):
 
         # Handle image uploads
         image_types = ["image/jpeg", "image/png", "image/jpg"]
+        images = args['images']
         
-        if not args["images"]:
+        if not images:
             return {"message": "No images provided"}, 400
 
         images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(new_project.id))
         os.makedirs(images_directory, exist_ok=True)
-
         try:
-            for image in args["images"]:
+            for image in images:
                 if image.mimetype not in image_types:
                     return {"message": "Invalid image type."}, 400
                 
