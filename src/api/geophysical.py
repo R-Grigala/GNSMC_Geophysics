@@ -141,6 +141,10 @@ class GeophysicalAPI(Resource):
             if os.path.exists(file_path):
                 os.remove(file_path)
 
+                # Optionally delete the directory if it's empty
+                if not os.listdir(upload_folder):
+                    os.rmdir(upload_folder)
+
         # Delete the geophysical record
         geophysical.delete()
 

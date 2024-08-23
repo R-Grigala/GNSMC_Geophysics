@@ -1,73 +1,31 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const geophysicalIdElement = document.getElementById("geophysicalId");
-    const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
-    // Fetch data from API endpoint geophysic_seismic
-    fetch(`/api/geophysic_seismic/${geophysicalId}`)
-        .then(response => response.json())
-        .then(data => {
+// Function to handle the form submission
+function createGeophysicalForm(event) {
 
-            const geologicalTableBody = document.getElementById('GeophysSeismicTable');
-            data.forEach(data => {
-                const row = `
-                    <tr>
-                        <td>${data.longitude}</td>
-                        <td>${data.latitude}</td>
-                        <td>${data.profile_length}</td>
-                        <td>${data.archival_img}</td>
-                        <td>${data.archival_excel}</td>
-                        <td>${data.vs30}</td>
-                        <td>${data.vs30_section}</td>
-                        <td>${data.ground_category_geo}</td>
-                        <td>${data.ground_category_euro}</td>
-                        <td>${data.archival_pdf}</td>
-                        <td>
-                            <a class="btn btn-info" href="#">Edit</a>
-                        </td>
-                        <td>
-                            <form action="#" method="POST" style="display:inline;">
-                                <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                `;
-                geologicalTableBody.innerHTML += row;
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            // Handle error scenario, e.g., show an error message on the UI
-        });
+    event.preventDefault(); // Prevent the default form submission
 
+    // Create a FormData object from the form
+    const form = document.getElementById('addGeophysicalForm');
+    const formData = new FormData(form);
+    const projectId = document.getElementById('projectId').getAttribute('data-project-id');
+    console.log(projectId)
 
-    // Fetch data from API endpoint geophysic_logging
-    fetch(`/api/geophysic_logging/${geophysicalId}`)
-        .then(response => response.json())
-        .then(data => {
-
-            const geophysic_loggingTableBody = document.getElementById('geophysic_loggingTableBody');
-            data.forEach(data => {
-                const row = `
-                    <tr>
-                        <td>${data.longitude}</td>
-                        <td>${data.latitude}</td>
-                        <td>${data.profile_length}</td>
-                        <td>${data.archival_img}</td>
-                        <td>${data.archival_excel}</td>
-                        <td>
-                            <a class="btn btn-info" href="#">Edit</a>
-                        </td>
-                        <td>
-                            <form action="#" method="POST" style="display:inline;">
-                                <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                `;
-                geophysic_loggingTableBody.innerHTML += row;
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            // Handle error scenario, e.g., show an error message on the UI
-        });
-});
+    // Make a POST request to your Flask API
+    fetch(`/api/geophysical/1`, {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message); // Display success message or handle response
+            $('#CreateGeophysicalModal').modal('hide'); // Hide the modal
+            form.reset(); // Reset the form
+        } else {
+            alert('Error: ' + JSON.stringify(data)); // Handle errors
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while creating the geophysical record.');
+    });
+}
