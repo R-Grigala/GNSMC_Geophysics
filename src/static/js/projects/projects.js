@@ -64,7 +64,8 @@ function createProjectForm(event) {
             alert(data.message); // Show success message
             window.location.reload();
         } else {
-            alert('Error occurred while adding the project.');
+            alert('Error პროექტის დამატებისას მოხდა შეცდომა');
+            console.error('Upload error:', data.message);
         }
     })
     .catch(error => console.error('Error:', error));

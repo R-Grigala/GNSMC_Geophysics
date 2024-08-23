@@ -157,6 +157,7 @@ class ProjectImageListAPI(Resource):
 
 
     @projects_ns.doc(parser=project_img_parser)
+    @projects_ns.marshal_with(projects_img_model)
     def post(self, proj_id):
         # Ensure the project exists
         project = Projects.query.get(proj_id)
@@ -169,16 +170,22 @@ class ProjectImageListAPI(Resource):
         if not images:
             return {"message": "No images provided"}, 400
         
-        # Validate image type
+        # Validate image type and size (if needed)
         image_types = ["image/jpeg", "image/png", "image/jpg"]
+        max_image_size = 5 * 1024 * 1024  # 5MB limit (example)
 
         images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(proj_id))
         os.makedirs(images_directory, exist_ok=True)
+
+        saved_images = []
 
         try:
             for image in images:
                 if image.mimetype not in image_types:
                     return {"message": "Invalid image type."}, 400
+
+                if image.content_length > max_image_size:
+                    return {"message": "Image file too large."}, 400
 
                 # Save each image
                 extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
@@ -189,11 +196,13 @@ class ProjectImageListAPI(Resource):
                 # Save image record in the database
                 new_image = Images(path=file_name, project_id=proj_id)
                 new_image.create()
+                saved_images.append(new_image)
 
-            return {"message": "Successfully added image to project"}, 200
+            return saved_images, 200
         
         except OSError as e:
-            return {"message": f"Failed to save image: {str(e)}"}, 500
+            return {"message": f"Failed to save images: {str(e)}"}, 500
+
 
 @projects_ns.route('/project/<int:proj_id>/images/<int:image_id>')
 @projects_ns.doc(responses={200: 'OK', 404: 'Not Found'})
