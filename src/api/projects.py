@@ -1,5 +1,4 @@
 from flask_restx import Resource
-from flask import request
 from werkzeug.exceptions import NotFound
 from datetime import datetime
 import os
@@ -43,35 +42,41 @@ class ProjectsListAPI(Resource):
         )
         new_project.create()
 
-        # Handle image uploads
+        # Handle image uploads if provided
         image_types = ["image/jpeg", "image/png", "image/jpg"]
         images = args['images']
-        
-        if not images:
-            return {"message": "No images provided"}, 400
 
+        invalid_files = []
+        images_saved = False
         images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(new_project.id))
-        os.makedirs(images_directory, exist_ok=True)
-        try:
-            for image in images:
-                if image.mimetype not in image_types:
-                    return {"message": "Invalid image type."}, 400
-                
-                extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
-                file_name = str(uuid.uuid4()) + extension
-                image_path = os.path.join(images_directory, file_name)
-                
+        
+        for image in images:
+            if image.mimetype not in image_types:
+                invalid_files.append(image.filename)
+                continue
+
+            if not images_saved:
+                os.makedirs(images_directory, exist_ok=True)
+                images_saved = True
+            
+            extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
+            file_name = str(uuid.uuid4()) + extension
+            image_path = os.path.join(images_directory, file_name)
+            
+            try:
                 # Save the file to the directory
                 image.save(image_path)
                 
                 # Save the file path to the database
                 new_image = Images(path=file_name, project_id=new_project.id)
                 new_image.create()
-
-            return {"message": "Successfully created project with images"}, 200
+            except OSError as e:
+                return {"message": f"Failed to save images: {str(e)}"}, 500
         
-        except OSError as e:
-            return {"message": f"Failed to save images: {str(e)}"}, 500
+        if invalid_files:
+            return {"message": "პროექტი შეიქმნა, მაგრამ პროექტის სურათი არ აიტვირთა"}, 200
+        
+        return {"message": "Successfully created project"}, 200
     
 @projects_ns.route('/project/<int:id>')
 @projects_ns.doc(responses={200: 'OK', 404: 'Project not found'})

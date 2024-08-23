@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${project.contract_number}</td>
                         <td>${project.start_time}</td>
                         <td>${project.end_time}</td>
-                        <td>${project.contractor}</td>
+                        <td>${project.contractor || '--'}</td>
                         <td>${project.proj_location}</td>
                         <td>${project.proj_latitude}</td>
                         <td>${project.proj_longitude}</td>
@@ -39,36 +39,35 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 });
 
-// Send POST request for create new project
+// Send POST request for creating a new project
 function createProjectForm(event) {
-    event.preventDefault();
-    // Prevent form submission
+    event.preventDefault(); // Prevent form submission
+
     const form = document.getElementById('addProjectForm');
     const formData = new FormData(form);
 
+    // Proceed with the form submission regardless of the file type
+    submitForm(formData);
+}
+
+function submitForm(formData) {
     fetch('/api/projects', {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json(); // Parse JSON if the response is OK
-        } else {
-            return response.json().then(data => {
-                alert(data.message);
-            });
-        }
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.message) {
             alert(data.message); // Show success message
             window.location.reload();
         } else {
-            alert('Error პროექტის დამატებისას მოხდა შეცდომა');
-            console.error('Upload error:', data.message);
+            alert('Error occurred while creating the project.');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert(`Error: ${error.message}`);
+    });
 }
 
 // Open edit Project Modal
