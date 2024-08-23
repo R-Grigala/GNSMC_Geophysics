@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     const projectIdElement = document.getElementById("projectId");
     const projectId = projectIdElement.getAttribute("data-project-id");
-    // Fetch data from API endpoint
-    fetch(`/api/geophysical/${projectId}`)
-        .then(response => response.json())
-        .then(data => {
+    const geophysicalTableContainer = document.getElementById('geophysicalTableContainer');
 
-            const geophysicalTableBody = document.getElementById('geophysicalTableBody');
+    fetch(`/api/geophysical/${projectId}`)
+    .then(response => response.json())
+    .then(data => {
+        // Check if data is an array
+        if (Array.isArray(data)) {
             data.forEach(geophysical => {
-            
                 const row = `
                     <tr data-href="/view_geophysical/${geophysical.id}">
                         <td>${geophysical.seismic_profiles ? "Yes" : "No"}</td>
@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 `;
                 geophysicalTableBody.innerHTML += row;
             });
+
             // Add click event listener to each <tr> to navigate to detailed view
             const tableRows = geophysicalTableBody.getElementsByTagName('tr');
             Array.from(tableRows).forEach(row => {
@@ -45,9 +46,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 });
             });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            // Handle error scenario, e.g., show an error message on the UI
-        });
+        } else {
+            // If data is not an array, hide the table
+            geophysicalTableContainer.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        // Handle error scenario, e.g., show an error message on the UI
+    });
+
 });

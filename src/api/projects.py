@@ -48,7 +48,7 @@ class ProjectsListAPI(Resource):
 
         invalid_files = []
         images_saved = False
-        images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(new_project.id))
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(new_project.id))
         
         for image in images:
             if image.mimetype not in image_types:
@@ -123,7 +123,7 @@ class ProjectAPI(Resource):
             # Delete associated images if they exist
             images = Images.query.filter_by(project_id=id).all()
             if images:
-                images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(id))
+                images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(id))
                 try:
                     # Delete images from filesystem
                     for image in images:
@@ -179,7 +179,7 @@ class ProjectImageListAPI(Resource):
         image_types = ["image/jpeg", "image/png", "image/jpg"]
         max_image_size = 5 * 1024 * 1024  # 5MB limit (example)
 
-        images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(proj_id))
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(proj_id))
         os.makedirs(images_directory, exist_ok=True)
 
         saved_images = []
@@ -220,7 +220,7 @@ class ProjectImageAPI(Resource):
             raise NotFound("Image not found")
 
         # Path to the image file
-        images_directory = os.path.join(Config.BASE_DIR, 'src', 'images', str(proj_id))
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(proj_id))
         image_path = os.path.join(images_directory, image.path)
         
         try:

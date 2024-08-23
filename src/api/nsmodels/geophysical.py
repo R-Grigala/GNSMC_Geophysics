@@ -1,5 +1,6 @@
-from flask_restx import fields
+from flask_restx import reqparse, fields
 from src.extensions import api
+from werkzeug.datastructures import FileStorage
 
 # from src.api.nsmodels.geophysic_details import geophysic_seismic_model, geophysic_logging_model
 
@@ -10,8 +11,7 @@ geophysical_model = api.model('Geophysical', {
     'project_id': fields.Integer(required=True, description='The ID of the related project'),
     'seismic_profiles': fields.Boolean(required=True, description='Whether seismic profiles are included'),
     'profiles_number': fields.Integer(required=True, description='Number of profiles'),
-    'vs30': fields.Integer(required=True, description='Vs30 value'),
-    'vs30_section': fields.String(required=True, description='Vs30 section'),
+    'vs30': fields.Integer(required=True, description='VS30 value'),
     'ground_category_geo': fields.String(required=True, description='Geological ground category'),
     'ground_category_euro': fields.String(required=True, description='European ground category'),
     'geophysical_logging': fields.Boolean(required=True, description='Whether geophysical logging is included'),
@@ -23,3 +23,11 @@ geophysical_model = api.model('Geophysical', {
     # 'geophysic_seismic': fields.List(fields.Nested(geophysic_seismic_model)),
     # 'geophysic_logging': fields.List(fields.Nested(geophysic_logging_model))
 })
+
+geophysical_parser = reqparse.RequestParser()
+
+geophysical_parser.add_argument('vs30', type=int, required=True,  help="VS30 Value example: 600")
+geophysical_parser.add_argument('ground_category_geo', type=str, required=True, help='Geological ground category: II')
+geophysical_parser.add_argument('ground_category_euro', type=str, required=True, help='European ground category: B')
+geophysical_parser.add_argument("archival_material", required=False, type=FileStorage, location="files", action="append", help="Upload archival material (PDF)")
+

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const row = `
                     <tr>
                         <td>${project.projects_name}</td>
-                        <td>${project.contract_number}</td>
+                        <td>${project.contract_number || '--'}</td>
                         <td>${project.start_time}</td>
                         <td>${project.end_time}</td>
                         <td>${project.contractor || '--'}</td>

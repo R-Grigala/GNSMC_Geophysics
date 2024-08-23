@@ -103,7 +103,7 @@
     {% include "create_geophysical.html" %}
 
     <!-- for Geological -->
-    <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
+    <div id="geologicalTableContainer" class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
         <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
             <thead class="table-warning">
                 <tr>
@@ -127,7 +127,7 @@
     </div>
 
     <!-- for Geophysical -->
-    <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
+    <div id="geophysicalTableContainer" class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
         <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
             <thead class="table-success">
                 <tr>
@@ -152,7 +152,7 @@
         </table>
     </div>
 
-    <!-- for Hazard -->
+    <!-- for Hazard
     <div class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">
         <table class="table align-middle table-bordered rounded-2 border-muted mb-0 bg-white table-striped">
             <thead class="table-primary">
@@ -196,7 +196,7 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    </div> -->
 
     <!-- for Project Data -->
     <script>
@@ -208,10 +208,10 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("projectName").textContent = data.projects_name;
-                    document.getElementById("contractNumber").textContent = data.contract_number;
+                    document.getElementById("contractNumber").textContent = data.contract_number || '--';
                     document.getElementById("startTime").textContent = data.start_time;
                     document.getElementById("endTime").textContent = data.end_time;
-                    document.getElementById("contractor").textContent = data.contractor;
+                    document.getElementById("contractor").textContent = data.contractor || '--';
                     document.getElementById("projLocation").textContent = data.proj_location;
                     document.getElementById("projLatitude").textContent = data.proj_latitude;
                     document.getElementById("projLongitude").textContent = data.proj_longitude;

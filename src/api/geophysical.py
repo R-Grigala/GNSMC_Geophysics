@@ -1,9 +1,11 @@
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
+import os
+import uuid
 
-from src.api.nsmodels import geophysical_ns, geophysical_model, geophysic_seismic_ns, geophysic_seismic_model, geophysic_logging_ns, geophysic_logging_model
-from src.api.nsmodels import geophysic_electrical_ns, geophysic_electrical_model
-from src.models import Geophysical, GeophysicSeismic, GeophysicLogging, GeophysicElectrical
+from src.api.nsmodels import geophysical_ns, geophysical_model, geophysical_parser
+from src.models import Geophysical
+from src.config import Config
 
 
 @geophysical_ns.route('/geophysical/<int:proj_id>')
@@ -17,33 +19,51 @@ class GeophysicalListAPI(Resource):
             raise NotFound("Geophysical not found")
         
         return geophysical, 200
+    
+    @geophysical_ns.doc(parser=geophysical_parser)
+    def post(self, proj_id):
+        # Parse the incoming request data
+        args = geophysical_parser.parse_args()
 
-@geophysic_seismic_ns.route('/geophysic_seismic/<int:geophy_id>')
-class GeophysicSeismicAPI(Resource):
-    @geophysic_seismic_ns.marshal_with(geophysic_seismic_model)
-    def get(self, geophy_id):
-        geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id).all()
-        if not geophysic_seismic:
-            raise NotFound("Geophysical not found")
-        
-        return geophysic_seismic, 200
+        # Extract the PDF file from the request
+        pdf_files = args.get('archival_material', [])
+
+        # Initialize file_path to None
+        file_path = None
+
+        # Handle the PDF file upload
+        if pdf_files:
+            # Check if there is at least one file
+            if len(pdf_files) > 0:
+                pdf_file = pdf_files[0]  # Get the first file in the list
+
+                # Ensure the file is a PDF
+                if pdf_file.mimetype == 'application/pdf':
+                    # Secure the filename
+                    filename = str(uuid.uuid4()) + '.pdf'
+
+                    # Define the directory to save the file
+                    upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', 'geophysical', 'archival_material', str(proj_id))
+                    if not os.path.exists(upload_folder):
+                        os.makedirs(upload_folder)
+
+                    # Construct the full file path
+                    file_path = os.path.join(upload_folder, filename)
+
+                    # Save the PDF file to the server
+                    pdf_file.save(file_path)
+                else:
+                    return {'message': 'Only PDF files are allowed.'}, 400
+
+        new_geophysical = Geophysical(
+            project_id=proj_id,
+            vs30=args['vs30'],
+            ground_category_geo=args['ground_category_geo'],
+            ground_category_euro=args['ground_category_euro'],
+            archival_material=filename
+        )
+        new_geophysical.create()
+
+        return {"message": "Successfully created project"}, 200
+
     
-@geophysic_logging_ns.route('/geophysic_logging/<int:geophy_id>')
-class GeophysicLoggingAPI(Resource):
-    @geophysic_logging_ns.marshal_with(geophysic_logging_model)
-    def get(self, geophy_id):
-        geophysic_logging = GeophysicLogging.query.filter_by(geophysical_id=geophy_id).all()
-        if not geophysic_logging:
-            raise NotFound("Geophysical not found")
-        
-        return geophysic_logging, 200
-    
-@geophysic_electrical_ns.route('/geophysic_electrical/<int:geophy_id>')
-class GeophysicElectricalAPI(Resource):
-    @geophysic_electrical_ns.marshal_with(geophysic_electrical_model)
-    def get(self, geophy_id):
-        geophysic_electrical = GeophysicElectrical.query.filter_by(geophysical_id=geophy_id).all()
-        if not geophysic_electrical:
-            raise NotFound("Geophysical not found")
-        
-        return geophysic_electrical, 200
