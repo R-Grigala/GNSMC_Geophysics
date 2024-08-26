@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>${geological.points_number}</td>
                             <td>${geological.archival_material}</td>
                             <td>
+                                <a class="btn btn-sm btn-primary" href="#">View</a>
+                            </td>
+                            <td>
                                 <a class="btn btn-info" href="#">Edit</a>
                             </td>
                             <td>

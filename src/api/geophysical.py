@@ -28,8 +28,9 @@ class GeophysicalListAPI(Resource):
         # Extract the PDF file from the request
         pdf_files = args.get('archival_material', [])
 
-        # Initialize file_path to None
-        file_path = None
+        # Initialize file_path and filename
+        filename = None
+        server_message = "წარმატებით დაემატა გეოფიზიკა."
 
         # Handle the PDF file upload
         if pdf_files:
@@ -53,8 +54,9 @@ class GeophysicalListAPI(Resource):
                     # Save the PDF file to the server
                     pdf_file.save(file_path)
                 else:
-                    return {'message': 'Only PDF files are allowed.'}, 400
+                    server_message =  'წარმატებით დაემატა გეოფიზიკა, მაგრამ არ აიტვირთა საარქივო ფაილი.'
 
+        # Create the Geophysical record
         new_geophysical = Geophysical(
             project_id=proj_id,
             vs30=args['vs30'],
@@ -64,7 +66,7 @@ class GeophysicalListAPI(Resource):
         )
         new_geophysical.create()
 
-        return {"message": "Successfully created project"}, 200
+        return {"message": server_message}, 200
 
 @geophysical_ns.route('/geophysical/<int:proj_id>/<int:id>')
 @geophysical_ns.doc(responses={200: 'OK', 404: 'Geophysical not found'})
@@ -91,6 +93,10 @@ class GeophysicalAPI(Resource):
         # Extract the PDF file from the request
         pdf_files = args.get('archival_material', [])
 
+        # Initialize file_path and filename
+        filename = None
+        server_message = "წარმატებით განახლდა გეოფიზიკა."
+
         # Handle the PDF file upload
         if pdf_files:
             # Check if there is at least one file
@@ -116,7 +122,7 @@ class GeophysicalAPI(Resource):
                     # Update the archival_material field with the new filename
                     geophysical.archival_material = filename
                 else:
-                    return {'message': 'Only PDF files are allowed.'}, 400
+                    server_message =  'წარმატებით განახლდა გეოფიზიკა, მაგრამ არ აიტვირთა საარქივო ფაილი.'
 
         # Update other fields
         geophysical.vs30 = args['vs30']
@@ -126,7 +132,7 @@ class GeophysicalAPI(Resource):
         # Save the changes
         geophysical.save()
 
-        return {"message": "Successfully updated project"}, 200
+        return {"message": server_message}, 200
     
     def delete(self, proj_id, id):
         # Fetch the geophysical record

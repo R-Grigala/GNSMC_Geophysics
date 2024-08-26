@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, send_from_directory
 from os import path
 
 from src.config import Config
@@ -18,3 +18,8 @@ def create_geophysical():
 @geophysical_blueprint.route('/edit_geophysical/<int:id>', methods=['GET', 'POST'])
 def edit_geophysical(id):
     return render_template("edit_geophysical.html", geophysical_id=id)
+
+@geophysical_blueprint.route('/geophysical/archival_material/<int:proj_id>/<filename>')
+def serve_image(proj_id, filename):
+    directory = f'temp/geophysical/archival_material/{proj_id}/'
+    return send_from_directory(directory, filename)

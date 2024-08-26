@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 const row = `
                     <tr>
                         <td>${project.projects_name}</td>
-                        <td>${project.contract_number || '--'}</td>
+                        <td>${project.contract_number || '----'}</td>
                         <td>${project.start_time}</td>
                         <td>${project.end_time}</td>
-                        <td>${project.contractor || '--'}</td>
+                        <td>${project.contractor || '----'}</td>
                         <td>${project.proj_location}</td>
                         <td>${project.proj_latitude}</td>
                         <td>${project.proj_longitude}</td>
@@ -112,7 +112,6 @@ function editProjectForm() {
         if (data.message) {
             alert(data.message); // Show success message
             form.reset();
-            $('#editProjectModal').modal('hide');
         } else {
             alert('Error occurred while editing the project.');
         }
