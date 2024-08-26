@@ -44,7 +44,7 @@ class GeophysicalListAPI(Resource):
                     filename = str(uuid.uuid4()).replace('-', '')[:12] + '.pdf'
 
                     # Define the directory to save the file
-                    upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', 'geophysical', 'archival_material', str(proj_id))
+                    upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_material')
                     if not os.path.exists(upload_folder):
                         os.makedirs(upload_folder)
 
@@ -111,13 +111,19 @@ class GeophysicalAPI(Resource):
 
                 # Ensure the file is a PDF
                 if pdf_file.mimetype == 'application/pdf':
-                    # Generate a UUID4 and take the first 12 characters
-                    filename = str(uuid.uuid4()).replace('-', '')[:12] + '.pdf'
-
                     # Define the directory to save the file
-                    upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', 'geophysical', 'archival_material', str(proj_id))
+                    upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_material')
                     if not os.path.exists(upload_folder):
                         os.makedirs(upload_folder)
+
+                    # If there's an existing archival material, delete it
+                    if geophysical.archival_material:
+                        old_file_path = os.path.join(upload_folder, geophysical.archival_material)
+                        if os.path.exists(old_file_path):
+                            os.remove(old_file_path)
+
+                    # Generate a UUID4 and take the first 12 characters
+                    filename = str(uuid.uuid4()).replace('-', '')[:12] + '.pdf'
 
                     # Construct the full file path
                     file_path = os.path.join(upload_folder, filename)
@@ -148,7 +154,7 @@ class GeophysicalAPI(Resource):
 
         # Delete the associated PDF file if it exists
         if geophysical.archival_material:
-            upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', 'geophysical', 'archival_material', str(proj_id))
+            upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_material')
             file_path = os.path.join(upload_folder, geophysical.archival_material)
             if os.path.exists(file_path):
                 os.remove(file_path)

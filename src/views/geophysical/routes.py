@@ -21,5 +21,5 @@ def edit_geophysical(id):
 
 @geophysical_blueprint.route('/geophysical/archival_material/<int:proj_id>/<filename>')
 def serve_image(proj_id, filename):
-    directory = f'temp/geophysical/archival_material/{proj_id}/'
+    directory = f'temp/{proj_id}/geophysical/archival_material/'
     return send_from_directory(directory, filename)

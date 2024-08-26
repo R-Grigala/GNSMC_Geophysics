@@ -25,5 +25,5 @@ def edit_project(id):
 
 @projects_blueprint.route('/images/<int:proj_id>/<filename>')
 def serve_image(proj_id, filename):
-    directory = f'temp/projects/images/{proj_id}'
+    directory = f'temp/{proj_id}/images/'
     return send_from_directory(directory, filename)

@@ -3,6 +3,7 @@ from werkzeug.exceptions import NotFound
 from datetime import datetime
 import os
 import uuid
+import shutil
 import mimetypes
 
 from src.api.nsmodels import projects_ns, projects_model, projects_parser, projects_img_model, project_img_parser
@@ -48,7 +49,7 @@ class ProjectsListAPI(Resource):
 
         invalid_files = []
         images_saved = False
-        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(new_project.id))
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', str(new_project.id), 'images')
         
         for image in images:
             if image.mimetype not in image_types:
@@ -60,7 +61,7 @@ class ProjectsListAPI(Resource):
                 images_saved = True
             
             extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
-            file_name = str(uuid.uuid4()) + extension
+            file_name = str(uuid.uuid4()).replace('-', '')[:12] + extension
             image_path = os.path.join(images_directory, file_name)
             
             try:
@@ -120,29 +121,20 @@ class ProjectAPI(Resource):
     def delete(self, id):
         project = Projects.query.get(id)
         if project:
-            # Delete associated images if they exist
-            images = Images.query.filter_by(project_id=id).all()
-            if images:
-                images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(id))
-                try:
-                    # Delete images from filesystem
-                    for image in images:
-                        image_path = os.path.join(images_directory, image.path)
-                        if os.path.isfile(image_path):
-                            os.remove(image_path)
-                        
-                        # Delete image record from the database
-                        image.delete()
-                    
-                    # Optionally delete the directory if it's empty
-                    if os.path.isdir(images_directory) and not os.listdir(images_directory):
-                        os.rmdir(images_directory)
-                except OSError as e:
-                    return {"message": f"Failed to delete images: {str(e)}"}, 500
-            
-            # Delete the project record from the database
-            project.delete()
-            return {"message": "Successfully deleted Project and associated images"}, 200
+            try:
+                # Path to the entire project directory
+                project_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', str(id))
+
+                # Delete the entire project directory if it exists
+                if os.path.isdir(project_directory):
+                    shutil.rmtree(project_directory)
+
+                # Delete the project record from the database
+                project.delete()
+                return {"message": "Successfully deleted Project and all associated files"}, 200
+
+            except OSError as e:
+                return {"message": f"Failed to delete project directory: {str(e)}"}, 500
         else:
             raise NotFound("Project not found")
         
@@ -179,7 +171,7 @@ class ProjectImageListAPI(Resource):
         image_types = ["image/jpeg", "image/png", "image/jpg"]
         max_image_size = 5 * 1024 * 1024  # 5MB limit (example)
 
-        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(proj_id))
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp',  str(proj_id), 'images')
         os.makedirs(images_directory, exist_ok=True)
 
         saved_images = []
@@ -194,7 +186,7 @@ class ProjectImageListAPI(Resource):
 
                 # Save each image
                 extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
-                file_name = str(uuid.uuid4()) + extension
+                file_name = str(uuid.uuid4()).replace('-', '')[:12] + extension
                 image_path = os.path.join(images_directory, file_name)
                 image.save(image_path)
 
@@ -220,7 +212,7 @@ class ProjectImageAPI(Resource):
             raise NotFound("Image not found")
 
         # Path to the image file
-        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', 'projects', 'images', str(proj_id))
+        images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'images')
         image_path = os.path.join(images_directory, image.path)
         
         try:
