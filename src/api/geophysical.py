@@ -4,7 +4,7 @@ import os
 import uuid
 
 from src.api.nsmodels import geophysical_ns, geophysical_model, geophysical_parser
-from src.models import Geophysical
+from src.models import Geophysical, Projects
 from src.config import Config
 
 
@@ -65,6 +65,12 @@ class GeophysicalListAPI(Resource):
             archival_material=filename
         )
         new_geophysical.create()
+
+        # Update the geophysical_study field in the Projects table
+        project = Projects.query.get(proj_id)
+        if project:
+            project.geophysical_study = True
+            project.save()
 
         return {"message": server_message}, 200
 
@@ -153,5 +159,13 @@ class GeophysicalAPI(Resource):
 
         # Delete the geophysical record
         geophysical.delete()
+
+        # Check if there are any remaining geophysical records for the project
+        remaining_geophysicals = Geophysical.query.filter_by(project_id=proj_id).count()
+        if remaining_geophysicals == 0:
+            project = Projects.query.get(proj_id)
+            if project:
+                project.geophysical_study = False
+                project.save()
 
         return {"message": "Successfully deleted geophysical record"}, 200
