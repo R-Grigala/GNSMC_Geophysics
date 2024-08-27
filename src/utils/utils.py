@@ -1,17 +1,34 @@
 import os
+import uuid
 
-from src.config import Config
 
+def save_uploaded_file(file, upload_dir, allowed_mimetypes, file_extension=None):
+    """
+    Helper function to save an uploaded file to the specified directory.
 
-def get_project_image_cover_data(project_id):
-    directory = Config.BASE_DIR + f"/src/static/images/{project_id}/"
+    :param file: The file to be uploaded
+    :param upload_dir: Directory where the file should be saved
+    :param allowed_mimetypes: List of allowed mimetypes for the file
+    :param file_extension: Optional extension for the file
+    :return: Filename if successfully saved, else None
+    """
+    # Check if the file's mimetype is allowed
+    if file.mimetype in allowed_mimetypes:
+        # Generate a unique filename using UUID
+        if not file_extension:
+            file_extension = os.path.splitext(file.filename)[1]
+        filename = str(uuid.uuid4()).replace('-', '')[:12] + file_extension
 
-    image_files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        # Ensure the upload directory exists
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
 
-    if image_files:
-        cover_image_path = os.path.join(directory, image_files[0])
+        # Construct the full file path
+        file_path = os.path.join(upload_dir, filename)
 
-        with open(cover_image_path, 'rb') as image_file:
-            image_data = image_file.read()
+        # Save the file
+        file.save(file_path)
 
-        return image_data
+        return filename
+    else:
+        return None

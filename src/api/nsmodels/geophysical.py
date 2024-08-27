@@ -2,7 +2,6 @@ from flask_restx import reqparse, fields
 from src.extensions import api
 from werkzeug.datastructures import FileStorage
 
-# from src.api.nsmodels.geophysic_details import geophysic_seismic_model, geophysic_logging_model
 
 geophysical_ns = api.namespace('Geophysical', description='API endpoint for Geophysical related operations', path='/api')
 
@@ -19,9 +18,7 @@ geophysical_model = api.model('Geophysical', {
     'electrical_profiles': fields.Boolean(required=True, description='Whether electrical profiles are included'),
     'point_number': fields.Integer(required=True, description='Number of points'),
     'georadar': fields.Boolean(required=True, description='Whether georadar is included'),
-    'archival_material': fields.String(description='Archival material'),
-    # 'geophysic_seismic': fields.List(fields.Nested(geophysic_seismic_model)),
-    # 'geophysic_logging': fields.List(fields.Nested(geophysic_logging_model))
+    'archival_material': fields.String(description='Archival material')
 })
 
 geophysical_parser = reqparse.RequestParser()

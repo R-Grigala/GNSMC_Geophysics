@@ -49,14 +49,14 @@ def str_to_bool(value):
 
 projects_parser = reqparse.RequestParser()
 
-projects_parser.add_argument("projects_name", required=True, type=str, help="Project name example: New Project")
+projects_parser.add_argument("projects_name", required=True, type=str, help="Project name example: AKHN Project")
 projects_parser.add_argument("contract_number", required=False, type=empty_or_none, help="Contract number example: 12345")
-projects_parser.add_argument("start_time", required=True, type=str, help="Start time example: 2024-01-23")
-projects_parser.add_argument("end_time", required=True, type=str, help="End time example: 2024-03-03")
-projects_parser.add_argument("contractor", required=False, type=empty_or_none, help="Contarctor name example: New Contractor")
-projects_parser.add_argument("proj_location", required=True, type=str, help="Project location example: Example Location")
-projects_parser.add_argument("proj_latitude", required=True, type=float, help="Latitude example: 42.0163")
-projects_parser.add_argument("proj_longitude", required=True, type=float, help="Longitude example: 43.1412")
+projects_parser.add_argument("start_time", required=True, type=str, help="Start time example: 2024-08-13")
+projects_parser.add_argument("end_time", required=True, type=str, help="End time example: 2024-08-16")
+projects_parser.add_argument("contractor", required=False, type=empty_or_none, help="Contarctor name example: AKHN Contractor")
+projects_parser.add_argument("proj_location", required=True, type=str, help="Project location example: ახალქალაქი")
+projects_parser.add_argument("proj_latitude", required=True, type=float, help="Latitude example: 41.4256")
+projects_parser.add_argument("proj_longitude", required=True, type=float, help="Longitude example: 43.513")
 projects_parser.add_argument("images", required=False, type=werkzeug.datastructures.FileStorage, location="files", action="append", help="Upload images (JPEG/PNG/JPG)")
 
 

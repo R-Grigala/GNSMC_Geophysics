@@ -38,13 +38,12 @@ class GeophysicSeismic(db.Model, BaseModel):
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     profile_length = db.Column(db.Float, nullable=False)
-    archival_img = db.Column(db.String, nullable=True)
-    archival_excel = db.Column(db.String, nullable=True)
     vs30 = db.Column(db.Integer, nullable=False)
-    vs30_section = db.Column(db.String, nullable=False)
     ground_category_geo = db.Column(db.String, nullable=False)
     ground_category_euro = db.Column(db.String, nullable=False)
-    archival_pdf = db.Column(db.String, nullable=False)
+    archival_img = db.Column(db.String, nullable=True)
+    archival_excel = db.Column(db.String, nullable=True)
+    archival_pdf = db.Column(db.String, nullable=True)
 
     geophysical = db.relationship('Geophysical', back_populates='geophysic_seismic')
 

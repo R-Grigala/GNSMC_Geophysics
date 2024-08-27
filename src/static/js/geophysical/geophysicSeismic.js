@@ -13,12 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${data.longitude}</td>
                         <td>${data.latitude}</td>
                         <td>${data.profile_length}</td>
-                        <td>${data.archival_img}</td>
-                        <td>${data.archival_excel}</td>
                         <td>${data.vs30}</td>
-                        <td>${data.vs30_section}</td>
                         <td>${data.ground_category_geo}</td>
                         <td>${data.ground_category_euro}</td>
+                        <td>${data.archival_img}</td>
+                        <td>${data.archival_excel}</td>
                         <td>${data.archival_pdf}</td>
                         <td>
                             <a class="btn btn-info" href="#">Edit</a>

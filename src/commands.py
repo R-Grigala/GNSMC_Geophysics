@@ -102,12 +102,11 @@ def populate_db():
         longitude=42.1234,
         latitude=42.549,
         profile_length=0,
-        archival_img="image.png",
-        archival_excel="test.xlsx",
         vs30=650,
-        vs30_section="vs30.xlsx",
         ground_category_geo="II",
         ground_category_euro="B",
+        archival_img="image.png",
+        archival_excel="test.xlsx",
         archival_pdf="testarchve.pdf"
     )
 
@@ -119,12 +118,11 @@ def populate_db():
         longitude=42.1234,
         latitude=42.549,
         profile_length=0,
-        archival_img="image.png",
-        archival_excel="test.xlsx",
         vs30=550,
-        vs30_section="vs30.xlsx",
         ground_category_geo="II",
         ground_category_euro="B",
+        archival_img="image.png",
+        archival_excel="test.xlsx",
         archival_pdf="testarchve.pdf"
     )
 
