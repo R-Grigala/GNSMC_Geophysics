@@ -19,6 +19,18 @@ class ProjectsListAPI(Resource):
     def get(self):
         projects = Projects.query.all()
 
+        # Add calculated fields to each project
+        for project in projects:
+            # Calculate dynamic fields
+            project.geological_study = len(project.geological) > 0
+            project.geophysical_study = len(project.geophysical) > 0
+            # project.hazard_study = len(project.hazard) > 0
+            # project.geodetic_study = len(project.geodetic) > 0
+            # project.other_study = len(project.other) > 0
+            project.hazard_study = False
+            project.geodetic_study = False
+            project.other_study = False
+
         return projects, 200
     
     @projects_ns.doc(parser=projects_parser)
@@ -91,6 +103,16 @@ class ProjectAPI(Resource):
         
         images = Images.query.filter_by(project_id=id).all()
         project.images = images
+
+        # Calculate dynamic fields
+        project.geological_study = len(project.geological) > 0
+        project.geophysical_study = len(project.geophysical) > 0
+        # project.hazard_study = len(project.hazard) > 0
+        # project.geodetic_study = len(project.geodetic) > 0
+        # project.other_study = len(project.other) > 0
+        project.hazard_study = False
+        project.geodetic_study = False
+        project.other_study = False
 
         return project, 200
     

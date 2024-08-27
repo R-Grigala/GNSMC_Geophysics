@@ -2,9 +2,10 @@ from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 import os
 import uuid
+import shutil
 
 from src.api.nsmodels import geophysical_ns, geophysical_model, geophysical_parser
-from src.models import Geophysical, Projects
+from src.models import Geophysical
 from src.config import Config
 
 
@@ -14,11 +15,21 @@ class GeophysicalListAPI(Resource):
 
     @geophysical_ns.marshal_with(geophysical_model)
     def get(self, proj_id):
-        geophysical = Geophysical.query.filter_by(project_id=proj_id).all()
-        if not geophysical:
+        geophysical_records = Geophysical.query.filter_by(project_id=proj_id).all()
+        if not geophysical_records:
             raise NotFound("Geophysical not found")
+
+        # Add calculated fields to each geophysical record
+        for geophysical in geophysical_records:
+            # Calculate dynamic fields
+            geophysical.seismic_profiles = len(geophysical.geophysic_seismic) > 0
+            geophysical.profiles_number = len(geophysical.geophysic_seismic)
+            geophysical.geophysical_logging = len(geophysical.geophysic_logging) > 0
+            geophysical.logging_number = len(geophysical.geophysic_logging)
+            geophysical.electrical_profiles = len(geophysical.geophysic_electrical) > 0
+            geophysical.point_number = len(geophysical.geophysic_electrical)
         
-        return geophysical, 200
+        return geophysical_records, 200
     
     @geophysical_ns.doc(parser=geophysical_parser)
     def post(self, proj_id):
@@ -66,12 +77,6 @@ class GeophysicalListAPI(Resource):
         )
         new_geophysical.create()
 
-        # Update the geophysical_study field in the Projects table
-        project = Projects.query.get(proj_id)
-        if project:
-            project.geophysical_study = True
-            project.save()
-
         return {"message": server_message}, 200
 
 @geophysical_ns.route('/geophysical/<int:proj_id>/<int:id>')
@@ -83,6 +88,14 @@ class GeophysicalAPI(Resource):
         geophysical = Geophysical.query.filter_by(project_id=proj_id, id=id).first()
         if not geophysical:
             raise NotFound("Geophysical not found")
+        
+        # Calculate dynamic fields
+        geophysical.seismic_profiles = len(geophysical.geophysic_seismic) > 0
+        geophysical.profiles_number = len(geophysical.geophysic_seismic)
+        geophysical.geophysical_logging = len(geophysical.geophysic_logging) > 0
+        geophysical.logging_number = len(geophysical.geophysic_logging)
+        geophysical.electrical_profiles = len(geophysical.geophysic_electrical) > 0
+        geophysical.point_number = len(geophysical.geophysic_electrical)
         
         return geophysical, 200
     
@@ -154,24 +167,13 @@ class GeophysicalAPI(Resource):
 
         # Delete the associated PDF file if it exists
         if geophysical.archival_material:
-            upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_material')
-            file_path = os.path.join(upload_folder, geophysical.archival_material)
-            if os.path.exists(file_path):
-                os.remove(file_path)
+            geophysical_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical')
 
-                # Optionally delete the directory if it's empty
-                if not os.listdir(upload_folder):
-                    os.rmdir(upload_folder)
+            # Delete the entire project directory if it exists
+            if os.path.isdir(geophysical_directory):
+                shutil.rmtree(geophysical_directory)
 
         # Delete the geophysical record
         geophysical.delete()
-
-        # Check if there are any remaining geophysical records for the project
-        remaining_geophysicals = Geophysical.query.filter_by(project_id=proj_id).count()
-        if remaining_geophysicals == 0:
-            project = Projects.query.get(proj_id)
-            if project:
-                project.geophysical_study = False
-                project.save()
 
         return {"message": "Successfully deleted geophysical record"}, 200

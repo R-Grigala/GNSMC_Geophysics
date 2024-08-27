@@ -26,9 +26,7 @@ def populate_db():
         contractor="New Contractor",
         proj_location="Example Location",
         proj_latitude=42.1234,
-        proj_longitude=43.649,
-        geological_study=True,
-        geophysical_study=True
+        proj_longitude=43.649
     )
     new_project.create()
 
@@ -81,15 +79,9 @@ def populate_db():
     click.echo("Creating First Geophysical")
     new_geophysical = Geophysical(
         project_id=1,
-        seismic_profiles=True,
-        profiles_number=2,
         vs30=600,
         ground_category_geo="II",
         ground_category_euro="B",
-        geophysical_logging=True,
-        logging_number=1,
-        electrical_profiles=True,
-        point_number=1,
         georadar=True,
         archival_material="main_material.xlsx"
     )
