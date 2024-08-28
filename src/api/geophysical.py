@@ -176,4 +176,4 @@ class GeophysicalAPI(Resource):
         # Delete the geophysical record
         geophysical.delete()
 
-        return {"message": "Successfully deleted geophysical record"}, 200
+        return {"message": "წარმატებით წაიშალა გეოფიზიკა"}, 200

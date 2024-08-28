@@ -23,3 +23,7 @@ def edit_geophysical(id):
 def serve_image(proj_id, filename):
     directory = f'temp/{proj_id}/geophysical/archival_material/'
     return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/create_geophysicSeismic', methods=['GET', 'POST'])
+def create_geophysiSeismic():
+    return render_template("geophysicSeismic.html")

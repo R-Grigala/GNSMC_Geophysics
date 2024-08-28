@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", function() {
     .then(data => {
         // Check if data is an array
         if (Array.isArray(data)) {
+            const geophysicalTableBody = document.getElementById('geophysicalTableBody');
+
             data.forEach(geophysical => {
                 const row = `
                     <tr data-geophysical-id="${geophysical.id}">

@@ -96,9 +96,9 @@ class GeophysicSeismicListAPI(Resource):
 class GeophysicSeismicAPI(Resource):
     @geophysic_seismic_ns.marshal_with(geophysic_seismic_model)
     def get(self, geophy_id, id):
-        geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id, id=id).all()
+        geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_seismic:
-            raise NotFound("Geophysical not found")
+            raise NotFound("GeophysicSeismic not found")
         
         return geophysic_seismic, 200
     
@@ -129,7 +129,7 @@ class GeophysicSeismicAPI(Resource):
         pdf_filename = geophysic_seismic.archival_pdf
         excel_filename = geophysic_seismic.archival_excel
         img_filename = geophysic_seismic.archival_img
-        server_message = "Geophysical seismic record updated successfully."
+        server_message = "წარმატებით განახლდა სეისმური პროფილი."
 
         # Handle the PDF file upload
         if pdf_files:
@@ -147,7 +147,7 @@ class GeophysicSeismicAPI(Resource):
                     if os.path.exists(old_file_path):
                         os.remove(old_file_path)
             else:
-                server_message += ' PDF archival file was not uploaded.'
+                server_message += ' არ აიტვირთა PDF საარქივო ფაილი.'
 
         # Handle the Excel file upload
         if excel_files:
@@ -165,7 +165,7 @@ class GeophysicSeismicAPI(Resource):
                     if os.path.exists(old_file_path):
                         os.remove(old_file_path)
             else:
-                server_message += ' Excel archival file was not uploaded.'
+                server_message += ' არ აიტვირთა Excel საარქივო ფაილი.'
 
         # Handle the Image file upload
         if img_files:
@@ -182,7 +182,7 @@ class GeophysicSeismicAPI(Resource):
                     if os.path.exists(old_file_path):
                         os.remove(old_file_path)
             else:    
-                server_message += ' Image archival file was not uploaded.'
+                server_message += ' არ აიტვირთა სურათის საარქივო ფაილი.'
 
         # Update the record fields
         geophysic_seismic.longitude = args['longitude']
@@ -242,4 +242,4 @@ class GeophysicSeismicAPI(Resource):
             if os.path.isdir(folder) and not os.listdir(folder):
                 os.rmdir(folder)
 
-        return {"message": "Geophysical seismic record deleted successfully"}, 200
+        return {"message": "წარმატებით წაიშალა სეისმური პროფილი."}, 200
