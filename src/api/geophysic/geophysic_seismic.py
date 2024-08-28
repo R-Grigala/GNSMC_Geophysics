@@ -146,8 +146,11 @@ class GeophysicSeismicAPI(Resource):
                     old_file_path = os.path.join(upload_folder, geophysic_seismic.archival_pdf)
                     if os.path.exists(old_file_path):
                         os.remove(old_file_path)
+
+                geophysic_seismic.archival_pdf = pdf_filename
             else:
                 server_message += ' არ აიტვირთა PDF საარქივო ფაილი.'
+            
 
         # Handle the Excel file upload
         if excel_files:
@@ -164,6 +167,8 @@ class GeophysicSeismicAPI(Resource):
                     old_file_path = os.path.join(upload_folder, geophysic_seismic.archival_excel)
                     if os.path.exists(old_file_path):
                         os.remove(old_file_path)
+
+                geophysic_seismic.archival_excel = excel_filename    
             else:
                 server_message += ' არ აიტვირთა Excel საარქივო ფაილი.'
 
@@ -181,6 +186,8 @@ class GeophysicSeismicAPI(Resource):
                     old_file_path = os.path.join(upload_folder, geophysic_seismic.archival_img)
                     if os.path.exists(old_file_path):
                         os.remove(old_file_path)
+                        
+                geophysic_seismic.archival_img = img_filename
             else:    
                 server_message += ' არ აიტვირთა სურათის საარქივო ფაილი.'
 
@@ -191,9 +198,6 @@ class GeophysicSeismicAPI(Resource):
         geophysic_seismic.vs30 = args['vs30']
         geophysic_seismic.ground_category_geo = args['ground_category_geo']
         geophysic_seismic.ground_category_euro = args['ground_category_euro']
-        geophysic_seismic.archival_pdf = pdf_filename
-        geophysic_seismic.archival_excel = excel_filename
-        geophysic_seismic.archival_img = img_filename
 
         # Save the updates
         geophysic_seismic.save()
