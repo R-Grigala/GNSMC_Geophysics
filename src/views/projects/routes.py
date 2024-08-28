@@ -24,6 +24,6 @@ def edit_project(id):
     return render_template("edit_project.html", project_id=id)
 
 @projects_blueprint.route('/images/<int:proj_id>/<filename>')
-def serve_image(proj_id, filename):
+def project_image(proj_id, filename):
     directory = f'temp/{proj_id}/images/'
     return send_from_directory(directory, filename)

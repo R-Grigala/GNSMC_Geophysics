@@ -156,10 +156,10 @@
     <!-- for Project Data -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // const projectIdElement = document.getElementById("projectId");
-            // const projectId = projectIdElement.getAttribute("data-project-id");
+            const projectIdElement = document.getElementById("projectId");
+            const projectId = projectIdElement.getAttribute("data-project-id");
 
-            fetch(`/api/project/1`)
+            fetch(`/api/project/${projectId}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("projectName").textContent = data.projects_name;

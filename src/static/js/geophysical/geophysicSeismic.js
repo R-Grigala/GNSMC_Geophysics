@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const geophysicalIdElement = document.getElementById("geophysicalId");
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
     const geophysicSeismicTableContainer = document.getElementById('geophysicSeismicTableContainer');
+    const projectIdElement = document.getElementById("projectId");
+    const projectId = projectIdElement.getAttribute("data-project-id");
     
     // Fetch data from API endpoint geophysic_seismic
     fetch(`/api/geophysic_seismic/${geophysicalId}`)
@@ -21,9 +23,9 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>${data.vs30}</td>
                             <td>${data.ground_category_geo}</td>
                             <td>${data.ground_category_euro}</td>
-                            <td>${data.archival_img}</td>
-                            <td>${data.archival_excel}</td>
-                            <td>${data.archival_pdf}</td>
+                            <td><a href="/${projectId}/geophysical/${data.geophysical_id}/archival_img/${data.archival_img}" target="_blank">${data.archival_img}</a></td>
+                            <td><a href="/${projectId}/geophysical/${data.geophysical_id}/archival_excel/${data.archival_excel}" target="_blank">${data.archival_excel}</a></td>
+                            <td><a href="/${projectId}/geophysical/${data.geophysical_id}/archival_pdf/${data.archival_pdf}" target="_blank">${data.archival_pdf}</a></td>
                             <td>
                                 <a class="btn btn-info" onclick="openGeophysicSeismicModal(true, ${data.id})">Edit</a>
                             </td>
