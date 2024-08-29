@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const projectTableBody = document.getElementById('projectTableBody');
             data.forEach(project => {
                 const row = `
-                    <tr>
+                    <tr data-project-id="${project.id}">
                         <td>${project.projects_name}</td>
                         <td>${project.contract_number || '----'}</td>
                         <td>${project.start_time}</td>
@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             <a class="btn btn-sm btn-primary" href="/view_project/${project.id}">View</a>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-info" data-project-id="${project.id}" onclick="openEditProjectModal(${project.id})">Edit</a>
+                            <a class="btn btn-sm btn-info" onclick="openEditProjectModal(${project.id})">Edit</a>
                         </td>
                         <td>
-                            <a type="button" class="btn btn-sm btn-danger" data-project-id="${project.id}" onclick="confirmDelete(this)">Delete</a>
+                            <img src="/static/img/x_button.png" alt="Delete" class="delete-icon" onclick="confirmDelete(${project.id})" style="width: 25px; height: 25px; cursor: pointer;">
                         </td>
                     </tr>
                 `;
@@ -120,8 +120,7 @@ function editProjectForm() {
 }
 
 // Function to confirm and delete a project
-function confirmDelete(button) {
-    const projectId = button.getAttribute('data-project-id');
+function confirmDelete(projectId) {
     const confirmed = confirm('დარწმუნებული ხართ რომ გსურთ ამ პროექტის წაშლა?');
 
     if (confirmed) {
@@ -132,7 +131,12 @@ function confirmDelete(button) {
         .then(data => {
             if (data.message) {
                 alert(data.message); // Show success message
-                button.closest('tr').remove();
+
+                // Remove the row from the table
+                const row = document.querySelector(`tr[data-project-id="${projectId}"]`);
+                if (row) {
+                    row.remove();
+                }
             } else {
                 alert('Failed to delete project');
             }

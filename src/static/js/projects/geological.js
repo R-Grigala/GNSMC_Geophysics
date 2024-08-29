@@ -26,11 +26,11 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <a class="btn btn-sm btn-primary" href="#">View</a>
                             </td>
                             <td>
-                                <a class="btn btn-info" href="#">Edit</a>
+                                <a class="btn btn-sm btn-info" href="#">Edit</a>
                             </td>
                             <td>
                                 <form action="#" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this station?');">Delete</button>
                                 </form>
                             </td>
                         </tr>

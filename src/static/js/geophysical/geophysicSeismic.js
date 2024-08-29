@@ -15,6 +15,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 const geophysicSeismicTable = document.getElementById('geophysicSeismicTable');
 
                 data.forEach(data => {
+                    const archivalImgLink = data.archival_img ? 
+                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/archival_img/${data.archival_img}" target="_blank">${data.archival_img}</a>` : 
+                        '---';
+
+                    const archivalExcelLink = data.archival_excel ? 
+                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/archival_excel/${data.archival_excel}" target="_blank">${data.archival_excel}</a>` : 
+                        '---';
+
+                    const archivalPdfLink = data.archival_pdf ? 
+                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/archival_pdf/${data.archival_pdf}" target="_blank">${data.archival_pdf}</a>` : 
+                        '---';
+
                     const row = `
                         <tr data-geophysicSeismic-id="${data.id}">
                             <td>${data.longitude}</td>
@@ -23,14 +35,14 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>${data.vs30}</td>
                             <td>${data.ground_category_geo}</td>
                             <td>${data.ground_category_euro}</td>
-                            <td><a href="/${projectId}/geophysical/${data.geophysical_id}/archival_img/${data.archival_img}" target="_blank">${data.archival_img}</a></td>
-                            <td><a href="/${projectId}/geophysical/${data.geophysical_id}/archival_excel/${data.archival_excel}" target="_blank">${data.archival_excel}</a></td>
-                            <td><a href="/${projectId}/geophysical/${data.geophysical_id}/archival_pdf/${data.archival_pdf}" target="_blank">${data.archival_pdf}</a></td>
+                            <td>${archivalImgLink}</td>
+                            <td>${archivalExcelLink}</td>
+                            <td>${archivalPdfLink}</td>
                             <td>
-                                <a class="btn btn-info" onclick="openGeophysicSeismicModal(true, ${data.id})">Edit</a>
+                                <a class="btn btn-sm btn-info" onclick="openGeophysicSeismicModal(true, ${data.id})">Edit</a>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger btn-block" onclick="deleteGeophysicSeismic(${data.id})">Delete</button>
+                                <img src="/static/img/x_button.png" style="width: 25px; height: 25px; cursor: pointer;" alt="Delete" class="delete-icon" onclick="deleteGeophysicSeismic(${data.id})">
                             </td>
                         </tr>
                     `;
@@ -45,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error fetching data:', error);
             // Handle error scenario, e.g., show an error message on the UI
         });
-    
 });
 
 

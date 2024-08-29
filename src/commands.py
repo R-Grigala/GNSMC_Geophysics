@@ -43,37 +43,37 @@ def populate_db():
     )
     new_project.create()
 
-    click.echo("Creating First Geological")
-    new_geological = Geological(
-        project_id = 1,
-        geological_survey = True,
-        objects_number = 2,
-        boreholes = False,
-        boreholes_number = 0,
-        pits = False,
-        pits_number = 0,
-        laboratory_tests = True,
-        points_number = 2,
-        archival_material = "archival_material.xlsx"
-    )
+    # click.echo("Creating First Geological")
+    # new_geological = Geological(
+    #     project_id = 1,
+    #     geological_survey = True,
+    #     objects_number = 2,
+    #     boreholes = False,
+    #     boreholes_number = 0,
+    #     pits = False,
+    #     pits_number = 0,
+    #     laboratory_tests = True,
+    #     points_number = 2,
+    #     archival_material = "archival_material.xlsx"
+    # )
 
-    new_geological.create()
+    # new_geological.create()
 
-    click.echo("Creating Second Geological")
-    new_geological = Geological(
-        project_id = 1,
-        geological_survey = False,
-        objects_number = 0,
-        boreholes = False,
-        boreholes_number = 0,
-        pits = False,
-        pits_number = 0,
-        laboratory_tests = True,
-        points_number = 20,
-        archival_material = "example_material.xlsx"
-    )
+    # click.echo("Creating Second Geological")
+    # new_geological = Geological(
+    #     project_id = 1,
+    #     geological_survey = False,
+    #     objects_number = 0,
+    #     boreholes = False,
+    #     boreholes_number = 0,
+    #     pits = False,
+    #     pits_number = 0,
+    #     laboratory_tests = True,
+    #     points_number = 20,
+    #     archival_material = "example_material.xlsx"
+    # )
 
-    new_geological.create()
+    # new_geological.create()
 
 
     click.echo("Creating First Geophysical")
@@ -121,26 +121,26 @@ def populate_db():
     new_geophysical_seismic.create()
 
 
-    click.echo("Creating First GeophysicLogging")
-    new_geophysical_logging = GeophysicLogging(
-        geophysical_id=1,
-        longitude=41.1234,
-        latitude=42.549,
-        profile_length=0,
-        archival_img="image.png",
-        archival_excel="test.xlsx",
-    )
+    # click.echo("Creating First GeophysicLogging")
+    # new_geophysical_logging = GeophysicLogging(
+    #     geophysical_id=1,
+    #     longitude=41.1234,
+    #     latitude=42.549,
+    #     profile_length=0,
+    #     archival_img="image.png",
+    #     archival_excel="test.xlsx",
+    # )
 
-    new_geophysical_logging.create()
+    # new_geophysical_logging.create()
 
-    click.echo("Creating First GeophysicElectrical")
-    new_geophysic_electrical = GeophysicElectrical(
-        geophysical_id=1,
-        longitude=41.1234,
-        latitude=42.549,
-        profile_length=0,
-        archival_img="image.png",
-        archival_excel="test.xlsx",
-    )
+    # click.echo("Creating First GeophysicElectrical")
+    # new_geophysic_electrical = GeophysicElectrical(
+    #     geophysical_id=1,
+    #     longitude=41.1234,
+    #     latitude=42.549,
+    #     profile_length=0,
+    #     archival_img="image.png",
+    #     archival_excel="test.xlsx",
+    # )
 
-    new_geophysic_electrical.create()
+    # new_geophysic_electrical.create()

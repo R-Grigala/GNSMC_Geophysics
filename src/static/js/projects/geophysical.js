@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const geophysicalTableBody = document.getElementById('geophysicalTableBody');
 
             data.forEach(geophysical => {
+                const archivalMaterialLink = geophysical.archival_material ? 
+                `<a href="/geophysical/archival_material/${projectId}/${geophysical.archival_material}" target="_blank">${geophysical.archival_material}</a>` : 
+                '---';
+
                 const row = `
                     <tr data-geophysical-id="${geophysical.id}">
                         <td>${geophysical.seismic_profiles ? "Yes" : "No"}</td>
@@ -23,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${geophysical.electrical_profiles ? "Yes" : "No"}</td>
                         <td>${geophysical.point_number}</td>
                         <td>${geophysical.georadar ? "Yes" : "No"}</td>
-                        <td>${geophysical.archival_material || '----'}</td>
+                        <td>${archivalMaterialLink}</td>
                         <td>
                             <a class="btn btn-sm btn-primary" href="/view_geophysical/${geophysical.id}">View</a>
                         </td>
@@ -31,9 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <a class="btn btn-sm btn-info" onclick="openEditGeophysicalModal(${geophysical.id}, ${projectId})">Edit</a>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-danger btn-block" 
-                                    onclick="deleteGeophysicalRecord(${geophysical.id}, ${projectId})">Delete
-                            </a>
+                            <img src="/static/img/x_button.png" alt="Delete" class="delete-icon" onclick="deleteGeophysicalRecord(${geophysical.id}, ${projectId})" style="width: 25px; height: 25px; cursor: pointer;">
                         </td>
                     </tr>
                 `;
@@ -124,16 +126,6 @@ function openEditGeophysicalModal(geophysicalId, projectId) {
             document.getElementById('editVs30').value = data.vs30;
             document.getElementById('editGroundCategoryGeo').value = data.ground_category_geo;
             document.getElementById('editGroundCategoryEuro').value = data.ground_category_euro;
-
-            // Handle the existing archival material file
-            const archivalMaterialContainer = document.getElementById('existingArchivalMaterial');
-            if (data.archival_material) {
-                archivalMaterialContainer.innerHTML = `
-                    <p>არსებული საარქივო ფაილი :&emsp;<a href="/geophysical/archival_material/${projectId}/${data.archival_material}" target="_blank">${data.archival_material}</a></p>
-                `;
-            } else {
-                archivalMaterialContainer.innerHTML = `<p>არ არის ატვირთული საარქივო ფაილი.</p>`;
-            }
 
             // Show the modal
             var editGeophysicalModal = new bootstrap.Modal(document.getElementById('editGeophysicalModal'));
