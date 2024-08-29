@@ -1,7 +1,6 @@
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 import os
-import uuid
 
 from src.api.nsmodels import geophysic_seismic_ns, geophysic_seismic_model, geophysical_seismic__parser
 from src.models import GeophysicSeismic, Geophysical
@@ -15,7 +14,7 @@ class GeophysicSeismicListAPI(Resource):
     def get(self, geophy_id):
         geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id).all()
         if not geophysic_seismic:
-            raise NotFound("Geophysical not found")
+            raise NotFound("GeophysicSeismic not found")
         
         return geophysic_seismic, 200
     
@@ -52,7 +51,7 @@ class GeophysicSeismicListAPI(Resource):
                 '.pdf'
             )
             if not pdf_filename:
-                server_message += ' არ აიტვირთა PDF საარქივო ფაილი.'
+                server_message += ' არ აიტვირთა საარქივო PDF-ის ფაილი.'
 
         # Handle the Excel file upload
         if excel_files:
@@ -63,7 +62,7 @@ class GeophysicSeismicListAPI(Resource):
                 '.xlsx'
             )
             if not excel_filename:
-                server_message += ' არ აიტვირთა Excel საარქივო ფაილი.'
+                server_message += ' არ აიტვირთა საარქივო Excel-ის ფაილი.'
 
         # Handle the Image file upload
         if img_files:
@@ -73,7 +72,7 @@ class GeophysicSeismicListAPI(Resource):
                 ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
             )
             if not img_filename:
-                server_message += ' არ აიტვირთა სურათის საარქივო ფაილი.'
+                server_message += ' არ აიტვირთა საარქივო Image-ის ფაილი.'
 
         # Create the Geophysical record
         new_geophysical_seismic = GeophysicSeismic(
@@ -115,7 +114,7 @@ class GeophysicSeismicAPI(Resource):
         # Retrieve the record
         geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_seismic:
-            raise NotFound("Geophysical seismic record not found")
+            raise NotFound("GeophysicSeismic record not found")
 
         # Parse the incoming request data
         args = geophysical_seismic__parser.parse_args()
@@ -149,7 +148,7 @@ class GeophysicSeismicAPI(Resource):
 
                 geophysic_seismic.archival_pdf = pdf_filename
             else:
-                server_message += ' არ აიტვირთა PDF საარქივო ფაილი.'
+                server_message += ' არ აიტვირთა საარქივო PDF-ის ფაილი.'
             
 
         # Handle the Excel file upload
@@ -170,7 +169,7 @@ class GeophysicSeismicAPI(Resource):
 
                 geophysic_seismic.archival_excel = excel_filename    
             else:
-                server_message += ' არ აიტვირთა Excel საარქივო ფაილი.'
+                server_message += ' არ აიტვირთა საარქივო Excel-ის ფაილი.'
 
         # Handle the Image file upload
         if img_files:
@@ -189,7 +188,7 @@ class GeophysicSeismicAPI(Resource):
                         
                 geophysic_seismic.archival_img = img_filename
             else:    
-                server_message += ' არ აიტვირთა სურათის საარქივო ფაილი.'
+                server_message += ' არ აიტვირთა საარქივო Image-ის ფაილი.'
 
         # Update the record fields
         geophysic_seismic.longitude = args['longitude']
@@ -215,7 +214,7 @@ class GeophysicSeismicAPI(Resource):
         # Retrieve the Geophysic Seismic record
         geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_seismic:
-            raise NotFound("Geophysical seismic record not found")
+            raise NotFound("GeophysicSeismic record not found")
 
         # Define paths for old files
         pdf_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'seismic', 'archival_pdf')

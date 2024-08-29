@@ -15,9 +15,9 @@ geophysic_logging_model = geophysic_logging_ns.model('GeophysicLogging', {
 })
 
 geophysic_logging_parser = reqparse.RequestParser()
-geophysic_logging_parser.add_argument('geophysical_id', type=int, required=True, help='The ID of the related geophysical record')
-geophysic_logging_parser.add_argument('longitude', type=float, required=True, help='The longitude of the logging profile')
-geophysic_logging_parser.add_argument('latitude', type=float, required=True, help='The latitude of the logging profile')
-geophysic_logging_parser.add_argument('profile_length', type=float, required=True, help='The profile length')
+
+geophysic_logging_parser.add_argument('longitude', type=float, required=True,  help="The longitude of the seismic profile: 41.4256")
+geophysic_logging_parser.add_argument('latitude', type=float, required=True,  help="The latitude of the seismic profile: 43.513")
+geophysic_logging_parser.add_argument('profile_length', type=float, required=True,  help="The profile length: 100")
 geophysic_logging_parser.add_argument("archival_img", required=False, type=FileStorage, location="files", action="append", help="Upload Images (JPEG/PNG/JPG)")
 geophysic_logging_parser.add_argument("archival_excel", required=False, type=FileStorage, location="files", action="append", help="Upload archival EXCEL (XLS/XLSX)")
