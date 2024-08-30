@@ -20,8 +20,11 @@
         </div>
     </div>
 
-    <!-- The CreateGeophysicalModal -->
+    <!-- The Create GeophysicSeismicModal -->
     {% include "geophysicSeismic.html" %}
+
+    <!-- The Create GeophysicLoggingModal -->
+    {% include "geophysicLogging.html" %}
 
     <div class="table-responsive-xxl table-bordered text-center mt-2" style="font-size: small;">
         <table class="table align-middle rounded-2 border-muted mb-0 bg-white">
@@ -29,7 +32,7 @@
                 <a class="btn btn-sm btn-warning" style="font-size: x-small;" onclick="openGeophysicSeismicModal()">სეისმური პროფილის დამატება</a>
             </td>
             <td>
-                <a class="btn btn-sm btn-success" style="font-size: x-small;" href="#">გეოფიზიკური კაროტაჟის დამატება</a>
+                <a class="btn btn-sm btn-success" style="font-size: x-small;" onclick="openGeophysicLoggingModal()">გეოფიზიკური კაროტაჟის დამატება</a>
             </td>
             <td>
                 <a class="btn btn-sm btn-primary" style="font-size: x-small;" href="#">ელექტრული პროფილის დამატება</a>
@@ -74,6 +77,7 @@
                     <th>პროფილის სიგრძე</th>
                     <th>საარქივო Image</th>
                     <th>საარქივო Excel</th>
+                    <th>საარქივო PDF</th>
                     <th></th>
                     <th></th>
                 </tr>

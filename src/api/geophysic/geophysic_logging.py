@@ -32,13 +32,26 @@ class GeophysicLoggingListAPI(Resource):
         args = geophysic_logging_parser.parse_args()
 
         # Extract files from the request
+        pdf_files = args.get('archival_pdf', [])
         excel_files = args.get('archival_excel', [])
         img_files = args.get('archival_img', [])
 
         # Initialize filenames
+        pdf_filename = None
         excel_filename = None
         img_filename = None
         server_message = "წარმატებით დაემატა გეოფიზიკური კაროტაჟი."
+
+        # Handle the PDF file upload
+        if pdf_files:
+            pdf_filename = save_uploaded_file(
+                pdf_files[0],
+                os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'logging', 'archival_pdf'),
+                ['application/pdf'],
+                '.pdf'
+            )
+            if not pdf_filename:
+                server_message += ' არ აიტვირთა საარქივო PDF-ის ფაილი.'
 
         # Handle the Excel file upload
         if excel_files:
@@ -68,6 +81,7 @@ class GeophysicLoggingListAPI(Resource):
             longitude=args['longitude'],
             latitude=args['latitude'],
             profile_length=args['profile_length'],
+            archival_pdf=pdf_filename,
             archival_excel=excel_filename,
             archival_img=img_filename
         )
@@ -111,9 +125,30 @@ class GeophysicLoggingAPI(Resource):
         img_files = args.get('archival_img', [])
 
         # Initialize filenames
+        pdf_filename = geophysic_logging.archival_pdf
         excel_filename = geophysic_logging.archival_excel
         img_filename = geophysic_logging.archival_img
         server_message = "წარმატებით განახლდა გეოფიზიკური კაროტაჟი."
+
+        # Handle the PDF file upload
+        if pdf_files:
+            upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'seismic', 'archival_pdf')
+            pdf_filename = save_uploaded_file(
+                pdf_files[0],
+                upload_folder,
+                ['application/pdf'],
+                '.pdf'
+            )
+            if pdf_filename:
+                # If there's an existing archival_pdf, delete it
+                if geophysic_logging.archival_pdf:
+                    old_file_path = os.path.join(upload_folder, geophysic_logging.archival_pdf)
+                    if os.path.exists(old_file_path):
+                        os.remove(old_file_path)
+
+                geophysic_logging.archival_pdf = pdf_filename
+            else:
+                server_message += ' არ აიტვირთა საარქივო PDF-ის ფაილი.'
 
         # Handle the Excel file upload
         if excel_files:
@@ -179,10 +214,15 @@ class GeophysicLoggingAPI(Resource):
             raise NotFound("GeophysicSeismic record not found")
 
         # Define paths for old files
+        pdf_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'logging', 'archival_pdf')
         excel_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'logging', 'archival_excel')
         img_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'logging', 'archival_img')
 
         # Delete old files if they exist
+        if geophysic_logging.archival_pdf:
+            old_pdf_path = os.path.join(pdf_folder, geophysic_logging.archival_pdf)
+            if os.path.exists(old_pdf_path):
+                os.remove(old_pdf_path)
         
         if geophysic_logging.archival_excel:
             old_excel_path = os.path.join(excel_folder, geophysic_logging.archival_excel)

@@ -34,17 +34,27 @@ def archival_material(proj_id, filename):
 def create_geophysiSeismic():
     return render_template("geophysicSeismic.html")
 
-@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/archival_img/<filename>')
-def geophysical_img(proj_id, geophy_id, filename):
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/seismic/archival_img/<filename>')
+def geophySeismic_img(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/seismic/archival_img/'
     return send_from_directory(directory, filename)
 
-@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/archival_excel/<filename>')
-def geophysical_excel(proj_id, geophy_id, filename):
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/seismic/archival_excel/<filename>')
+def geophySeismic_excel(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/seismic/archival_excel/'
     return send_from_directory(directory, filename)
 
-@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/archival_pdf/<filename>')
-def geophysical_pdf(proj_id, geophy_id, filename):
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/seismic/archival_pdf/<filename>')
+def geophySeismic_pdf(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/seismic/archival_pdf/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/logging/archival_img/<filename>')
+def geophyLogging_img(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/logging/archival_img/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/logging/archival_excel/<filename>')
+def geophyLogging_excel(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/logging/archival_excel/'
     return send_from_directory(directory, filename)

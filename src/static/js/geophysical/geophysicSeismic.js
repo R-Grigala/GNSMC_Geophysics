@@ -16,15 +16,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 data.forEach(data => {
                     const archivalImgLink = data.archival_img ? 
-                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/archival_img/${data.archival_img}" target="_blank">${data.archival_img}</a>` : 
+                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/seismic/archival_img/${data.archival_img}" target="_blank">${data.archival_img}</a>` : 
                         '---';
 
                     const archivalExcelLink = data.archival_excel ? 
-                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/archival_excel/${data.archival_excel}" target="_blank">${data.archival_excel}</a>` : 
+                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/seismic/archival_excel/${data.archival_excel}" target="_blank">${data.archival_excel}</a>` : 
                         '---';
 
                     const archivalPdfLink = data.archival_pdf ? 
-                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/archival_pdf/${data.archival_pdf}" target="_blank">${data.archival_pdf}</a>` : 
+                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/seismic/archival_pdf/${data.archival_pdf}" target="_blank">${data.archival_pdf}</a>` : 
                         '---';
 
                     const row = `
@@ -97,15 +97,15 @@ function fetchGeophysicSeismicData(geophysicalId, geophysicSeismicId) {
         .then(data => {
             if (data) {
                 document.getElementById('geophysicSeismicId').value = data.id;
-                document.getElementById('longitude').value = data.longitude;
-                document.getElementById('latitude').value = data.latitude;
-                document.getElementById('profile_length').value = data.profile_length;
-                document.getElementById('vs30').value = data.vs30;
-                document.getElementById('ground_category_geo').value = data.ground_category_geo;
-                document.getElementById('ground_category_euro').value = data.ground_category_euro;
+                document.getElementById('seismic_longitude').value = data.longitude;
+                document.getElementById('seismic_latitude').value = data.latitude;
+                document.getElementById('seismic_profile_length').value = data.profile_length;
+                document.getElementById('seismic_vs30').value = data.vs30;
+                document.getElementById('seismic_ground_category_geo').value = data.ground_category_geo;
+                document.getElementById('seismic_ground_category_euro').value = data.ground_category_euro;
 
 
-                console.log(data);
+                // console.log(data);
             } else {
                 alert('სეისმური პროფილი არ მოიძებნა.');
             }

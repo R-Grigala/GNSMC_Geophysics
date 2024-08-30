@@ -11,7 +11,8 @@ geophysic_logging_model = geophysic_logging_ns.model('GeophysicLogging', {
     'latitude': fields.Float(required=True, description='The latitude of the logging profile'),
     'profile_length': fields.Float(required=True, description='The profile length'),
     'archival_img': fields.String(description='The URL of the archival image'),
-    'archival_excel': fields.String(description='The URL of the archival Excel file')
+    'archival_excel': fields.String(description='The URL of the archival Excel file'),
+    'archival_pdf': fields.String(description='The URL of the archival PDF')
 })
 
 geophysic_logging_parser = reqparse.RequestParser()
@@ -21,3 +22,4 @@ geophysic_logging_parser.add_argument('latitude', type=float, required=True,  he
 geophysic_logging_parser.add_argument('profile_length', type=float, required=True,  help="The profile length: 100")
 geophysic_logging_parser.add_argument("archival_img", required=False, type=FileStorage, location="files", action="append", help="Upload Images (JPEG/PNG/JPG)")
 geophysic_logging_parser.add_argument("archival_excel", required=False, type=FileStorage, location="files", action="append", help="Upload archival EXCEL (XLS/XLSX)")
+geophysic_logging_parser.add_argument("archival_pdf", required=False, type=FileStorage, location="files", action="append", help="Upload archival PDF (PDF)")

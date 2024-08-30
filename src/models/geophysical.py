@@ -17,6 +17,7 @@ class Geophysical(db.Model, BaseModel):
     geophysic_seismic = db.relationship('GeophysicSeismic', back_populates='geophysical', cascade='all, delete-orphan')
     geophysic_logging = db.relationship('GeophysicLogging', back_populates='geophysical', cascade='all, delete-orphan')
     geophysic_electrical = db.relationship('GeophysicElectrical', back_populates='geophysical', cascade='all, delete-orphan')
+    geophysic_georadar = db.relationship('GeophysicGeoradar', back_populates='geophysical', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Geophysical {self.id}>'
@@ -55,6 +56,7 @@ class GeophysicLogging(db.Model, BaseModel):
     profile_length = db.Column(db.Float, nullable=False)
     archival_img = db.Column(db.String, nullable=True)
     archival_excel = db.Column(db.String, nullable=True)
+    archival_pdf = db.Column(db.String, nullable=True)
 
     geophysical = db.relationship('Geophysical', back_populates='geophysic_logging')
 
@@ -73,8 +75,30 @@ class GeophysicElectrical(db.Model, BaseModel):
     profile_length = db.Column(db.Float, nullable=False)
     archival_img = db.Column(db.String, nullable=True)
     archival_excel = db.Column(db.String, nullable=True)
+    archival_pdf = db.Column(db.String, nullable=True)
 
     geophysical = db.relationship('Geophysical', back_populates='geophysic_electrical')
 
     def __repr__(self):
         return f'<Electrical Profile {self.id}>'
+    
+
+class GeophysicGeoradar(db.Model, BaseModel):
+    __tablename__ = "geophysic_georadar"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id'), nullable=False)
+
+    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    profile_length = db.Column(db.Float, nullable=False)
+    archival_img = db.Column(db.String, nullable=True)
+    archival_excel = db.Column(db.String, nullable=True)
+    archival_pdf = db.Column(db.String, nullable=True)
+
+    geophysical = db.relationship('Geophysical', back_populates='geophysic_georadar')
+
+    def __repr__(self):
+        return f'<Georadar Profile {self.id}>'
+    
