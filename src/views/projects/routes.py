@@ -15,14 +15,6 @@ def projects():
 def view_projects(id):
     return render_template("view_project.html", project_id=id)
 
-@projects_blueprint.route('/create_project', methods=['GET', 'POST'])
-def create_project():
-    return render_template("create_project.html")
-
-@projects_blueprint.route('/edit_project/<int:id>', methods=['GET', 'POST'])
-def edit_project(id):
-    return render_template("edit_project.html", project_id=id)
-
 @projects_blueprint.route('/images/<int:proj_id>/<filename>')
 def project_image(proj_id, filename):
     directory = f'temp/{proj_id}/images/'
