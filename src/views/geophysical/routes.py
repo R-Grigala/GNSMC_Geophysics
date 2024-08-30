@@ -30,10 +30,6 @@ def archival_material(proj_id, filename):
     directory = f'temp/{proj_id}/geophysical/archival_material/'
     return send_from_directory(directory, filename)
 
-@geophysical_blueprint.route('/create_geophysicSeismic', methods=['GET', 'POST'])
-def create_geophysiSeismic():
-    return render_template("geophysicSeismic.html")
-
 @geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/seismic/archival_img/<filename>')
 def geophySeismic_img(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/seismic/archival_img/'
@@ -57,4 +53,24 @@ def geophyLogging_img(proj_id, geophy_id, filename):
 @geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/logging/archival_excel/<filename>')
 def geophyLogging_excel(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/logging/archival_excel/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/logging/archival_pdf/<filename>')
+def geophyLogging_pdf(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/logging/archival_pdf/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/electrical/archival_img/<filename>')
+def geophyElectrical_img(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/electrical/archival_img/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/electrical/archival_excel/<filename>')
+def geophyElectrical_excel(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/electrical/archival_excel/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/electrical/archival_pdf/<filename>')
+def geophyElectrical_pdf(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/electrical/archival_pdf/'
     return send_from_directory(directory, filename)

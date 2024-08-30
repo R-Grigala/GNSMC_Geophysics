@@ -28,6 +28,9 @@
     <!-- The Create GeophysicLoggingModal -->
     {% include "geophysicLogging.html" %}
 
+    <!-- The Create GeophysicElectricalModal -->
+    {% include "geophysicElectrical.html" %}
+
     <div class="table-responsive-xxl table-bordered text-center mt-2" style="font-size: small;">
         <table class="table align-middle rounded-2 border-muted mb-0 bg-white">
             <td>
@@ -37,7 +40,7 @@
                 <a class="btn btn-sm btn-success" style="font-size: x-small;" onclick="openGeophysicLoggingModal()">გეოფიზიკური კაროტაჟის დამატება</a>
             </td>
             <td>
-                <a class="btn btn-sm btn-primary" style="font-size: x-small;" href="#">ელექტრული პროფილის დამატება</a>
+                <a class="btn btn-sm btn-primary" style="font-size: x-small;" onclick="openGeophysicElectricalModal()">ელექტრული პროფილის დამატება</a>
             </td>
             <td>
                 <a class="btn btn-sm btn-secondary" style="font-size: x-small;" href="#">გეორადარის დამატება</a>
