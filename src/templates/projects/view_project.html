@@ -82,7 +82,7 @@
 
             <!-- Button to trigger CreateGeophysicalModal -->
             <td>
-                <a type="button" class="btn btn-sm btn-success" style="font-size: x-small;" data-bs-toggle="modal" data-bs-target="#CreateGeophysicalModal">
+                <a type="button" class="btn btn-sm btn-success" style="font-size: x-small;" onclick="openGeophysicalModal()">
                     გეოფიზიკური კვლევის დამატება
                 </a>
             </td>
@@ -99,11 +99,8 @@
         </table>
     </div>
 
-    <!-- The CreateGeophysicalModal -->
-    {% include "create_geophysical.html" %}
-
-    <!-- The EditGeophysicalModal -->
-    {% include "edit_geophysical.html" %}
+    <!-- The GeophysicalModal -->
+    {% include "geophysical.html" %}
 
     <!-- for Geological -->
     <div id="geologicalTableContainer" class="table-responsive-xxl text-center mt-1 mb-2" style="font-size: x-small;">

@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             <a class="btn btn-sm btn-primary" href="/view_geophysical/${geophysical.id}">View</a>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-info" onclick="openEditGeophysicalModal(${geophysical.id}, ${projectId})">Edit</a>
+                            <a class="btn btn-sm btn-info" onclick="openGeophysicalModal(true, ${geophysical.id})">Edit</a>
                         </td>
                         <td>
-                            <img src="/static/img/x_button.png" alt="Delete" class="delete-icon" onclick="deleteGeophysicalRecord(${geophysical.id}, ${projectId})" style="width: 25px; height: 25px; cursor: pointer;">
+                            <img src="/static/img/x_button.png" alt="Delete" class="delete-icon" onclick="deleteGeophysical(${geophysical.id}, ${projectId})" style="width: 25px; height: 25px; cursor: pointer;">
                         </td>
                     </tr>
                 `;
@@ -53,120 +53,112 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-function createGeophysicalForm(event) {
 
-    event.preventDefault(); // Prevent the default form submission
+let isEditMode = false;
+let currentProjectId = null;
+let geophysicalId = null;
 
-    // Create a FormData object from the form
-    const form = document.getElementById('addGeophysicalForm');
-    const formData = new FormData(form);
+// Open the modal for creating or editing a Geophysical record
+function openGeophysicalModal(editMode = false, geophyId = null) {
+    const modalTitle = document.getElementById('GeophysicalModalTitle');
+    const submitButton = document.getElementById('submitGeophysicalBtn');
+    const form = document.getElementById('GeophysicalForm');
+    const projectIdElement = document.getElementById("projectId");
+    const projectId = projectIdElement.getAttribute("data-project-id");
+    
+    isEditMode = editMode;
+    currentProjectId = projectId;
+    geophysicalId = geophyId;
 
-    // Use the dynamic project ID
-    const projectId = document.getElementById('projectId').getAttribute('data-project-id');
+    if (editMode) {
+        modalTitle.textContent = "სეისმური პროფილის განახლება";
+        submitButton.textContent = "განახლება";
+        fetchGeophysicalData(currentProjectId, geophysicalId);
+    } else {
+        modalTitle.textContent = "სეისმური პროფილის დამატება";
+        submitButton.textContent = "დამატება";
+        form.reset();
+    }
 
-    // Make a POST request to your Flask API
-    fetch(`/api/geophysical/${projectId}`, {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert(data.message); // Display success message or handle response
-            form.reset(); // Reset the form
-            window.location.reload();
-        } else {
-            alert('Error: ' + JSON.stringify(data)); // Handle errors
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while creating the geophysical record.');
-    });
+    const modal = new bootstrap.Modal(document.getElementById('GeophysicalModal'));
+    modal.show();
 }
 
-function deleteGeophysicalRecord(geophysicalId, projectId) {
-    if (!confirm('დარწმუნებული ხართ რომ გსურთ ამ გეოფიზიკის წაშლა?')) return;
-
-    // Send DELETE request to the API
-    fetch(`/api/geophysical/${projectId}/${geophysicalId}`, {
-        method: 'DELETE',
-    })
-    .then(response => {
-        if (response.ok) {
-            // Remove the row from the table
-            const row = document.querySelector(`tr[data-geophysical-id="${geophysicalId}"]`);
-            if (row) {
-                row.remove();
-            }
-            alert('წარმატებით წაიშალა გეოფიზიკის ჩანაწერი.');
-        } else {
-            // Handle error responses
-            response.json().then(data => {
-                alert('Error: ' + data.message);
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while deleting the geophysical record.');
-    });
-}
-
-// Function to open the edit modal with existing data
-function openEditGeophysicalModal(geophysicalId, projectId) {
+// Fetch data for editing a Geophysical record
+function fetchGeophysicalData(geophysicalId, projectId) {
     // Fetch the existing data for the geophysical record
     fetch(`/api/geophysical/${projectId}/${geophysicalId}`)
-    .then(response => response.json())
-    .then(data => {
-        if (data) {
-            // Fill the form fields with existing data
-            document.getElementById('editProjectId').value = projectId;
-            document.getElementById('editGeophysicalId').value = data.id;
-            document.getElementById('editVs30').value = data.vs30;
-            document.getElementById('editGroundCategoryGeo').value = data.ground_category_geo;
-            document.getElementById('editGroundCategoryEuro').value = data.ground_category_euro;
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                // Fill the form fields with existing data
+                document.getElementById('geophysicalId').value = data.id;
+                document.getElementById('vs30').value = data.vs30;
+                document.getElementById('groundCategoryGeo').value = data.ground_category_geo;
+                document.getElementById('groundCategoryEuro').value = data.ground_category_euro;
 
-            // Show the modal
-            var editGeophysicalModal = new bootstrap.Modal(document.getElementById('editGeophysicalModal'));
-            editGeophysicalModal.show();
-        } else {
-            alert('Geophysical record not found.');
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-        alert('An error occurred while fetching geophysical data.');
-    });
+                console.log(document.getElementById('vs30').value, data.vs30)
+    
+            } else {
+                alert('გეოფიზიკური კვლევა არ მოიძებნა.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 }
 
-function editGeophysicalForm(event) {
-    event.preventDefault(); // Prevent the default form submission
+function submitGeophysicalForm(event) {
+    event.preventDefault();
 
-    // Create a FormData object from the form
-    const form = document.getElementById('editGeophysicalForm');
-    const formData = new FormData(form);
+    const formData = new FormData(document.getElementById('GeophysicalForm'));
+    const url = isEditMode ? `/api/geophysical/${currentProjectId}/${geophysicalId}` : `/api/geophysical/${currentProjectId}`;
+    const method = isEditMode ? 'PUT' : 'POST';
 
-    // Get the geophysical ID
-    const geophysicalId = document.getElementById('editGeophysicalId').value;
-    const projectId = document.getElementById('editProjectId').value;
-
-    // Make a PUT request to your Flask API
-    fetch(`/api/geophysical/${projectId}/${geophysicalId}`, {
-        method: 'PUT',
-        body: formData,
+    fetch(url, {
+        method: method,
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message) {
-            alert(data.message); // Display success message or handle response
-            window.location.reload(); // Reload the page to reflect changes
-        } else {
+        if (data.error) {
             alert('Error: ' + JSON.stringify(data)); // Handle errors
+        } else {
+            alert(data.message);
+            window.location.reload(); // Reload the page to reflect changes
         }
+        
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while updating the geophysical record.');
+        alert('Error: გეოფიზიკური კვლევის დამატება რედაქტირებისას.');
     });
+}
+
+document.getElementById('GeophysicalForm').onsubmit = submitGeophysicalForm;
+
+
+function deleteGeophysical(id, projectId) {
+    if (confirm('ნამდვილად გსურთ ამ გეოფიზიკის წაშლა?')) {
+        fetch(`/api/geophysical/${projectId}/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                // Optionally, remove the row from the table
+                const row = document.querySelector(`tr[data-geophysical-id="${id}"]`);
+                if (row) {
+                    row.remove();
+                }
+            } else if (data.error) {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting record.');
+        });
+    }
 }

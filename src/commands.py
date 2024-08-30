@@ -83,7 +83,7 @@ def populate_db():
         ground_category_geo="II",
         ground_category_euro="B",
         georadar=True,
-        archival_material="main_material.xlsx"
+        # archival_material="main_material.xlsx"
     )
 
     new_geophysical.create()
@@ -97,9 +97,9 @@ def populate_db():
         vs30=650,
         ground_category_geo="II",
         ground_category_euro="B",
-        archival_img="image.png",
-        archival_excel="test.xlsx",
-        archival_pdf="testarchve.pdf"
+        # archival_img="image.png",
+        # archival_excel="test.xlsx",
+        # archival_pdf="testarchve.pdf"
     )
 
     new_geophysical_seismic.create()
@@ -113,34 +113,34 @@ def populate_db():
         vs30=550,
         ground_category_geo="II",
         ground_category_euro="B",
-        archival_img="image.png",
-        archival_excel="test.xlsx",
-        archival_pdf="testarchve.pdf"
+        # archival_img="image.png",
+        # archival_excel="test.xlsx",
+        # archival_pdf="testarchve.pdf"
     )
 
     new_geophysical_seismic.create()
 
 
-    # click.echo("Creating First GeophysicLogging")
-    # new_geophysical_logging = GeophysicLogging(
-    #     geophysical_id=1,
-    #     longitude=41.1234,
-    #     latitude=42.549,
-    #     profile_length=0,
-    #     archival_img="image.png",
-    #     archival_excel="test.xlsx",
-    # )
+    click.echo("Creating First GeophysicLogging")
+    new_geophysical_logging = GeophysicLogging(
+        geophysical_id=1,
+        longitude=41.1234,
+        latitude=42.549,
+        profile_length=10,
+        # archival_img="image.png",
+        # archival_excel="test.xlsx",
+    )
 
-    # new_geophysical_logging.create()
+    new_geophysical_logging.create()
 
-    # click.echo("Creating First GeophysicElectrical")
-    # new_geophysic_electrical = GeophysicElectrical(
-    #     geophysical_id=1,
-    #     longitude=41.1234,
-    #     latitude=42.549,
-    #     profile_length=0,
-    #     archival_img="image.png",
-    #     archival_excel="test.xlsx",
-    # )
+    click.echo("Creating First GeophysicElectrical")
+    new_geophysic_electrical = GeophysicElectrical(
+        geophysical_id=1,
+        longitude=41.1234,
+        latitude=42.549,
+        profile_length=0,
+        # archival_img="image.png",
+        # archival_excel="test.xlsx",
+    )
 
-    # new_geophysic_electrical.create()
+    new_geophysic_electrical.create()
