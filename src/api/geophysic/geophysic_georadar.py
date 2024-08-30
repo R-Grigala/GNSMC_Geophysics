@@ -1,15 +1,15 @@
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 
-from src.api.nsmodels import geophysic_electrical_ns, geophysic_electrical_model
-from src.models import GeophysicElectrical
+from src.api.nsmodels import geophysic_georadar_ns, geophysic_georadar_model, geophysic_georadar_parser
+from src.models import GeophysicGeoradar
 
-@geophysic_electrical_ns.route('/geophysic_electrical/<int:geophy_id>')
-class GeophysicGeoradarAPI(Resource):
-    @geophysic_electrical_ns.marshal_with(geophysic_electrical_model)
+@geophysic_georadar_ns.route('/geophysic_georadar/<int:geophy_id>')
+class GeophysicGeoradarListAPI(Resource):
+    @geophysic_georadar_ns.marshal_with(geophysic_georadar_model)
     def get(self, geophy_id):
-        geophysic_electrical = GeophysicElectrical.query.filter_by(geophysical_id=geophy_id).all()
-        if not geophysic_electrical:
-            raise NotFound("Geophysical not found")
+        geophysic_georadar = GeophysicGeoradar.query.filter_by(geophysical_id=geophy_id).all()
+        if not geophysic_georadar:
+            raise NotFound("GeophysicGeoradar not found")
         
-        return geophysic_electrical, 200
+        return geophysic_georadar, 200

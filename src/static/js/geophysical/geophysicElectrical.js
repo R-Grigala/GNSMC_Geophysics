@@ -1,18 +1,18 @@
 document.addEventListener("DOMContentLoaded", function() {
     const geophysicalIdElement = document.getElementById("geophysicalId");
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
-    const geophysicGeoradarTableContainer = document.getElementById('geophysicGeoradarTableContainer');
+    const geophysicElectricTableContainer = document.getElementById('geophysicElectricTableContainer');
     const projectIdElement = document.getElementById("projectId");
     const projectId = projectIdElement.getAttribute("data-project-id");
 
     // Fetch data from API endpoint geophysic_logging
-    fetch(`/api/geophysic_georadar/${geophysicalId}`)
+    fetch(`/api/geophysic_electrical/${geophysicalId}`)
         .then(response => response.json())
         .then(data => {
 
             // Check if data is an array
             if (Array.isArray(data)) {
-                const geophysicGeoradarTable = document.getElementById('geophysicGeoradarTable');
+                const geophysicElectricTable = document.getElementById('geophysicElectricTable');
 
                 data.forEach(data => {
                     const archivalImgLink = data.archival_img ? 
@@ -43,11 +43,11 @@ document.addEventListener("DOMContentLoaded", function() {
                             </td>
                         </tr>
                     `;
-                    geophysicGeoradarTable.innerHTML += row;
+                    geophysicElectricTable.innerHTML += row;
                 });
             }else{
                 // If data is not an array, hide the table
-                geophysicGeoradarTableContainer.style.display = 'none';
+                geophysicElectricTableContainer.style.display = 'none';
             }
         })
         .catch(error => {
