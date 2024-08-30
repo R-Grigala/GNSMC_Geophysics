@@ -91,7 +91,7 @@ class GeophysicElectricalListAPI(Resource):
         return {"message": server_message}, 200
     
 @geophysic_electrical_ns.route('/geophysic_electrical/<int:geophy_id>/<int:id>')    
-class GeophysicLoggingAPI(Resource):
+class GeophysicElectricalAPI(Resource):
     @geophysic_electrical_ns.marshal_with(geophysic_electrical_model)
     def get(self, geophy_id, id):
         geophysic_electical = GeophysicElectrical.query.filter_by(geophysical_id=geophy_id, id=id).first()
@@ -208,7 +208,7 @@ class GeophysicLoggingAPI(Resource):
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
-        # Retrieve the Geophysic Seismic record
+        # Retrieve the GeophysicElectrical record
         geophysic_electrical = GeophysicElectrical.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_electrical:
             raise NotFound("GeophysicElectrical record not found")

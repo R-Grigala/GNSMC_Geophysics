@@ -16,19 +16,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 data.forEach(data => {
                     const archivalImgLink = data.archival_img ? 
-                    `<a href="/${projectId}/geophysical/${data.geophysical_id}/logging/archival_img/${data.archival_img}" target="_blank">${data.archival_img}</a>` : 
+                    `<a href="/${projectId}/geophysical/${data.geophysical_id}/georadar/archival_img/${data.archival_img}" target="_blank">${data.archival_img}</a>` : 
                     '---';
 
                     const archivalExcelLink = data.archival_excel ? 
-                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/logging/archival_excel/${data.archival_excel}" target="_blank">${data.archival_excel}</a>` : 
+                        `<a href="/${projectId}/geophysical/${data.geophysical_id}/georadar/archival_excel/${data.archival_excel}" target="_blank">${data.archival_excel}</a>` : 
                         '---';
 
                     const archivalPdfLink = data.archival_pdf ? 
-                    `<a href="/${projectId}/geophysical/${data.geophysical_id}/logging/archival_pdf/${data.archival_pdf}" target="_blank">${data.archival_pdf}</a>` : 
+                    `<a href="/${projectId}/geophysical/${data.geophysical_id}/georadar/archival_pdf/${data.archival_pdf}" target="_blank">${data.archival_pdf}</a>` : 
                     '---';
 
                     const row = `
-                        <tr data-geophysicLogging-id="${data.id}">
+                        <tr data-geophysicGeoradar-id="${data.id}">
                             <td>${data.longitude}</td>
                             <td>${data.latitude}</td>
                             <td>${data.profile_length}</td>
@@ -36,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>${archivalExcelLink}</td>
                             <td>${archivalPdfLink}</td>
                             <td>
-                                <a class="btn btn-sm btn-info" onclick="openGeophysicLoggingModal(true, ${data.id})">Edit</a>
+                                <a class="btn btn-sm btn-info" onclick="openGeophysicGeoradarModal(true, ${data.id})">Edit</a>
                             </td>
                             <td>
-                                <img src="/static/img/x_button.png" style="width: 25px; height: 25px; cursor: pointer;" alt="Delete" class="delete-icon" onclick="deleteGeophysicLogging(${data.id})">
+                                <img src="/static/img/x_button.png" style="width: 25px; height: 25px; cursor: pointer;" alt="Delete" class="delete-icon" onclick="deleteGeophysicGeoradar(${data.id})">
                             </td>
                         </tr>
                     `;
@@ -55,3 +55,108 @@ document.addEventListener("DOMContentLoaded", function() {
             // Handle error scenario, e.g., show an error message on the UI
         });
 });
+
+
+let geophysicGeoradarId = null;
+
+// Open the modal for creating or editing a GeophysicGeoradar record
+function openGeophysicGeoradarModal(editMode = false, geophyGeoradarId = null) {
+    const modalTitle = document.getElementById('GeophysicGeoradarModalTitle');
+    const submitButton = document.getElementById('submitGeophysicGeoradarBtn');
+    const form = document.getElementById('GeophysicGeoradarForm');
+    const geophysicalIdElement = document.getElementById("geophysicalId");
+    const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
+    
+    isEditMode = editMode;
+    currentGeophysicalId = geophysicalId;
+    geophysicGeoradarId = geophyGeoradarId;
+
+    if (editMode) {
+        modalTitle.textContent = "გეორადარის განახლება";
+        submitButton.textContent = "განახლება";
+        fetchGeophysicGeoradarData(currentGeophysicalId, geophysicGeoradarId);
+    } else {
+        modalTitle.textContent = "გეორადარის დამატება";
+        submitButton.textContent = "დამატება";
+        form.reset();
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('GeophysicGeoradarModal'));
+    modal.show();
+}
+
+
+// Fetch data for editing a geophysicGeoradar record
+function fetchGeophysicGeoradarData(geophysicalId, geophysicGeoradarId) {
+    fetch(`/api/geophysic_georadar/${geophysicalId}/${geophysicGeoradarId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                document.getElementById('geophysicGeoradarId').value = data.id;
+                document.getElementById('georadar_longitude').value = data.longitude;
+                document.getElementById('georadar_latitude').value = data.latitude;
+                document.getElementById('georadar_profile_length').value = data.profile_length;
+
+            } else {
+                alert('გეორადარის ჩანაწერი არ მოიძებნა.');
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+function submitGeophysicGeoradarForm(event) {
+    event.preventDefault();
+
+    const formData = new FormData(document.getElementById('GeophysicGeoradarForm'));
+    const url = isEditMode ? `/api/geophysic_georadar/${currentGeophysicalId}/${geophysicGeoradarId}` : `/api/geophysic_georadar/${currentGeophysicalId}`;
+    const method = isEditMode ? 'PUT' : 'POST';
+
+    fetch(url, {
+        method: method,
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + JSON.stringify(data)); // Handle errors
+        } else {
+            alert(data.message);
+            window.location.reload(); // Reload the page to reflect changes
+        }
+        
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error: გეორადარის დამატება რედაქტირებისას.');
+    });
+}
+
+document.getElementById('GeophysicGeoradarForm').onsubmit = submitGeophysicGeoradarForm;
+
+function deleteGeophysicGeoradar(id) {
+    const geophysicalIdElement = document.getElementById("geophysicalId");
+    const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
+
+    if (confirm('ნამდვილად გსურთ გეორადარის ჩანაწერის წაშლა?')) {
+        fetch(`/api/geophysic_georadar/${geophysicalId}/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                // Optionally, remove the row from the table
+                const row = document.querySelector(`tr[data-geophysicGeoradar-id="${id}"]`);
+                if (row) {
+                    row.remove();
+                }
+            } else if (data.error) {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting record.');
+        });
+    }
+}

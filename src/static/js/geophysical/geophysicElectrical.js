@@ -75,7 +75,7 @@ function openGeophysicElectricalModal(editMode = false, geophyElectricalId = nul
         submitButton.textContent = "განახლება";
         fetchGeophysicElectricalData(currentGeophysicalId, geophysicElectricalId);
     } else {
-        modalTitle.textContent = "სეისმური პროფილის დამატება";
+        modalTitle.textContent = "ელექტრული პროფილის დამატება";
         submitButton.textContent = "დამატება";
         form.reset();
     }

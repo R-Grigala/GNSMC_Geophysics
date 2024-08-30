@@ -4,32 +4,31 @@ from os import path
 from src.config import Config
 from src.models import Geophysical
 
+# Define the folder path for the templates
 TEMPLATES_FOLDER = path.join(Config.BASE_DIR, "src/templates", "geophysical")
+
+# Create a Blueprint for the geophysical routes
 geophysical_blueprint = Blueprint("geophysical", __name__, template_folder=TEMPLATES_FOLDER)
 
 
+# Route to view a specific Geophysical record by its ID
 @geophysical_blueprint.route("/view_geophysical/<int:id>")
 def view_geophysical(id):
-    # Query the Geophysical model to get the proj_id
     geophysical_record = Geophysical.query.get(id)
+    proj_id = geophysical_record.project_id
 
-    proj_id = geophysical_record.project_id  # Get the project ID
-
+    # Render the template for viewing the Geophysical record
     return render_template("view_geophysical.html", geophysical_id=id, project_id=proj_id)
 
-@geophysical_blueprint.route('/create_geophysical', methods=['GET', 'POST'])
-def create_geophysical():
-    return render_template("create_geophysical.html")
 
-@geophysical_blueprint.route('/edit_geophysical/<int:id>', methods=['GET', 'POST'])
-def edit_geophysical(id):
-    return render_template("edit_geophysical.html", geophysical_id=id)
-
+# Route to serve archival material (like PDFs) for a specific project ID
 @geophysical_blueprint.route('/geophysical/archival_material/<int:proj_id>/<filename>')
 def archival_material(proj_id, filename):
     directory = f'temp/{proj_id}/geophysical/archival_material/'
     return send_from_directory(directory, filename)
 
+
+# Route to serve seismic archival images for a specific Geophysical record
 @geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/seismic/archival_img/<filename>')
 def geophySeismic_img(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/seismic/archival_img/'
@@ -45,6 +44,8 @@ def geophySeismic_pdf(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/seismic/archival_pdf/'
     return send_from_directory(directory, filename)
 
+
+# Route to serve logging archival images for a specific Geophysical record
 @geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/logging/archival_img/<filename>')
 def geophyLogging_img(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/logging/archival_img/'
@@ -60,6 +61,8 @@ def geophyLogging_pdf(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/logging/archival_pdf/'
     return send_from_directory(directory, filename)
 
+
+# Route to serve electrical archival images for a specific Geophysical record
 @geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/electrical/archival_img/<filename>')
 def geophyElectrical_img(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/electrical/archival_img/'
@@ -73,4 +76,21 @@ def geophyElectrical_excel(proj_id, geophy_id, filename):
 @geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/electrical/archival_pdf/<filename>')
 def geophyElectrical_pdf(proj_id, geophy_id, filename):
     directory = f'temp/{proj_id}/geophysical/{geophy_id}/electrical/archival_pdf/'
+    return send_from_directory(directory, filename)
+
+
+# Route to serve georadar archival images for a specific Geophysical record
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/georadar/archival_img/<filename>')
+def geophyGeoradar_img(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/georadar/archival_img/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/georadar/archival_excel/<filename>')
+def geophyGeoradar_excel(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/georadar/archival_excel/'
+    return send_from_directory(directory, filename)
+
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/georadar/archival_pdf/<filename>')
+def geophyGeoradar_pdf(proj_id, geophy_id, filename):
+    directory = f'temp/{proj_id}/geophysical/{geophy_id}/georadar/archival_pdf/'
     return send_from_directory(directory, filename)

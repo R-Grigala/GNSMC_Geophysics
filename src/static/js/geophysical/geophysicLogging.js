@@ -75,7 +75,7 @@ function openGeophysicLoggingModal(editMode = false, geophyLoggingId = null) {
         submitButton.textContent = "განახლება";
         fetchGeophysicLoggingData(currentGeophysicalId, geophysicLoggingId);
     } else {
-        modalTitle.textContent = "სეისმური პროფილის დამატება";
+        modalTitle.textContent = "გეოფიზიკური კაროტაჟის დამატება";
         submitButton.textContent = "დამატება";
         form.reset();
     }
