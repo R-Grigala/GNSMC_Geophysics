@@ -116,7 +116,7 @@ class ProjectAPI(Resource):
 
         return project, 200
     
-    @projects_ns.expect(projects_parser)
+    @projects_ns.doc(projects_parser)
     def put(self, id):
         args = projects_parser.parse_args()
         try:
