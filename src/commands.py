@@ -4,6 +4,7 @@ from datetime import datetime
 
 from src.extensions import db
 from src.models import Projects, Geological, Geophysical, GeophysicSeismic, GeophysicLogging, GeophysicElectrical
+from src.models import User, Role
 
 
 @click.command("init_db")
@@ -144,3 +145,20 @@ def populate_db():
     )
 
     new_geophysic_electrical.create()
+
+    click.echo("Creating Role")
+    role = Role(name="admin", can_geohysic=True,
+                 can_geologic=True, can_geodetic=True, can_hazard=True)
+    role.create()
+    role = Role(name="guest")
+    role.create()
+
+    click.echo("Creating User")
+    admin_user = User (
+        name="Roma",
+        lastname="Grigalashvili",
+        email="roma.grigalashvili@iliauni.edu.ge",
+        password="Grigalash1",
+        role_id=1
+    )
+    admin_user.create()
