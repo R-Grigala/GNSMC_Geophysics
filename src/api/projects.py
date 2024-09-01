@@ -62,30 +62,33 @@ class ProjectsListAPI(Resource):
         invalid_files = []
         images_saved = False
         images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', str(new_project.id), 'images')
-        
-        for image in images:
-            if image.mimetype not in image_types:
-                invalid_files.append(image.filename)
-                continue
 
-            if not images_saved:
-                os.makedirs(images_directory, exist_ok=True)
-                images_saved = True
-            
-            extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
-            file_name = str(uuid.uuid4()).replace('-', '')[:12] + extension
-            image_path = os.path.join(images_directory, file_name)
-            
-            try:
-                # Save the file to the directory
-                image.save(image_path)
+        if images:
+            for image in images:
+                if image.mimetype not in image_types:
+                    invalid_files.append(image.filename)
+                    continue
+
+                if not images_saved:
+                    os.makedirs(images_directory, exist_ok=True)
+                    images_saved = True
                 
-                # Save the file path to the database
-                new_image = Images(path=file_name, project_id=new_project.id)
-                new_image.create()
-            except OSError as e:
-                return {"message": f"Failed to save images: {str(e)}"}, 500
-        
+                extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
+                file_name = str(uuid.uuid4()).replace('-', '')[:12] + extension
+                image_path = os.path.join(images_directory, file_name)
+                
+                try:
+                    # Save the file to the directory
+                    image.save(image_path)
+                    
+                    # Save the file path to the database
+                    new_image = Images(path=file_name, project_id=new_project.id)
+                    new_image.create()
+                except OSError as e:
+                    return {"message": f"Failed to save images: {str(e)}"}, 500
+        else:
+            invalid_files.append("empty")
+            
         if invalid_files:
             return {"message": "პროექტი შეიქმნა, მაგრამ პროექტის სურათი არ აიტვირთა"}, 200
         

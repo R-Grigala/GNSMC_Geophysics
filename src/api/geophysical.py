@@ -3,6 +3,7 @@ from werkzeug.exceptions import NotFound
 import os
 import uuid
 import shutil
+from flask_jwt_extended import jwt_required, current_user
 
 from src.api.nsmodels import geophysical_ns, geophysical_model, geophysical_parser
 from src.models import Geophysical
