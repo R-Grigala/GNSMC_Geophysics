@@ -38,7 +38,7 @@ class User(db.Model, BaseModel):
         return any(role.name == "admin" for role in self.role)
 
     def __repr__(self):
-        return f"<User {self.username} ({self.email})>"
+        return f"<User {self.name} ({self.email})>"
     
 
 class Role(db.Model, BaseModel):

@@ -45,9 +45,8 @@ class AuthorizationApi(Resource):
             return {"message": "User with this email does not exist"}, 400
 
         if user.check_password(args["password"]):
-            access_token = create_access_token(identity=user)
-            refresh_token = create_refresh_token(identity=user)
-            print("acc", access_token, "ref", refresh_token)
+            access_token = create_access_token(identity=user.id)
+            refresh_token = create_refresh_token(identity=user.id)
             response = {
                 "access_token": access_token,
                 "refresh_token": refresh_token
@@ -57,7 +56,6 @@ class AuthorizationApi(Resource):
             return {"message": "Password is incorrect"}, 400
 
 @registration_ns.route('/refresh')
-
 class AccessTokenRefreshApi(Resource):
     @jwt_required()
     @registration_ns.doc(security='JsonWebToken')
