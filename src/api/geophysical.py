@@ -37,8 +37,8 @@ class GeophysicalListAPI(Resource):
     @geophysical_ns.doc(parser=geophysical_parser)
     def post(self, proj_id):
 
-        if not current_user.check_permission('can_geophysical'):
-            return {"message": "არ გაქვს გეოფიზიკის დამატების ნებართვა."}, 403
+        if not current_user.check_permission('can_geologic'):
+            return {"error": "არ გაქვს გეოფიზიკის დამატების ნებართვა."}, 403
         
         # Parse the incoming request data
         args = geophysical_parser.parse_args()
@@ -111,7 +111,7 @@ class GeophysicalAPI(Resource):
     @geophysical_ns.doc(parser=geophysical_parser)
     def put(self, proj_id, id):
                 
-        if not current_user.check_permission('can_geophysical'):
+        if not current_user.check_permission('can_geologic'):
             return {"error": "არ გაქვს გეოფიზიკის რედაქტირების ნებართვა."}, 403
         
 
@@ -176,7 +176,7 @@ class GeophysicalAPI(Resource):
     @jwt_required()
     def delete(self, proj_id, id):
                         
-        if not current_user.check_permission('can_geophysical'):
+        if not current_user.check_permission('can_geologic'):
             return {"error": "არ გაქვს გეოფიზიკის წაშლის ნებართვა."}, 403
         
         # Fetch the geophysical record

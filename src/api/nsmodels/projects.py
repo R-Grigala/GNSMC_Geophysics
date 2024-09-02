@@ -8,8 +8,8 @@ import werkzeug
 projects_ns = api.namespace('Projects', description='API endpoint for Projects related operations', path='/api')
 
 projects_img_model = projects_ns.model('Image', {
-    'id': fields.Integer(description='Image ID'),
-    'path': fields.String(description='Image path')
+    'id': fields.Integer(required=True, description='Image ID', example=1),
+    'path': fields.String(required=True, description='Image path', example='3419382269fa.png')
 })
 
 projects_model = projects_ns.model('Projects', {

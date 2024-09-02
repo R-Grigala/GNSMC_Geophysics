@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
         deleteIcon.alt = 'Trash Icon';
         deleteIcon.style.position = 'absolute';
         deleteIcon.style.width = '30px';
-        deleteIcon.style.width = '30px';
+        deleteIcon.style.height = '30px';
         deleteIcon.style.top = '10px';
         deleteIcon.style.right = '150px';
         deleteIcon.style.cursor = 'pointer';
@@ -84,18 +84,28 @@ document.addEventListener("DOMContentLoaded", function() {
     function deleteImage(projectId, imageId) {
         if (!confirm('დარწმუნებული ხართ რომ გსურთ ამ სურათის წაშლა?')) return;
 
+        const token = sessionStorage.getItem('access_token');
+
         fetch(`/api/project/${projectId}/images/${imageId}`, {
             method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('წარმატებით წაიშალა');
-                fetchImages(); // Refresh carousel dynamically
-            } else {
-                handleError(new Error('Error deleting image'));
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
         })
-        .catch(handleError);
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                // Optionally, remove the row from the table
+                fetchImages();
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting record.');
+        });
     }
 
     document.getElementById('uploadButton').onclick = function() {
@@ -107,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const files = inputElement.files;
 
         if (files.length === 0) {
-            alert('გთხოვთ აირჩიოთ სურათები');
+            alert('გთხოვთ აირჩიოთ სურათები.');
             return;
         }
 
@@ -116,24 +126,30 @@ document.addEventListener("DOMContentLoaded", function() {
             formData.append('images', files[i]);
         }
 
+        const token = sessionStorage.getItem('access_token');
+
         fetch(`/api/project/${projectId}/images`, {
             method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             body: formData
         })
-        .then(response => response.json().then(data => ({
-            status: response.status,
-            body: data
-        })))
-        .then(({ status, body }) => {
-            if (status === 200) {
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
                 inputElement.value = '';
-                alert('წარმატებით აიტვირთა');
+                alert(data.message);
+                // Optionally, remove the row from the table
                 fetchImages(); // Refresh carousel dynamically
-            } else {
-                alert(body.message || 'Error სურათების ატვირთვისას მოხდა შეცდომა');
+            } else if (data.error) {
+                alert(data.error);
             }
         })
-        .catch(handleError);
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error uploading record.');
+        });
     }
 
     function displayPlaceholderImage() {
@@ -150,6 +166,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function handleError(error) {
         console.error('Error:', error);
-        alert('ოპერაციის დროს შეცდომა მოხდა');
+        alert('სურათების ატვირთვისას მოხდა შეცდომა.');
     }
 });

@@ -48,6 +48,7 @@ class Role(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
+    can_project = db.Column(db.Boolean, default=False)
     can_geohysic = db.Column(db.Boolean, default=False)
     can_geologic = db.Column(db.Boolean, default=False)
     can_hazard = db.Column(db.Boolean, default=False)

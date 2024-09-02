@@ -51,8 +51,14 @@ function createProjectForm(event) {
 }
 
 function submitForm(formData) {
+    // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    const token = sessionStorage.getItem('access_token');
+
     fetch('/api/projects', {
         method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+        },
         body: formData
     })
     .then(response => response.json())
@@ -85,6 +91,9 @@ function openEditProjectModal(projectId) {
             document.getElementById('editProjLatitude').value = data.proj_latitude;
             document.getElementById('editProjLongitude').value = data.proj_longitude;
 
+            // Set the data-project-id attribute for later use
+            document.getElementById('editProjectForm').setAttribute('data-project-id', data.id);
+
             var editProjectModal = new bootstrap.Modal(document.getElementById('editProjectModal'));
             editProjectModal.show();
         })
@@ -92,20 +101,21 @@ function openEditProjectModal(projectId) {
 }
 
 // Send PUT request for edit project
-function editProjectForm() {
-    const form = document.getElementById('editProjectForm');
-    const formData = new FormData(form);
-    const jsonData = {};
-    formData.forEach((value, key) => {
-        jsonData[key] = value;
-    });
+function editProjectForm(event) {
+    event.preventDefault(); // Prevent form submission
 
-    fetch(`/api/project/${jsonData.project_id}`, {
+    const formData = new FormData(document.getElementById('editProjectForm'));
+    const projectId = document.getElementById("editProjectForm").getAttribute("data-project-id");
+
+    // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    const token = sessionStorage.getItem('access_token');
+
+    fetch(`/api/project/${projectId}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
         },
-        body: JSON.stringify(jsonData)
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
@@ -124,21 +134,27 @@ function confirmDelete(projectId) {
     const confirmed = confirm('დარწმუნებული ხართ რომ გსურთ ამ პროექტის წაშლა?');
 
     if (confirmed) {
+
+        // Retrieve the JWT token from sessionStorage (or wherever you store it)
+        const token = sessionStorage.getItem('access_token');
+        
         fetch(`/api/project/${projectId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            },
         })
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                alert(data.message); // Show success message
-
-                // Remove the row from the table
+                alert(data.message);
+                // Optionally, remove the row from the table
                 const row = document.querySelector(`tr[data-project-id="${projectId}"]`);
                 if (row) {
                     row.remove();
                 }
-            } else {
-                alert('Failed to delete project');
+            } else if (data.error) {
+                alert(data.error);
             }
         })
         .catch(error => {

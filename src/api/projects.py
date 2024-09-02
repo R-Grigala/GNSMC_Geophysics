@@ -5,6 +5,7 @@ import os
 import uuid
 import shutil
 import mimetypes
+from flask_jwt_extended import jwt_required, current_user
 
 from src.api.nsmodels import projects_ns, projects_model, projects_parser, projects_img_model, project_img_parser
 from src.models import Projects, Images
@@ -33,8 +34,14 @@ class ProjectsListAPI(Resource):
 
         return projects, 200
     
+    @jwt_required()
     @projects_ns.doc(parser=projects_parser)
+    @projects_ns.doc(security = 'JsonWebToken')
     def post(self):
+                
+        if not current_user.check_permission('can_project'):
+            return {"message": "არ გაქვს პროექტის დამატების ნებართვა."}, 403
+        
         args = projects_parser.parse_args()
         
         try:
@@ -119,14 +126,20 @@ class ProjectAPI(Resource):
 
         return project, 200
     
+    @jwt_required()
     @projects_ns.doc(projects_parser)
+    @projects_ns.doc(security = 'JsonWebToken')
     def put(self, id):
+
+        if not current_user.check_permission('can_project'):
+            return {"message": "არ გაქვს პროექტის რედაქტირების ნებართვა."}, 403
+
         args = projects_parser.parse_args()
         try:
             start_time = datetime.strptime(args['start_time'], '%Y-%m-%d').date()
             end_time = datetime.strptime(args['end_time'], '%Y-%m-%d').date()
         except ValueError:
-            return {"message": "Invalid date format. Use YYYY-MM-DD."}, 400
+            return {"message": "ფორმატის არასწორი ტიპი. გამოიყენეთ YYYY-MM-DD."}, 400
 
         project = Projects.query.get(id)
         if project:
@@ -139,11 +152,17 @@ class ProjectAPI(Resource):
             project.proj_latitude = args["proj_latitude"]
             project.proj_longitude = args["proj_longitude"]
             project.save()  
-            return {"message": "Successfully updated Project"}, 200
+            return {"message": "პროექტი წარმატებით განახლდა."}, 200
         else:
-            raise NotFound("Project not found")
+            raise NotFound("პროექტი არ მოიძებნა.")
 
+    @jwt_required()
+    @projects_ns.doc(security = 'JsonWebToken')
     def delete(self, id):
+
+        if not current_user.check_permission('can_project'):
+            return {"error": "არ გაქვს პროექტის წაშლის ნებართვა."}, 403
+        
         project = Projects.query.get(id)
         if project:
             try:
@@ -156,12 +175,12 @@ class ProjectAPI(Resource):
 
                 # Delete the project record from the database
                 project.delete()
-                return {"message": "Successfully deleted Project and all associated files"}, 200
+                return {"message": "წარმატებით წაიშალა პროექტი, ყველა მიბმული ფაილით."}, 200
 
             except OSError as e:
                 return {"message": f"Failed to delete project directory: {str(e)}"}, 500
         else:
-            raise NotFound("Project not found")
+            raise NotFound("პროექტი არ მოიძებნა")
         
 @projects_ns.route('/project/<int:proj_id>/images')
 @projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 404: 'Not Found'})
@@ -173,14 +192,18 @@ class ProjectImageListAPI(Resource):
         # Fetch images associated with the project
         images = Images.query.filter_by(project_id=proj_id).all()
         if not images:
-            return {"message": "No images found for this project"}, 404
+            return {"message": "სურათი არ მოიძებნა ამ პროექტისთვის"}, 404
         
         return images, 200
 
-
+    @jwt_required()
     @projects_ns.doc(parser=project_img_parser)
-    @projects_ns.marshal_with(projects_img_model)
+    @projects_ns.doc(security = 'JsonWebToken')
     def post(self, proj_id):
+
+        if not current_user.check_permission('can_project'):
+            return {"error": "არ გაქვს სურათის ატვირთვის ნებართვა."}, 403
+        
         # Ensure the project exists
         project = Projects.query.get(proj_id)
         if not project:
@@ -204,10 +227,10 @@ class ProjectImageListAPI(Resource):
         try:
             for image in images:
                 if image.mimetype not in image_types:
-                    return {"message": "Invalid image type."}, 400
+                    return {"error": "ფაილი არ არის სურათის ტიპის (jpeg/png/jpg)."}, 400
 
                 if image.content_length > max_image_size:
-                    return {"message": "Image file too large."}, 400
+                    return {"error": "სურათის ზომა აჭარბებს ლიმიტს: 5MB limit."}, 400
 
                 # Save each image
                 extension = mimetypes.guess_extension(image.mimetype) or ".jpg"
@@ -218,19 +241,27 @@ class ProjectImageListAPI(Resource):
                 # Save image record in the database
                 new_image = Images(path=file_name, project_id=proj_id)
                 new_image.create()
-                saved_images.append(new_image)
+                saved_images.append({
+                    'id': new_image.id,
+                    'path': new_image.path
+                })
 
-            return saved_images, 200
+            return {"message": "სურათი წარმატებით აიტვირთა."}, 200
         
         except OSError as e:
             return {"message": f"Failed to save images: {str(e)}"}, 500
 
 
 @projects_ns.route('/project/<int:proj_id>/images/<int:image_id>')
-@projects_ns.doc(responses={200: 'OK', 404: 'Not Found'})
+@projects_ns.doc(security = 'JsonWebToken')
 class ProjectImageAPI(Resource):
 
+    @jwt_required()
     def delete(self, proj_id, image_id):
+
+        if not current_user.check_permission('can_project'):
+            return {"error": "არ გაქვს სურათის წაშლის ნებართვა."}, 403
+        
         # Find the image record
         image = Images.query.filter_by(id=image_id, project_id=proj_id).first()
         if not image:
@@ -252,7 +283,7 @@ class ProjectImageAPI(Resource):
             if os.path.isdir(images_directory) and not os.listdir(images_directory):
                 os.rmdir(images_directory)
                 
-            return {"message": "Successfully deleted image"}, 200
+            return {"message": "წარმატებით წაიშალა სურათი."}, 200
         
         except OSError as e:
             return {"message": f"Failed to delete image: {str(e)}"}, 500

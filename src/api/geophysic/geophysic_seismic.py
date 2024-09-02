@@ -23,7 +23,7 @@ class GeophysicSeismicListAPI(Resource):
     @geophysic_seismic_ns.doc(parser=geophysical_seismic__parser)
     def post(self, geophy_id):
                 
-        if not current_user.check_permission('can_geophysical'):
+        if not current_user.check_permission('can_geologic'):
             return {"error": "არ გაქვს სეისმური პროფილის დამატების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
@@ -110,7 +110,7 @@ class GeophysicSeismicAPI(Resource):
     @geophysic_seismic_ns.doc(parser=geophysical_seismic__parser)
     def put(self, geophy_id, id):
 
-        if not current_user.check_permission('can_geophysical'):
+        if not current_user.check_permission('can_geologic'):
             return {"error": "არ გაქვს სეისმური პროფილის რედაქტირების ნებართვა."}, 403
         
         # Query the Geophysical model to get the proj_id
@@ -215,7 +215,7 @@ class GeophysicSeismicAPI(Resource):
     @jwt_required()
     def delete(self, geophy_id, id):
         
-        if not current_user.check_permission('can_geophysical'):
+        if not current_user.check_permission('can_geologic'):
             return {"error": "არ გაქვს სეისმური პროფილის წაშლის ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
