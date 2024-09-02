@@ -1,6 +1,7 @@
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 import os
+from flask_jwt_extended import jwt_required, current_user
 
 from src.api.nsmodels import geophysic_electrical_ns, geophysic_electrical_model, geophysic_electrical_parser
 from src.models import GeophysicElectrical, Geophysical
@@ -18,9 +19,12 @@ class GeophysicElectricalListAPI(Resource):
         
         return geophysic_electrical, 200
     
+    @jwt_required()
     @geophysic_electrical_ns.doc(parser=geophysic_electrical_parser)
     def post(self, geophy_id):
-
+        
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს ელექტრული პროფილის დამატების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
@@ -100,9 +104,12 @@ class GeophysicElectricalAPI(Resource):
         
         return geophysic_electical, 200
     
-
+    @jwt_required()
     @geophysic_electrical_ns.doc(parser=geophysic_electrical_parser)
     def put(self, geophy_id, id):
+
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს ელექტრული პროფილის რედაქტირების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
@@ -200,7 +207,12 @@ class GeophysicElectricalAPI(Resource):
         return {"message": server_message}, 200
     
 
+    @jwt_required()
     def delete(self, geophy_id, id):
+
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს ელექტრული პროფილის წაშლის ნებართვა."}, 403
+        
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:

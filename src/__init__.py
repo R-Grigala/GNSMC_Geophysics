@@ -5,6 +5,7 @@ from src.api import api
 from src.extensions import db, api, migrate, jwt
 from src.commands import init_db, populate_db
 from src.views import projects_blueprint, geophysical_blueprint, auth_blueprint
+from src.models import User
 
 
 BLUEPRINTS = [projects_blueprint, geophysical_blueprint, auth_blueprint]
@@ -35,6 +36,22 @@ def register_extensions(app):
 
     # Flask-JWT-Extended
     jwt.init_app(app)
+
+    @jwt.user_identity_loader
+    def user_identity_lookup(user):
+        try:
+            return user.email
+        except AttributeError:
+            return user
+        
+    @jwt.user_lookup_loader
+    def user_lookup_callback(_jwt_header, jwt_data):
+        user_email = jwt_data.get("sub")
+        # print(f"JWT Data: {jwt_data}")
+        if user_email:
+            user = User.query.filter_by(email=user_email).first()
+            return user
+        return None
 
 def register_blueprints(app):
     for blueprint in BLUEPRINTS:

@@ -1,6 +1,7 @@
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 import os
+from flask_jwt_extended import jwt_required, current_user
 
 from src.api.nsmodels import geophysic_logging_ns, geophysic_logging_model, geophysic_logging_parser
 from src.models import GeophysicLogging, Geophysical
@@ -17,9 +18,12 @@ class GeophysicLoggingListAPI(Resource):
         
         return geophysic_logging, 200
     
+    @jwt_required()
     @geophysic_logging_ns.doc(parser=geophysic_logging_parser)
     def post(self, geophy_id):
-
+                
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს გეოფიზიკური კაროტაჟის დამატების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
@@ -100,9 +104,12 @@ class GeophysicLoggingAPI(Resource):
         
         return geophysic_logging, 200
     
-
+    @jwt_required()
     @geophysic_logging_ns.doc(parser=geophysic_logging_parser)
     def put(self, geophy_id, id):
+                        
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს გეოფიზიკური კაროტაჟის რედაქტირების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
@@ -199,8 +206,12 @@ class GeophysicLoggingAPI(Resource):
 
         return {"message": server_message}, 200
     
-
+    @jwt_required()
     def delete(self, geophy_id, id):
+
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს გეოფიზიკური კაროტაჟის წაშლის ნებართვა."}, 403
+        
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:

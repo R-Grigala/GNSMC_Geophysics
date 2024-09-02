@@ -111,19 +111,25 @@ function submitGeophysicGeoradarForm(event) {
     const url = isEditMode ? `/api/geophysic_georadar/${currentGeophysicalId}/${geophysicGeoradarId}` : `/api/geophysic_georadar/${currentGeophysicalId}`;
     const method = isEditMode ? 'PUT' : 'POST';
 
+    // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    const token = sessionStorage.getItem('access_token');
+
     fetch(url, {
         method: method,
+        headers: {
+            'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+        },
         body: formData
     })
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            alert('Error: ' + JSON.stringify(data)); // Handle errors
+            alert(data.error); // Handle errors
+            window.location.reload();
         } else {
             alert(data.message);
             window.location.reload(); // Reload the page to reflect changes
         }
-        
     })
     .catch(error => {
         console.error('Error:', error);
@@ -138,8 +144,14 @@ function deleteGeophysicGeoradar(id) {
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
 
     if (confirm('ნამდვილად გსურთ გეორადარის ჩანაწერის წაშლა?')) {
+        // Retrieve the JWT token from sessionStorage (or wherever you store it)
+        const token = sessionStorage.getItem('access_token');
+        
         fetch(`/api/geophysic_georadar/${geophysicalId}/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            }
         })
         .then(response => response.json())
         .then(data => {
@@ -151,7 +163,7 @@ function deleteGeophysicGeoradar(id) {
                     row.remove();
                 }
             } else if (data.error) {
-                alert('Error: ' + data.error);
+                alert(data.error);
             }
         })
         .catch(error => {

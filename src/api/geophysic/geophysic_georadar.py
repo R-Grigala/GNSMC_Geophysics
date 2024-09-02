@@ -1,6 +1,7 @@
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 import os
+from flask_jwt_extended import jwt_required, current_user
 
 from src.api.nsmodels import geophysic_georadar_ns, geophysic_georadar_model, geophysic_georadar_parser
 from src.models import GeophysicGeoradar, Geophysical
@@ -17,9 +18,12 @@ class GeophysicGeoradarListAPI(Resource):
         
         return geophysic_georadar, 200
     
+    @jwt_required()
     @geophysic_georadar_ns.doc(parser=geophysic_georadar_parser)
     def post(self, geophy_id):
 
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს გეორადარის დამატების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
@@ -99,9 +103,12 @@ class GeophysicGeoradarAPI(Resource):
         
         return geophysic_electical, 200
     
-
+    @jwt_required()
     @geophysic_georadar_ns.doc(parser=geophysic_georadar_parser)
     def put(self, geophy_id, id):
+
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს გეორადარის რედაქტირების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
@@ -199,7 +206,12 @@ class GeophysicGeoradarAPI(Resource):
         return {"message": server_message}, 200
     
 
+    @jwt_required()
     def delete(self, geophy_id, id):
+                
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს გეორადარის წაშლის ნებართვა."}, 403
+        
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:

@@ -30,9 +30,11 @@ class User(db.Model, BaseModel):
     def check_password(self, password):
         return check_password_hash(self.password, password)
     
-    def check_permission(self, request):
-        permisions = [getattr(permision, request) for permision in self.role]
-        return any(permisions)
+    def check_permission(self, permission_name):
+        if self.role:
+            permission_attr = getattr(self.role, permission_name, None)
+            return permission_attr is True
+        return False
 
     def is_admin(self):
         return any(role.name == "admin" for role in self.role)

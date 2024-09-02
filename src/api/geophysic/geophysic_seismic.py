@@ -1,6 +1,7 @@
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 import os
+from flask_jwt_extended import jwt_required, current_user
 
 from src.api.nsmodels import geophysic_seismic_ns, geophysic_seismic_model, geophysical_seismic__parser
 from src.models import GeophysicSeismic, Geophysical
@@ -18,8 +19,12 @@ class GeophysicSeismicListAPI(Resource):
         
         return geophysic_seismic, 200
     
+    @jwt_required()
     @geophysic_seismic_ns.doc(parser=geophysical_seismic__parser)
     def post(self, geophy_id):
+                
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს სეისმური პროფილის დამატების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
@@ -101,9 +106,13 @@ class GeophysicSeismicAPI(Resource):
         
         return geophysic_seismic, 200
     
+    @jwt_required()
     @geophysic_seismic_ns.doc(parser=geophysical_seismic__parser)
     def put(self, geophy_id, id):
 
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს სეისმური პროფილის რედაქტირების ნებართვა."}, 403
+        
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
@@ -203,7 +212,12 @@ class GeophysicSeismicAPI(Resource):
 
         return {"message": server_message}, 200
     
+    @jwt_required()
     def delete(self, geophy_id, id):
+        
+        if not current_user.check_permission('can_geophysical'):
+            return {"error": "არ გაქვს სეისმური პროფილის წაშლის ნებართვა."}, 403
+
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
