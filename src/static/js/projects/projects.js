@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <a class="btn btn-sm btn-info" onclick="openEditProjectModal(${project.id})">Edit</a>
                         </td>
                         <td>
-                            <img src="/static/img/x_button.png" alt="Delete" class="delete-icon" onclick="confirmDelete(${project.id})" style="width: 25px; height: 25px; cursor: pointer;">
+                            <img src="/static/img/trash_icon.png" alt="Delete" class="delete-icon" onclick="confirmDelete(${project.id})" style="width: 30px; height: 30px; cursor: pointer;">
                         </td>
                     </tr>
                 `;
