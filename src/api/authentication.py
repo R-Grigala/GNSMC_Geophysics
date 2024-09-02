@@ -65,7 +65,7 @@ class AuthorizationApi(Resource):
 
 @registration_ns.route('/refresh')
 class AccessTokenRefreshApi(Resource):
-    @jwt_required()
+    @jwt_required(refresh=True)
     @registration_ns.doc(security='JsonWebToken')
     def post(self):
         identity = get_jwt_identity()

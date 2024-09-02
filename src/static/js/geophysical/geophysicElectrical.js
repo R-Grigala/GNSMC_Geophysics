@@ -120,7 +120,6 @@ function submitGeophysicElectricalForm(event) {
         },
         body: formData
     })
-    .then(response => response.json())
     .then(data => {
         if (data.error) {
             alert(data.error); // Handle errors
@@ -155,7 +154,6 @@ function deleteGeophysicElectrical(id) {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
             }
         })
-        .then(response => response.json())
         .then(data => {
             if (data.message) {
                 alert(data.message);

@@ -119,15 +119,14 @@ function submitGeophysicalForm(event) {
 
     // Retrieve the JWT token from sessionStorage (or wherever you store it)
     const token = sessionStorage.getItem('access_token');
-
-    fetch(url, {
+    // makeApiRequest is in the globalAccessControl.js
+    makeApiRequest(url, {
         method: method,
         headers: {
             'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
         },
         body: formData
     })
-    .then(response => response.json())
     .then(data => {
         if (data.error) {
             alert(data.error); // Handle errors
@@ -151,13 +150,13 @@ function deleteGeophysical(id, projectId) {
         // Retrieve the JWT token from sessionStorage (or wherever you store it)
         const token = sessionStorage.getItem('access_token');
 
-        fetch(`/api/geophysical/${projectId}/${id}`, {
+        // makeApiRequest is in the globalAccessControl.js
+        makeApiRequest(`/api/geophysical/${projectId}/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
             }
         })
-        .then(response => response.json())
         .then(data => {
             if (data.message) {
                 alert(data.message);
