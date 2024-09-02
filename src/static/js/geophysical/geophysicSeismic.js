@@ -120,30 +120,27 @@ function submitGeophysicSeismicForm(event) {
     const url = isEditMode ? `/api/geophysic_seismic/${currentGeophysicalId}/${geophysicSeismicId}` : `/api/geophysic_seismic/${currentGeophysicalId}`;
     const method = isEditMode ? 'PUT' : 'POST';
 
-    // Retrieve the JWT token from sessionStorage (or wherever you store it)
     const token = sessionStorage.getItem('access_token');
 
-    fetch(url, {
+    // makeApiRequest is in the globalAccessControl.js
+    makeApiRequest(url, {
         method: method,
         headers: {
-            'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            'Authorization': `Bearer ${token}`
         },
         body: formData
     })
-    .then(response => response.json())
     .then(data => {
         if (data.error) {
-            alert(data.error); // Handle errors
-            window.location.reload();
+            alert(data.error);
         } else {
             alert(data.message);
             window.location.reload(); // Reload the page to reflect changes
         }
-        
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: სეისმური პოფილის დამატება რედაქტირებისას.');
+        alert('Error: სეისმური პროფილის დამატება რედაქტირებისას.');
     });
 }
 
@@ -155,20 +152,18 @@ function deleteGeophysicSeismic(id) {
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
 
     if (confirm('ნამდვილად გსურთ სეისმური პროფილის წაშლა?')) {
-        // Retrieve the JWT token from sessionStorage (or wherever you store it)
         const token = sessionStorage.getItem('access_token');
         
-        fetch(`/api/geophysic_seismic/${geophysicalId}/${id}`, {
+        // makeApiRequest is in the globalAccessControl.js
+        makeApiRequest(`/api/geophysic_seismic/${geophysicalId}/${id}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+                'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => response.json())
         .then(data => {
             if (data.message) {
                 alert(data.message);
-                // Optionally, remove the row from the table
                 const row = document.querySelector(`tr[data-geophysicSeismic-id="${id}"]`);
                 if (row) {
                     row.remove();

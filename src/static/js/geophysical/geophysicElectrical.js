@@ -112,7 +112,8 @@ function submitGeophysicElectricalForm(event) {
     // Retrieve the JWT token from sessionStorage (or wherever you store it)
     const token = sessionStorage.getItem('access_token');
 
-    fetch(url, {
+    // makeApiRequest is in the globalAccessControl.js
+    makeApiRequest(url, {
         method: method,
         headers: {
             'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
@@ -147,7 +148,8 @@ function deleteGeophysicElectrical(id) {
         // Retrieve the JWT token from sessionStorage (or wherever you store it)
         const token = sessionStorage.getItem('access_token');
         
-        fetch(`/api/geophysic_electrical/${geophysicalId}/${id}`, {
+        // makeApiRequest is in the globalAccessControl.js
+        makeApiRequest(`/api/geophysic_electrical/${geophysicalId}/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header

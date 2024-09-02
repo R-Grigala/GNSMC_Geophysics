@@ -49,7 +49,8 @@ function createProjectForm(event) {
     // Retrieve the JWT token from sessionStorage (or wherever you store it)
     const token = sessionStorage.getItem('access_token');
 
-    fetch('/api/projects', {
+    // makeApiRequest is in the globalAccessControl.js
+    makeApiRequest('/api/projects', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
@@ -106,7 +107,8 @@ function submitProjectForm(event) {
     // Retrieve the JWT token from sessionStorage (or wherever you store it)
     const token = sessionStorage.getItem('access_token');
 
-    fetch(`/api/project/${projectId}`, {
+    // makeApiRequest is in the globalAccessControl.js
+    makeApiRequest(`/api/project/${projectId}`, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
@@ -138,7 +140,8 @@ function confirmDelete(projectId) {
         // Retrieve the JWT token from sessionStorage (or wherever you store it)
         const token = sessionStorage.getItem('access_token');
         
-        fetch(`/api/project/${projectId}`, {
+        // makeApiRequest is in the globalAccessControl.js
+        makeApiRequest(`/api/project/${projectId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header

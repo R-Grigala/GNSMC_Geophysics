@@ -16,7 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     displayPlaceholderImage();
                 }
             })
-            .catch(handleError);
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                // Handle error scenario, e.g., show an error message on the UI
+            });
     }
 
     function populateCarousel(images) {
@@ -86,13 +89,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const token = sessionStorage.getItem('access_token');
 
-        fetch(`/api/project/${projectId}/images/${imageId}`, {
+        // makeApiRequest is in the globalAccessControl.js
+        makeApiRequest(`/api/project/${projectId}/images/${imageId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => response.json())
         .then(data => {
             if (data.message) {
                 alert(data.message);
@@ -128,14 +131,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const token = sessionStorage.getItem('access_token');
 
-        fetch(`/api/project/${projectId}/images`, {
+        // makeApiRequest is in the globalAccessControl.js
+        makeApiRequest(`/api/project/${projectId}/images`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
             },
             body: formData
         })
-        .then(response => response.json())
         .then(data => {
             if (data.message) {
                 inputElement.value = '';
@@ -162,10 +165,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
         item.appendChild(img);
         carouselInner.appendChild(item);
-    }
-
-    function handleError(error) {
-        console.error('Error:', error);
-        alert('სურათების ატვირთვისას მოხდა შეცდომა.');
     }
 });
