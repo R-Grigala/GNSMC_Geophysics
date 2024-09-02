@@ -83,7 +83,6 @@ def populate_db():
         vs30=600,
         ground_category_geo="II",
         ground_category_euro="B",
-        georadar=True,
         # archival_material="main_material.xlsx"
     )
 

@@ -10,7 +10,6 @@ class Geophysical(db.Model, BaseModel):
     vs30 = db.Column(db.Integer, nullable=False)
     ground_category_geo = db.Column(db.String, nullable=False)
     ground_category_euro = db.Column(db.String, nullable=False)
-    georadar = db.Column(db.Boolean, nullable=False, default=False)
     archival_material = db.Column(db.String, nullable=True)
 
     project = db.relationship('Projects', back_populates='geophysical')

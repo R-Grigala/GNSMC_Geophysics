@@ -29,6 +29,7 @@ class GeophysicalListAPI(Resource):
             geophysical.logging_number = len(geophysical.geophysic_logging)
             geophysical.electrical_profiles = len(geophysical.geophysic_electrical) > 0
             geophysical.point_number = len(geophysical.geophysic_electrical)
+            geophysical.georadar = len(geophysical.geophysic_georadar) > 0
         
         return geophysical_records, 200
     
@@ -97,6 +98,7 @@ class GeophysicalAPI(Resource):
         geophysical.logging_number = len(geophysical.geophysic_logging)
         geophysical.electrical_profiles = len(geophysical.geophysic_electrical) > 0
         geophysical.point_number = len(geophysical.geophysic_electrical)
+        geophysical.georadar = len(geophysical.geophysic_georadar) > 0
         
         return geophysical, 200
     
