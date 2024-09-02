@@ -36,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>${archivalExcelLink}</td>
                             <td>${archivalPdfLink}</td>
                             <td>
-                                <a class="btn btn-sm btn-info" onclick="openGeophysicElectricalModal(true, ${data.id})">Edit</a>
+                                <img src="/static/img/edit_icon.png" style="width: 30px; height: 30px; cursor: pointer;" alt="Edit" onclick="openGeophysicElectricalModal(true, ${data.id})">
                             </td>
                             <td>
-                                <img src="/static/img/x_button.png" style="width: 25px; height: 25px; cursor: pointer;" alt="Delete" class="delete-icon" onclick="deleteGeophysicElectrical(${data.id})">
+                                <img src="/static/img/trash_icon.png" style="width: 30px; height: 30px; cursor: pointer;" alt="Delete" class="delete-icon" onclick="deleteGeophysicElectrical(${data.id})">
                             </td>
                         </tr>
                     `;

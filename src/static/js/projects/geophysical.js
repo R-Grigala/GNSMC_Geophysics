@@ -29,13 +29,15 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${geophysical.georadar ? "Yes" : "No"}</td>
                         <td>${archivalMaterialLink}</td>
                         <td>
-                            <a class="btn btn-sm btn-primary" href="/view_geophysical/${geophysical.id}">View</a>
+                            <a href="/view_geophysical/${geophysical.id}">
+                                <img src="/static/img/view_icon.png" alt="View" style="width: 30px; height: 30px; cursor: pointer;">
+                            </a>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-info" onclick="openGeophysicalModal(true, ${geophysical.id})">Edit</a>
+                            <img src="/static/img/edit_icon.png" alt="Edit" onclick="openGeophysicalModal(true, ${geophysical.id})" style="width: 30px; height: 30px; cursor: pointer;">
                         </td>
                         <td>
-                            <img src="/static/img/x_button.png" alt="Delete" class="delete-icon" onclick="deleteGeophysical(${geophysical.id}, ${projectId})" style="width: 25px; height: 25px; cursor: pointer;">
+                            <img src="/static/img/trash_icon.png" alt="Delete" onclick="deleteGeophysical(${geophysical.id}, ${projectId})" style="width: 30px; height: 30px; cursor: pointer;">
                         </td>
                     </tr>
                 `;

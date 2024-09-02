@@ -38,10 +38,10 @@ document.addEventListener("DOMContentLoaded", function() {
         item.setAttribute('data-slide-to', index);
 
         const img = createImageElement(`/images/${projectId}/${imagePath}`);
-        const deleteButton = createDeleteButton(imageId, item);
+        const deleteIcon = createDeleteIcon(imageId, item);
 
         item.appendChild(img);
-        item.appendChild(deleteButton);
+        item.appendChild(deleteIcon);
         return item;
     }
 
@@ -56,15 +56,18 @@ document.addEventListener("DOMContentLoaded", function() {
         return img;
     }
 
-    function createDeleteButton(imageId, carouselItem) {
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn btn-sm btn-danger delete-btn';
-        deleteButton.innerHTML = 'წაშლა';
-        deleteButton.style.position = 'absolute';
-        deleteButton.style.top = '10px';
-        deleteButton.style.right = '150px';
-        deleteButton.onclick = () => deleteImage(projectId, imageId, carouselItem);
-        return deleteButton;
+    function createDeleteIcon(imageId, carouselItem) {
+        const deleteIcon = document.createElement('img');
+        deleteIcon.src = '/static/img/trash_icon.png';
+        deleteIcon.alt = 'Trash Icon';
+        deleteIcon.style.position = 'absolute';
+        deleteIcon.style.width = '30px';
+        deleteIcon.style.width = '30px';
+        deleteIcon.style.top = '10px';
+        deleteIcon.style.right = '150px';
+        deleteIcon.style.cursor = 'pointer';
+        deleteIcon.onclick = () => deleteImage(projectId, imageId, carouselItem);
+        return deleteIcon;
     }
 
     function createIndicator(index) {
