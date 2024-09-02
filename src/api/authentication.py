@@ -1,3 +1,4 @@
+import re
 from flask_restx import Resource
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from src.models import User, Role
@@ -12,24 +13,32 @@ class RegistrationApi(Resource):
     def post(self):
         args = registration_parser.parse_args()
 
+        # Validate password length and pattern
+        if args["password"] != args["passwordRepeat"]:
+            return {"message": "პაროლები არ ემთხვევა"}, 400
+        
+        password = args["password"]
+        if len(password) < 8:
+            return {"message": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო"}, 400
+
         if User.query.filter_by(email=args["email"]).first():
-            return {"message": "Email already exists"}, 400
+            return {"message": "ელ.ფოსტის მისამართი უკვე რეგისტრირებულია"}, 400
 
         role = Role.query.filter_by(name=args["role_name"]).first()
         if not role:
-            return {"message": "Role name not found"}, 400
+            return {"message": "როლი ვერ მოიძებნა"}, 400
 
         new_user = User(
             name=args["name"],
             lastname=args["lastname"],
             email=args["email"],
-            password=args["password"],
+            password=password,
             role_id=role.id
         )
 
         new_user.create()
 
-        return {"message": "Successfully created User"}, 200
+        return {"message": "მომხმარებელი წარმატებით დარეგისტრირდა."}, 200
     
 @registration_ns.route('/login')
 @registration_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
