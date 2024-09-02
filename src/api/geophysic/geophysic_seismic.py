@@ -21,6 +21,7 @@ class GeophysicSeismicListAPI(Resource):
     
     @jwt_required()
     @geophysic_seismic_ns.doc(parser=geophysical_seismic__parser)
+    @geophysic_seismic_ns.doc(security = 'JsonWebToken')
     def post(self, geophy_id):
                 
         if not current_user.check_permission('can_geologic'):
@@ -108,6 +109,7 @@ class GeophysicSeismicAPI(Resource):
     
     @jwt_required()
     @geophysic_seismic_ns.doc(parser=geophysical_seismic__parser)
+    @geophysic_seismic_ns.doc(security = 'JsonWebToken')
     def put(self, geophy_id, id):
 
         if not current_user.check_permission('can_geologic'):
@@ -213,6 +215,7 @@ class GeophysicSeismicAPI(Resource):
         return {"message": server_message}, 200
     
     @jwt_required()
+    @geophysic_seismic_ns.doc(security = 'JsonWebToken')
     def delete(self, geophy_id, id):
         
         if not current_user.check_permission('can_geologic'):

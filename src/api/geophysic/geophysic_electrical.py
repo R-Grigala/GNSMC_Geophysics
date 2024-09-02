@@ -21,6 +21,7 @@ class GeophysicElectricalListAPI(Resource):
     
     @jwt_required()
     @geophysic_electrical_ns.doc(parser=geophysic_electrical_parser)
+    @geophysic_electrical_ns.doc(security = 'JsonWebToken')
     def post(self, geophy_id):
         
         if not current_user.check_permission('can_geologic'):
@@ -106,6 +107,7 @@ class GeophysicElectricalAPI(Resource):
     
     @jwt_required()
     @geophysic_electrical_ns.doc(parser=geophysic_electrical_parser)
+    @geophysic_electrical_ns.doc(security = 'JsonWebToken')
     def put(self, geophy_id, id):
 
         if not current_user.check_permission('can_geologic'):
@@ -208,6 +210,7 @@ class GeophysicElectricalAPI(Resource):
     
 
     @jwt_required()
+    @geophysic_electrical_ns.doc(security = 'JsonWebToken')
     def delete(self, geophy_id, id):
 
         if not current_user.check_permission('can_geologic'):

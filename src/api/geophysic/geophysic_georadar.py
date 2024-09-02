@@ -20,6 +20,7 @@ class GeophysicGeoradarListAPI(Resource):
     
     @jwt_required()
     @geophysic_georadar_ns.doc(parser=geophysic_georadar_parser)
+    @geophysic_georadar_ns.doc(security = 'JsonWebToken')
     def post(self, geophy_id):
 
         if not current_user.check_permission('can_geologic'):
@@ -105,6 +106,7 @@ class GeophysicGeoradarAPI(Resource):
     
     @jwt_required()
     @geophysic_georadar_ns.doc(parser=geophysic_georadar_parser)
+    @geophysic_georadar_ns.doc(security = 'JsonWebToken')
     def put(self, geophy_id, id):
 
         if not current_user.check_permission('can_geologic'):
@@ -207,6 +209,7 @@ class GeophysicGeoradarAPI(Resource):
     
 
     @jwt_required()
+    @geophysic_georadar_ns.doc(security = 'JsonWebToken')
     def delete(self, geophy_id, id):
                 
         if not current_user.check_permission('can_geologic'):
