@@ -46,11 +46,6 @@ function createProjectForm(event) {
     const form = document.getElementById('addProjectForm');
     const formData = new FormData(form);
 
-    // Proceed with the form submission regardless of the file type
-    submitForm(formData);
-}
-
-function submitForm(formData) {
     // Retrieve the JWT token from sessionStorage (or wherever you store it)
     const token = sessionStorage.getItem('access_token');
 
@@ -81,7 +76,6 @@ function openEditProjectModal(projectId) {
     fetch(`/api/project/${projectId}`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('editProjectId').value = data.id;
             document.getElementById('editProjectName').value = data.projects_name;
             document.getElementById('editContractNumber').value = data.contract_number;
             document.getElementById('editStartTime').value = data.start_time;
@@ -101,11 +95,13 @@ function openEditProjectModal(projectId) {
 }
 
 // Send PUT request for edit project
-function editProjectForm(event) {
-    event.preventDefault(); // Prevent form submission
+function submitProjectForm(event) {
+    event.preventDefault();
 
     const formData = new FormData(document.getElementById('editProjectForm'));
-    const projectId = document.getElementById("editProjectForm").getAttribute("data-project-id");
+    // Retrieve the project ID from the hidden input field
+    const projectIdElement = document.getElementById("editProjectForm");
+    const projectId = projectIdElement.getAttribute("data-project-id");
 
     // Retrieve the JWT token from sessionStorage (or wherever you store it)
     const token = sessionStorage.getItem('access_token');
@@ -119,14 +115,18 @@ function editProjectForm(event) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message) {
-            alert(data.message); // Show success message
-            form.reset();
+        if (data.error) {
+            alert(data.error);
+            window.location.reload();
         } else {
-            alert('Error occurred while editing the project.');
-        }
+            alert(data.message);
+            window.location.reload();
+        } 
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error: პროექტის რედაქტირებისას.');
+    });
 }
 
 // Function to confirm and delete a project

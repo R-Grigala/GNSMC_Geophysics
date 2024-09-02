@@ -99,7 +99,7 @@ function fetchGeophysicalData(geophysicalId, projectId) {
                 document.getElementById('groundCategoryGeo').value = data.ground_category_geo;
                 document.getElementById('groundCategoryEuro').value = data.ground_category_euro;
 
-                console.log(document.getElementById('vs30').value, data.vs30)
+                // console.log(document.getElementById('vs30').value, data.vs30)
     
             } else {
                 alert('გეოფიზიკური კვლევა არ მოიძებნა.');

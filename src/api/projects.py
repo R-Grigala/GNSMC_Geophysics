@@ -13,10 +13,9 @@ from src.config import Config
 
 
 @projects_ns.route('/projects')
-@projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
 class ProjectsListAPI(Resource):
 
-    @projects_ns.marshal_list_with(projects_model)
+    @projects_ns.marshal_with(projects_model)
     def get(self):
         projects = Projects.query.all()
 
@@ -92,17 +91,16 @@ class ProjectsListAPI(Resource):
                     new_image = Images(path=file_name, project_id=new_project.id)
                     new_image.create()
                 except OSError as e:
-                    return {"message": f"Failed to save images: {str(e)}"}, 500
+                    return {"error": f"Failed to save images: {str(e)}"}, 500
         else:
             invalid_files.append("empty")
             
         if invalid_files:
             return {"message": "პროექტი შეიქმნა, მაგრამ პროექტის სურათი არ აიტვირთა"}, 200
         
-        return {"message": "Successfully created project"}, 200
+        return {"message": "პროექტი წარმატებით შეიქმნა."}, 200
     
 @projects_ns.route('/project/<int:id>')
-@projects_ns.doc(responses={200: 'OK', 404: 'Project not found'})
 class ProjectAPI(Resource):
 
     @projects_ns.marshal_with(projects_model)
@@ -127,7 +125,7 @@ class ProjectAPI(Resource):
         return project, 200
     
     @jwt_required()
-    @projects_ns.doc(projects_parser)
+    @projects_ns.doc(parser=projects_parser)
     @projects_ns.doc(security = 'JsonWebToken')
     def put(self, id):
 
