@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
     navItems.forEach(item => {
         const link = document.createElement('a');
         link.href = item.endpoint;
-        link.className = currentPath === item.endpoint ? 'btn btn-info m-1' : 'btn btn-primary m-1';
+        link.className = currentPath === item.endpoint ? 'btn btn-sm btn-info m-1' : 'btn btn-sm btn-primary m-1';
         link.textContent = item.text;
 
         const listItem = document.createElement('li');
@@ -58,14 +58,27 @@ document.addEventListener("DOMContentLoaded", function() {
     if (sessionStorage.getItem('access_token')) {
         // User is logged in, show Logout button
         const logoutItem = document.createElement('li');
-        logoutItem.className = 'nav-item';
+        logoutItem.className = 'nav-item d-flex align-items-center';
+
+        // Retrieve the user's email from sessionStorage
+        const userEmail = sessionStorage.getItem('user_email');
+        if (userEmail) {
+            const emailSpan = document.createElement('span');
+            emailSpan.className = 'me-2'; // Margin end for spacing
+            emailSpan.textContent = userEmail;
+            emailSpan.style.fontSize = 'small';
+
+            logoutItem.appendChild(emailSpan); // Append email first
+        }
 
         const logoutLink = document.createElement('a');
-        logoutLink.href = '#';
-        logoutLink.className = 'btn btn-danger m-1';
+        logoutLink.href = '/login';
+        logoutLink.className = 'btn btn-sm btn-danger m-1';
         logoutLink.textContent = 'გასვლა';
         logoutLink.onclick = function() {
             sessionStorage.removeItem('access_token');
+            sessionStorage.removeItem('refresh_token');
+            sessionStorage.removeItem('user_email');
             window.location.reload(); // Refresh to show the updated nav
         };
 
@@ -79,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const authLink = document.createElement('a');
             authLink.href = link.endpoint;
-            authLink.className = currentPath === link.endpoint ? 'btn btn-info m-1' : 'btn btn-primary m-1';
+            authLink.className = currentPath === link.endpoint ? 'btn btn-sm btn-info m-1' : 'btn btn-sm btn-primary m-1';
             authLink.textContent = link.text;
 
             authItem.appendChild(authLink);

@@ -24,11 +24,12 @@ function login(event) {
             // Save the token in local storage
             sessionStorage.setItem('access_token', data.access_token);
             sessionStorage.setItem('refresh_token', data.refresh_token);
+            sessionStorage.setItem('user_email', email);
 
             // Redirect to /projects page
             window.location.href = '/projects';
         } else {
-            alert(data.message || ' არასწორი ავტორიზაცია.');
+            alert(data.message || ' გაუმართავი ავტორიზაცია.');
         }
     })
     .catch(error => {
