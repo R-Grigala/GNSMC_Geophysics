@@ -2,14 +2,14 @@ from flask_restx import Resource
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
 from src.models import User, Role
-from src.api.nsmodels import registration_ns, registration_parser, auth_parser
+from src.api.nsmodels import auth_ns, registration_parser, auth_parser, user_model, user_parser
 
 
 
-@registration_ns.route('/registration')
-@registration_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
+@auth_ns.route('/registration')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
 class RegistrationApi(Resource):
-    @registration_ns.doc(parser=registration_parser)
+    @auth_ns.doc(parser=registration_parser)
     def post(self):
         args = registration_parser.parse_args()
 
@@ -40,10 +40,10 @@ class RegistrationApi(Resource):
 
         return {"message": "მომხმარებელი წარმატებით დარეგისტრირდა."}, 200
     
-@registration_ns.route('/login')
-@registration_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
+@auth_ns.route('/login')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
 class AuthorizationApi(Resource):
-    @registration_ns.doc(parser=auth_parser)
+    @auth_ns.doc(parser=auth_parser)
     def post(self):
         args = auth_parser.parse_args()
 
@@ -63,10 +63,10 @@ class AuthorizationApi(Resource):
         else:
             return {"message": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
 
-@registration_ns.route('/refresh')
+@auth_ns.route('/refresh')
 class AccessTokenRefreshApi(Resource):
     @jwt_required(refresh=True)
-    @registration_ns.doc(security='JsonWebToken')
+    @auth_ns.doc(security='JsonWebToken')
     def post(self):
         identity = get_jwt_identity()
         access_token = create_access_token(identity=identity)
@@ -75,3 +75,45 @@ class AccessTokenRefreshApi(Resource):
         }
 
         return response
+    
+@auth_ns.route('/acount')
+class AcountApi(Resource):
+    @jwt_required()
+    @auth_ns.doc(security='JsonWebToken')
+    @auth_ns.marshal_with(user_model)
+    def get(self):
+        identity = get_jwt_identity()
+        user = User.query.filter_by(email=identity).first()
+
+        if user:
+            role = Role.query.filter_by(id=user.role_id).first()
+            user.role_name = role.name
+            if not role:
+                return {"error": "როლი ვერ მოიძებნა."}, 400
+            return user, 200
+        else:
+            return {'error': 'მომხმარებელი ვერ მოიძებნა.'}, 404
+        
+    @jwt_required()
+    @auth_ns.doc(security='JsonWebToken')
+    @auth_ns.expect(user_parser)
+    def put(self):
+        identity = get_jwt_identity()
+        user = User.query.filter_by(email=identity).first()
+
+        if not user:
+            return {'error': 'User not found.'}, 404
+
+        args = user_parser.parse_args()
+
+        if User.query.filter_by(email=args["email"]).first():
+            return {"error": "ელ.ფოსტის მისამართი უკვე რეგისტრირებულია."}, 400
+        
+        # Verify old password
+        if user.check_password(args['old_password']):
+            return {'error': 'პაროლი წარმატებით განახლდა.'}, 200
+        if len(args["password"]) > 8:
+            return {"error": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
+        
+        else:
+            return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 400
