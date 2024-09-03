@@ -16,7 +16,7 @@ class Geological(db.Model, BaseModel):
     pits_number = db.Column(db.Integer, nullable=False)
     laboratory_tests = db.Column(db.Boolean, nullable=False)
     points_number = db.Column(db.Integer, nullable=False)
-    archival_material = db.Column(db.String, nullable=False)
+    archival_material = db.Column(db.String(255), nullable=False)
 
     project = db.relationship('Projects', back_populates='geological')
 

@@ -9,11 +9,11 @@ class User(db.Model, BaseModel):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(db.String, default=lambda: str(uuid.uuid4().hex)[:12])
+    uuid = db.Column(db.String(255), default=lambda: str(uuid.uuid4().hex)[:12])
     name = db.Column(db.String(20))
     lastname = db.Column(db.String(20))
     email = db.Column(db.String(120), unique=True, nullable=False)
-    _password = db.Column(db.String(128), nullable=False)
+    _password = db.Column(db.String(255), nullable=False)
 
     # One-to-One relationship with Role
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))

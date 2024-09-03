@@ -5,7 +5,7 @@ class Images(db.Model, BaseModel):
     __tablename__ = "images"
 
     id = db.Column(db.Integer, primary_key=True)
-    path = db.Column(db.String, nullable=False)
+    path = db.Column(db.String(255), nullable=False)
     
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     

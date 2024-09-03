@@ -8,9 +8,9 @@ class Geophysical(db.Model, BaseModel):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
 
     vs30 = db.Column(db.Integer, nullable=False)
-    ground_category_geo = db.Column(db.String, nullable=False)
-    ground_category_euro = db.Column(db.String, nullable=False)
-    archival_material = db.Column(db.String, nullable=True)
+    ground_category_geo = db.Column(db.String(255), nullable=False)
+    ground_category_euro = db.Column(db.String(255), nullable=False)
+    archival_material = db.Column(db.String(255), nullable=True)
 
     project = db.relationship('Projects', back_populates='geophysical')
     geophysic_seismic = db.relationship('GeophysicSeismic', back_populates='geophysical', cascade='all, delete-orphan')
@@ -32,11 +32,11 @@ class GeophysicSeismic(db.Model, BaseModel):
     latitude = db.Column(db.Float, nullable=False)
     profile_length = db.Column(db.Float, nullable=False)
     vs30 = db.Column(db.Integer, nullable=False)
-    ground_category_geo = db.Column(db.String, nullable=False)
-    ground_category_euro = db.Column(db.String, nullable=False)
-    archival_img = db.Column(db.String, nullable=True)
-    archival_excel = db.Column(db.String, nullable=True)
-    archival_pdf = db.Column(db.String, nullable=True)
+    ground_category_geo = db.Column(db.String(255), nullable=False)
+    ground_category_euro = db.Column(db.String(255), nullable=False)
+    archival_img = db.Column(db.String(255), nullable=True)
+    archival_excel = db.Column(db.String(255), nullable=True)
+    archival_pdf = db.Column(db.String(255), nullable=True)
 
     geophysical = db.relationship('Geophysical', back_populates='geophysic_seismic')
 
@@ -53,9 +53,9 @@ class GeophysicLogging(db.Model, BaseModel):
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     profile_length = db.Column(db.Float, nullable=False)
-    archival_img = db.Column(db.String, nullable=True)
-    archival_excel = db.Column(db.String, nullable=True)
-    archival_pdf = db.Column(db.String, nullable=True)
+    archival_img = db.Column(db.String(255), nullable=True)
+    archival_excel = db.Column(db.String(255), nullable=True)
+    archival_pdf = db.Column(db.String(255), nullable=True)
 
     geophysical = db.relationship('Geophysical', back_populates='geophysic_logging')
 
@@ -72,9 +72,9 @@ class GeophysicElectrical(db.Model, BaseModel):
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     profile_length = db.Column(db.Float, nullable=False)
-    archival_img = db.Column(db.String, nullable=True)
-    archival_excel = db.Column(db.String, nullable=True)
-    archival_pdf = db.Column(db.String, nullable=True)
+    archival_img = db.Column(db.String(255), nullable=True)
+    archival_excel = db.Column(db.String(255), nullable=True)
+    archival_pdf = db.Column(db.String(255), nullable=True)
 
     geophysical = db.relationship('Geophysical', back_populates='geophysic_electrical')
 
@@ -92,9 +92,9 @@ class GeophysicGeoradar(db.Model, BaseModel):
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     profile_length = db.Column(db.Float, nullable=False)
-    archival_img = db.Column(db.String, nullable=True)
-    archival_excel = db.Column(db.String, nullable=True)
-    archival_pdf = db.Column(db.String, nullable=True)
+    archival_img = db.Column(db.String(255), nullable=True)
+    archival_excel = db.Column(db.String(255), nullable=True)
+    archival_pdf = db.Column(db.String(255), nullable=True)
 
     geophysical = db.relationship('Geophysical', back_populates='geophysic_georadar')
 
