@@ -7,7 +7,7 @@ from src.api.nsmodels import auth_ns, registration_parser, auth_parser, user_mod
 
 
 @auth_ns.route('/registration')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class RegistrationApi(Resource):
     @auth_ns.doc(parser=registration_parser)
     def post(self):
@@ -15,24 +15,23 @@ class RegistrationApi(Resource):
 
         # Validate password length and pattern
         if args["password"] != args["passwordRepeat"]:
-            return {"message": "პაროლები არ ემთხვევა."}, 400
+            return {"error": "პაროლები არ ემთხვევა."}, 400
         
-        password = args["password"]
-        if len(password) < 8:
-            return {"message": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
+        if len(args["password"]) < 8:
+            return {"error": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
 
         if User.query.filter_by(email=args["email"]).first():
-            return {"message": "ელ.ფოსტის მისამართი უკვე რეგისტრირებულია."}, 400
+            return {"error": "ელ.ფოსტის მისამართი უკვე რეგისტრირებულია."}, 400
 
         role = Role.query.filter_by(name=args["role_name"]).first()
         if not role:
-            return {"message": "როლი ვერ მოიძებნა."}, 400
+            return {"error": "როლი ვერ მოიძებნა."}, 400
 
         new_user = User(
             name=args["name"],
             lastname=args["lastname"],
             email=args["email"],
-            password=password,
+            password=args["password"],
             role_id=role.id
         )
 
@@ -41,6 +40,7 @@ class RegistrationApi(Resource):
         return {"message": "მომხმარებელი წარმატებით დარეგისტრირდა."}, 200
     
 @auth_ns.route('/login')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class AuthorizationApi(Resource):
     @auth_ns.doc(parser=auth_parser)
     def post(self):
@@ -49,7 +49,7 @@ class AuthorizationApi(Resource):
         # Look up the user by email
         user = User.query.filter_by(email=args["email"]).first()
         if not user:
-            return {"message": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
+            return {"error": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
 
         # Check if the password matches
         if user.check_password(args["password"]):
@@ -64,9 +64,10 @@ class AuthorizationApi(Resource):
         
         # If the password is incorrect
         else:
-            return {"message": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
+            return {"error": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
 
 @auth_ns.route('/refresh')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class AccessTokenRefreshApi(Resource):
     @jwt_required(refresh=True)
     @auth_ns.doc(security='JsonWebToken')
@@ -80,6 +81,7 @@ class AccessTokenRefreshApi(Resource):
         return response
     
 @auth_ns.route('/acount')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class AcountApi(Resource):
     @jwt_required()
     @auth_ns.doc(security='JsonWebToken')
@@ -105,15 +107,30 @@ class AcountApi(Resource):
         user = User.query.filter_by(uuid=identity).first()
 
         if not user:
-            return {'error': 'User not found.'}, 404
+            return {'error': 'მომხმარებელი ვერ მოიძებნა.'}, 404
 
         args = user_parser.parse_args()
         
         # Verify old password
         if not user.check_password(args['old_password']):
-            return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 200
+            return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 400
+        
+        if args['old_password'] == args["password"]:
+            return {"error": "ახალი პაროლი უნდა განსხვავდება ძველისგან."}, 400
+
         if len(args["password"]) < 8:
             return {"error": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
         
-        else:
-            return {'message': 'პაროლი წარმატებით განახლდა.'}, 400
+        role = Role.query.filter_by(name=args["role_name"]).first()
+        if not role:
+            return {"error": "როლი ვერ მოიძებნა."}, 400
+
+        # Update existing user
+        user.name = args["name"]
+        user.lastname = args["lastname"]
+        user.password = args["password"]
+        user.role_id = role.id
+
+        user.save()
+
+        return {'message': 'მონაცემები წარმატებით განახლდა.'}, 200

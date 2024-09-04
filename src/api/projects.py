@@ -1,5 +1,4 @@
 from flask_restx import Resource
-from werkzeug.exceptions import NotFound
 from datetime import datetime
 import os
 import uuid
@@ -13,11 +12,15 @@ from src.config import Config
 
 
 @projects_ns.route('/projects')
+@projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class ProjectsListAPI(Resource):
 
     @projects_ns.marshal_with(projects_model)
     def get(self):
         projects = Projects.query.all()
+
+        if not projects:
+            return {"error": "პროექტები არ მოიძებნა."}, 404
 
         # Add calculated fields to each project
         for project in projects:
@@ -39,7 +42,7 @@ class ProjectsListAPI(Resource):
     def post(self):
                 
         if not current_user.check_permission('can_project'):
-            return {"message": "არ გაქვს პროექტის დამატების ნებართვა."}, 403
+            return {"error": "არ გაქვს პროექტის დამატების ნებართვა."}, 403
         
         args = projects_parser.parse_args()
         
@@ -47,7 +50,7 @@ class ProjectsListAPI(Resource):
             start_time = datetime.strptime(args['start_time'], '%Y-%m-%d').date()
             end_time = datetime.strptime(args['end_time'], '%Y-%m-%d').date()
         except ValueError:
-            return {"message": "Invalid date format. Use YYYY-MM-DD."}, 400
+            return {"error": "ფორმატის არასწორი ტიპი. გამოიყენეთ YYYY-MM-DD."}, 400
 
         new_project = Projects(
             projects_name=args['projects_name'],
@@ -90,8 +93,8 @@ class ProjectsListAPI(Resource):
                     # Save the file path to the database
                     new_image = Images(path=file_name, project_id=new_project.id)
                     new_image.create()
-                except OSError as e:
-                    return {"error": f"Failed to save images: {str(e)}"}, 500
+                except:
+                    return {"error": "სურათის ვერ შეინახა"}, 400
         else:
             invalid_files.append("empty")
             
@@ -101,13 +104,14 @@ class ProjectsListAPI(Resource):
         return {"message": "პროექტი წარმატებით შეიქმნა."}, 200
     
 @projects_ns.route('/project/<int:id>')
+@projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class ProjectAPI(Resource):
 
     @projects_ns.marshal_with(projects_model)
     def get(self, id):
         project = Projects.query.get(id)
         if not project:
-            raise NotFound("Project not found")
+            return {"error": "პროექტი არ მოიძებნა."}, 404
         
         images = Images.query.filter_by(project_id=id).all()
         project.images = images
@@ -130,14 +134,14 @@ class ProjectAPI(Resource):
     def put(self, id):
 
         if not current_user.check_permission('can_project'):
-            return {"message": "არ გაქვს პროექტის რედაქტირების ნებართვა."}, 403
+            return {"error": "არ გაქვს პროექტის რედაქტირების ნებართვა."}, 403
 
         args = projects_parser.parse_args()
         try:
             start_time = datetime.strptime(args['start_time'], '%Y-%m-%d').date()
             end_time = datetime.strptime(args['end_time'], '%Y-%m-%d').date()
         except ValueError:
-            return {"message": "ფორმატის არასწორი ტიპი. გამოიყენეთ YYYY-MM-DD."}, 400
+            return {"error": "ფორმატის არასწორი ტიპი. გამოიყენეთ YYYY-MM-DD."}, 400
 
         project = Projects.query.get(id)
         if project:
@@ -152,7 +156,7 @@ class ProjectAPI(Resource):
             project.save()  
             return {"message": "პროექტი წარმატებით განახლდა."}, 200
         else:
-            raise NotFound("პროექტი არ მოიძებნა.")
+            return {"error":"პროექტი არ მოიძებნა."}, 404
 
     @jwt_required()
     @projects_ns.doc(security = 'JsonWebToken')
@@ -176,12 +180,12 @@ class ProjectAPI(Resource):
                 return {"message": "წარმატებით წაიშალა პროექტი, ყველა მიბმული ფაილით."}, 200
 
             except OSError as e:
-                return {"message": f"Failed to delete project directory: {str(e)}"}, 500
+                return {"error": f"ვერ წაიშალა პროექტის, ყველა მიბმული ფაილი: {str(e)}"}, 400
         else:
-            raise NotFound("პროექტი არ მოიძებნა")
+            return {"error": "პროექტი არ მოიძებნა"}, 404
         
 @projects_ns.route('/project/<int:proj_id>/images')
-@projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 404: 'Not Found'})
+@projects_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class ProjectImageListAPI(Resource):
 
     @projects_ns.marshal_with(projects_img_model)
@@ -190,7 +194,7 @@ class ProjectImageListAPI(Resource):
         # Fetch images associated with the project
         images = Images.query.filter_by(project_id=proj_id).all()
         if not images:
-            return {"message": "სურათი არ მოიძებნა ამ პროექტისთვის"}, 404
+            return {"error": "სურათი არ მოიძებნა ამ პროექტისთვის"}, 404
         
         return images, 200
 
@@ -205,13 +209,13 @@ class ProjectImageListAPI(Resource):
         # Ensure the project exists
         project = Projects.query.get(proj_id)
         if not project:
-            return {"message": "Project not found"}, 404
+            return {"error": "პროექტი არ მოიძებნა."}, 404
 
         # Parse arguments
         args = project_img_parser.parse_args()
         images = args['images']
         if not images:
-            return {"message": "No images provided"}, 400
+            return {"error": "სურათი არ არის მოინიშნა"}, 400
         
         # Validate image type and size (if needed)
         image_types = ["image/jpeg", "image/png", "image/jpg"]
@@ -247,7 +251,7 @@ class ProjectImageListAPI(Resource):
             return {"message": "სურათი წარმატებით აიტვირთა."}, 200
         
         except OSError as e:
-            return {"message": f"Failed to save images: {str(e)}"}, 500
+            return {"error": f"სურათები ვერ შეინახა: {str(e)}"}, 400
 
 
 @projects_ns.route('/project/<int:proj_id>/images/<int:image_id>')
@@ -263,7 +267,7 @@ class ProjectImageAPI(Resource):
         # Find the image record
         image = Images.query.filter_by(id=image_id, project_id=proj_id).first()
         if not image:
-            raise NotFound("Image not found")
+            return {"error": "სურათი არ მოიძებნა."}, 404
 
         # Path to the image file
         images_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'images')
@@ -284,6 +288,6 @@ class ProjectImageAPI(Resource):
             return {"message": "წარმატებით წაიშალა სურათი."}, 200
         
         except OSError as e:
-            return {"message": f"Failed to delete image: {str(e)}"}, 500
+            return {"message": f"სურათი ვერ შეინახა: {str(e)}"}, 400
 
 

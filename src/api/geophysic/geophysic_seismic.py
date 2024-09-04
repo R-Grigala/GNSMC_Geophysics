@@ -1,5 +1,4 @@
 from flask_restx import Resource
-from werkzeug.exceptions import NotFound
 import os
 from flask_jwt_extended import jwt_required, current_user
 
@@ -10,12 +9,13 @@ from src.utils.utils import save_uploaded_file
 
 
 @geophysic_seismic_ns.route('/geophysic_seismic/<int:geophy_id>')
+@geophysic_seismic_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class GeophysicSeismicListAPI(Resource):
     @geophysic_seismic_ns.marshal_with(geophysic_seismic_model)
     def get(self, geophy_id):
         geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id).all()
         if not geophysic_seismic:
-            raise NotFound("GeophysicSeismic not found")
+            return {"error": "სეისმური პროფილი არ მოიძებნა."}, 404
         
         return geophysic_seismic, 200
     
@@ -30,7 +30,7 @@ class GeophysicSeismicListAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
@@ -97,13 +97,14 @@ class GeophysicSeismicListAPI(Resource):
 
         return {"message": server_message}, 200
 
-@geophysic_seismic_ns.route('/geophysic_seismic/<int:geophy_id>/<int:id>')    
+@geophysic_seismic_ns.route('/geophysic_seismic/<int:geophy_id>/<int:id>')
+@geophysic_seismic_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})   
 class GeophysicSeismicAPI(Resource):
     @geophysic_seismic_ns.marshal_with(geophysic_seismic_model)
     def get(self, geophy_id, id):
         geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_seismic:
-            raise NotFound("GeophysicSeismic not found")
+            return {"error": "სეისმური პროფილი არ მოიძებნა."}, 404
         
         return geophysic_seismic, 200
     
@@ -118,14 +119,14 @@ class GeophysicSeismicAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეიფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
         # Retrieve the record
         geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_seismic:
-            raise NotFound("GeophysicSeismic record not found")
+            return {"error": "სეისმური პროფილი არ მოიძებნა."}, 404
 
         # Parse the incoming request data
         args = geophysical_seismic__parser.parse_args()
@@ -224,14 +225,14 @@ class GeophysicSeismicAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
         # Retrieve the Geophysic Seismic record
         geophysic_seismic = GeophysicSeismic.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_seismic:
-            raise NotFound("GeophysicSeismic record not found")
+            return {"error": "სეისმური პროფილი არ მოიძებნა."}, 404
 
         # Define paths for old files
         pdf_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'seismic', 'archival_pdf')

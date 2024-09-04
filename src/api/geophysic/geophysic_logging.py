@@ -1,5 +1,4 @@
 from flask_restx import Resource
-from werkzeug.exceptions import NotFound
 import os
 from flask_jwt_extended import jwt_required, current_user
 
@@ -8,13 +7,15 @@ from src.models import GeophysicLogging, Geophysical
 from src.utils.utils import save_uploaded_file
 from src.config import Config
 
+
 @geophysic_logging_ns.route('/geophysic_logging/<int:geophy_id>')
+@geophysic_logging_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class GeophysicLoggingListAPI(Resource):
     @geophysic_logging_ns.marshal_with(geophysic_logging_model)
     def get(self, geophy_id):
         geophysic_logging = GeophysicLogging.query.filter_by(geophysical_id=geophy_id).all()
         if not geophysic_logging:
-            raise NotFound("GeophysicLogging record not found")
+            return {"error": "გეოფიზიკური კაროტაჟი არ მოიძებნა."}, 404
         
         return geophysic_logging, 200
     
@@ -29,7 +30,7 @@ class GeophysicLoggingListAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
@@ -95,13 +96,14 @@ class GeophysicLoggingListAPI(Resource):
         return {"message": server_message}, 200
     
 
-@geophysic_logging_ns.route('/geophysic_logging/<int:geophy_id>/<int:id>')    
+@geophysic_logging_ns.route('/geophysic_logging/<int:geophy_id>/<int:id>')   
+@geophysic_logging_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'}) 
 class GeophysicLoggingAPI(Resource):
     @geophysic_logging_ns.marshal_with(geophysic_logging_model)
     def get(self, geophy_id, id):
         geophysic_logging = GeophysicLogging.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_logging:
-            raise NotFound("GeophysicLogging not found")
+            return {"error": "გეოფიზიკური კაროტაჟი არ მოიძებნა."}, 404
         
         return geophysic_logging, 200
     
@@ -116,14 +118,14 @@ class GeophysicLoggingAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
         # Retrieve the record
         geophysic_logging = GeophysicLogging.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_logging:
-            raise NotFound("GeophysicLogging record not found")
+            return {"error": "გეოფიზიკური კაროტაჟი არ მოიძებნა."}, 404
 
         # Parse the incoming request data
         args = geophysic_logging_parser.parse_args()
@@ -218,14 +220,14 @@ class GeophysicLoggingAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
         # Retrieve the Geophysic Seismic record
         geophysic_logging = GeophysicLogging.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_logging:
-            raise NotFound("GeophysicSeismic record not found")
+            return {"error": "გეოფიზიკური კაროტაჟი არ მოიძებნა."}, 404
 
         # Define paths for old files
         pdf_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'logging', 'archival_pdf')

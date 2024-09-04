@@ -11,14 +11,14 @@ from src.config import Config
 
 
 @geophysical_ns.route('/geophysical/<int:proj_id>')
-@geophysical_ns.doc(responses={200: 'OK', 404: 'Geophysical not found'})
+@geophysical_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class GeophysicalListAPI(Resource):
 
     @geophysical_ns.marshal_with(geophysical_model)
     def get(self, proj_id):
         geophysical_records = Geophysical.query.filter_by(project_id=proj_id).all()
         if not geophysical_records:
-            raise NotFound("Geophysical not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         # Add calculated fields to each geophysical record
         for geophysical in geophysical_records:
@@ -88,14 +88,14 @@ class GeophysicalListAPI(Resource):
         return {"message": server_message}, 200
 
 @geophysical_ns.route('/geophysical/<int:proj_id>/<int:id>')
-@geophysical_ns.doc(responses={200: 'OK', 404: 'Geophysical not found'})
+@geophysical_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class GeophysicalAPI(Resource):
     @geophysical_ns.marshal_with(geophysical_model)
     def get(self, proj_id, id):
         # Query the Geophysical record with the specified project_id and id
         geophysical = Geophysical.query.filter_by(project_id=proj_id, id=id).first()
         if not geophysical:
-            raise NotFound("Geophysical not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
         
         # Calculate dynamic fields
         geophysical.seismic_profiles = len(geophysical.geophysic_seismic) > 0
@@ -120,7 +120,7 @@ class GeophysicalAPI(Resource):
         # Find the existing geophysical record
         geophysical = Geophysical.query.filter_by(project_id=proj_id, id=id).first()
         if not geophysical:
-            raise NotFound("Geophysical not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         # Parse the incoming request data
         args = geophysical_parser.parse_args()
@@ -185,7 +185,7 @@ class GeophysicalAPI(Resource):
         # Fetch the geophysical record
         geophysical = Geophysical.query.filter_by(project_id=proj_id, id=id).first()
         if not geophysical:
-            raise NotFound("Geophysical not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         # Delete the associated PDF file if it exists
         if geophysical.archival_material:

@@ -1,5 +1,4 @@
 from flask_restx import Resource
-from werkzeug.exceptions import NotFound
 import os
 from flask_jwt_extended import jwt_required, current_user
 
@@ -8,13 +7,15 @@ from src.models import GeophysicGeoradar, Geophysical
 from src.utils.utils import save_uploaded_file
 from src.config import Config
 
+
 @geophysic_georadar_ns.route('/geophysic_georadar/<int:geophy_id>')
+@geophysic_georadar_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class GeophysicGeoradarListAPI(Resource):
     @geophysic_georadar_ns.marshal_with(geophysic_georadar_model)
     def get(self, geophy_id):
         geophysic_georadar = GeophysicGeoradar.query.filter_by(geophysical_id=geophy_id).all()
         if not geophysic_georadar:
-            raise NotFound("GeophysicGeoradar not found")
+            return {"error": "გეორადარი არ მოიძებნა."}, 404
         
         return geophysic_georadar, 200
     
@@ -29,7 +30,7 @@ class GeophysicGeoradarListAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
@@ -94,13 +95,14 @@ class GeophysicGeoradarListAPI(Resource):
 
         return {"message": server_message}, 200
 
-@geophysic_georadar_ns.route('/geophysic_georadar/<int:geophy_id>/<int:id>')    
+@geophysic_georadar_ns.route('/geophysic_georadar/<int:geophy_id>/<int:id>')
+@geophysic_georadar_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class GeophysicGeoradarAPI(Resource):
     @geophysic_georadar_ns.marshal_with(geophysic_georadar_model)
     def get(self, geophy_id, id):
         geophysic_electical = GeophysicGeoradar.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_electical:
-            raise NotFound("GeophysicGeoradar not found")
+            return {"error": "გეორადარი არ მოიძებნა."}, 404
         
         return geophysic_electical, 200
     
@@ -115,14 +117,14 @@ class GeophysicGeoradarAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
         # Retrieve the record
         geophysic_georadar = GeophysicGeoradar.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_georadar:
-            raise NotFound("GeophysicGeoradar record not found")
+            return {"error": "გეორადარი არ მოიძებნა."}, 404
 
         # Parse the incoming request data
         args = geophysic_georadar_parser.parse_args()
@@ -218,14 +220,14 @@ class GeophysicGeoradarAPI(Resource):
         # Query the Geophysical model to get the proj_id
         geophysical_record = Geophysical.query.get(geophy_id)
         if not geophysical_record:
-            raise NotFound("Geophysical record not found")
+            return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         proj_id = geophysical_record.project_id  # Get the project ID
 
         # Retrieve the GeophysicGeoradar record
         geophysic_georadar = GeophysicGeoradar.query.filter_by(geophysical_id=geophy_id, id=id).first()
         if not geophysic_georadar:
-            raise NotFound("GeophysicGeoradar record not found")
+            return {"error": "გეორადარი არ მოიძებნა."}, 404
 
         # Define paths for old files
         pdf_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', str(geophy_id), 'georadar', 'archival_pdf')
