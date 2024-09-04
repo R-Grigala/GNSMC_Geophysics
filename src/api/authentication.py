@@ -98,13 +98,15 @@ class AcountApi(Resource):
             return user, 200
         else:
             return {'error': 'მომხმარებელი ვერ მოიძებნა.'}, 404
-        
+
+@auth_ns.route('/acount/<uuid>')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
+class AcountApi(Resource):
     @jwt_required()
     @auth_ns.doc(security='JsonWebToken')
     @auth_ns.expect(user_parser)
-    def put(self):
-        identity = get_jwt_identity()
-        user = User.query.filter_by(uuid=identity).first()
+    def put(self, uuid):
+        user = User.query.filter_by(uuid=uuid).first()
 
         if not user:
             return {'error': 'მომხმარებელი ვერ მოიძებნა.'}, 404
@@ -134,3 +136,29 @@ class AcountApi(Resource):
         user.save()
 
         return {'message': 'მონაცემები წარმატებით განახლდა.'}, 200
+    
+@auth_ns.route('/users')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
+class AcountListApi(Resource):
+    @jwt_required()
+    @auth_ns.doc(security='JsonWebToken')
+    @auth_ns.marshal_with(user_model)
+    def get(self):
+        users = User.query.all()
+
+        if not users:
+            return {'error': 'მომხმარებლები ვერ მოიძებნა.'}, 404
+
+        # Append role_name to each user
+        user_list = [
+            {
+                'uuid': user.uuid,
+                'name': user.name,
+                'lastname': user.lastname,
+                'email': user.email,
+                'role_name': user.role.name if user.role else 'No Role'
+            } 
+            for user in users
+        ]
+        
+        return user_list, 200

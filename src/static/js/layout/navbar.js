@@ -53,10 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
         logoutLink.className = 'btn btn-sm btn-danger m-1';
         logoutLink.textContent = 'გასვლა';
         logoutLink.onclick = function() {
-            sessionStorage.removeItem('access_token');
-            sessionStorage.removeItem('refresh_token');
-            sessionStorage.removeItem('user_email');
-            window.location.reload(); // Refresh to show the updated nav
+            clearSessionData();
         };
 
         logoutItem.appendChild(logoutLink);

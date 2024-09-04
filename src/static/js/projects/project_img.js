@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error deleting record.');
+            alert('შეცდომა სურათის წაშლის დროს.');
         });
     }
 
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error uploading record.');
+            alert('შეცდომა სურათის ატვისთვის დროს.');
         });
     }
 

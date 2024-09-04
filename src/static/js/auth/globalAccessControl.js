@@ -1,22 +1,45 @@
+function clearSessionData(redirect = true) {
+    // Remove all session-related data
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('user_email');
+    
+    // Optionally redirect the user to the login page or another page
+    if (redirect) {
+        window.location.href = '/login'; // Redirect to the login page
+    }
+}
+
+function isTokenExpired(token) {
+    if (!token) return true;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Date.now() / 1000; // Current time in seconds
+
+    return currentTime > payload.exp;
+}
+
 // Define the refreshToken function globally
 function refreshToken() {
     const refreshToken = sessionStorage.getItem('refresh_token');
 
     if (!refreshToken) {
-        window.location.href = '/login';
+        clearSessionData(); // Clear session data and redirect to login
+        return Promise.reject('No refresh token available');
     }
 
     return fetch('/api/refresh', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${refreshToken}`, // Send the refresh token
+            'Authorization': `Bearer ${refreshToken}`,
             'Content-Type': 'application/json'
         }
     })
     .then(response => {
         if (response.status === 401) {
-            // Unauthorized, token may be invalid or expired
-            throw new Error('Refresh token is invalid or expired');
+            alert("გთხოვთ ხელახლა გაიაროთ ავტორიზაცია.");
+            clearSessionData(); // Clear session data and redirect to login
+            return Promise.reject('Unauthorized');
         }
         if (!response.ok) {
             throw new Error('Failed to refresh token');
@@ -33,15 +56,23 @@ function refreshToken() {
     })
     .catch(error => {
         console.error('Error refreshing token:', error);
-        // Clear refresh token and redirect to login page if refresh fails
-        sessionStorage.removeItem('refresh_token');
-        window.location.href = '/login'; // Redirect to login page
+        alert("გთხოვთ ხელახლა გაიაროთ ავტორიზაცია.");
+        clearSessionData(); // Clear session data and redirect to login
     });
 }
 
 function makeApiRequest(url, options) {
     const token = sessionStorage.getItem('access_token');
     
+    // Check if the token is expired
+    if (isTokenExpired(token)) {
+        return refreshToken().then(newToken => {
+            options.headers = options.headers || {};
+            options.headers['Authorization'] = `Bearer ${newToken}`;
+            return fetch(url, options);
+        });
+    }
+
     // Ensure the Authorization header is set
     if (token) {
         options.headers = options.headers || {};
@@ -60,14 +91,12 @@ function makeApiRequest(url, options) {
                     });
             }
             if (response.status === 422) {
-                // Unauthorized - token might be expired
+                // Unprocessable Entity - likely related to the request data
                 sessionStorage.removeItem('access_token');
                 window.location.href = '/login';
-            }
-            else {
+            } else {
                 return response;
             }
-            
         })
         .then(response => response.json())
         .catch(error => {
@@ -78,22 +107,23 @@ function makeApiRequest(url, options) {
 
 // The DOMContentLoaded event listener
 document.addEventListener("DOMContentLoaded", function() {
-    // Define the login and registration page URLs
-    const loginPage = '/login'; // Adjust this to your actual login page URL
-    const registrationPage = '/registration'; // Adjust this to your actual registration page URL
-    const homePage = '/projects'; 
-
-    // Get the current page URL
+    const loginPage = '/login';
+    const registrationPage = '/registration';
+    const homePage = '/projects';
     const currentPage = window.location.pathname;
-
-    // Check for the presence of an access token
     const token = sessionStorage.getItem('access_token');
 
-    // If there's no token and the user is not on the login or registration page, attempt to refresh the token
     if (!token && currentPage !== loginPage && currentPage !== registrationPage) {
-        // If no new token is obtained, redirect to the login page
         window.location.href = loginPage;
     }
+
+    // Check if the token is expired and redirect to login if necessary
+    if (token && isTokenExpired(token)) {
+        alert("გთხოვთ ხელახლა გაიაროთ ავტორიზაცია.");
+        clearSessionData(); // Clear session data and redirect to login
+    }
+
+    // Redirect to home page if token exists and user is on the login or registration page
     if (token && (currentPage === loginPage || currentPage === registrationPage)) {
         window.location.href = homePage;
     }

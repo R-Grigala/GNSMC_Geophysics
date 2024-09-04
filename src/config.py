@@ -21,7 +21,7 @@ class Config(object):
 
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'default_jwt_secret_key')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(hours=2)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(hours=12)
     AUTHORIZATION ={
         'JsonWebToken': {
             'type': 'apiKey',
