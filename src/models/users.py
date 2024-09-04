@@ -9,16 +9,16 @@ class User(db.Model, BaseModel):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(db.String(255), unique=True, default=str(uuid.uuid4()))
+    uuid = db.Column(db.String(255), unique=True, default=lambda: str(uuid.uuid4()))
     # uuid = db.Column(db.String(255), default=lambda: str(uuid.uuid4().hex)[:12])
-    name = db.Column(db.String(20))
-    lastname = db.Column(db.String(20))
+    name = db.Column(db.String(20), nullable=False)
+    lastname = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     _password = db.Column(db.String(255), nullable=False)
 
-    # One-to-One relationship with Role
+    # One-to-Many relationship with Role
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    role = db.relationship("Role", back_populates="user", uselist=False)
+    role = db.relationship('Role', back_populates='users')
 
     @property
     def password(self):
@@ -38,7 +38,7 @@ class User(db.Model, BaseModel):
         return False
 
     def is_admin(self):
-        return any(role.name == "admin" for role in self.role)
+        return self.role.is_admin if self.role else False
 
     def __repr__(self):
         return f"<User {self.name} ({self.email})>"
@@ -49,14 +49,15 @@ class Role(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
     can_project = db.Column(db.Boolean, default=False)
     can_geohysic = db.Column(db.Boolean, default=False)
     can_geologic = db.Column(db.Boolean, default=False)
     can_hazard = db.Column(db.Boolean, default=False)
     can_geodetic = db.Column(db.Boolean, default=False)
 
-    # One-to-One relationship with User
-    user = db.relationship("User", back_populates="role", uselist=False)
+    # One-to-Many relationship with User
+    users = db.relationship('User', back_populates='role')
 
     def __repr__(self):
         return f"{self.name}"

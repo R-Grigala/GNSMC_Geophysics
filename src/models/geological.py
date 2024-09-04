@@ -6,7 +6,7 @@ class Geological(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"), nullable=False)
     
     geological_survey = db.Column(db.Boolean, nullable=False)
     objects_number = db.Column(db.Integer, nullable=False)

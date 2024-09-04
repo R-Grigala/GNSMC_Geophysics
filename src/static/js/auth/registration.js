@@ -18,7 +18,7 @@ function registration(event) {
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
         passwordRepeat: document.getElementById('passwordRepeat').value,
-        role_name: "guest"
+        role_name: "User"
     };
 
     // Send POST request to the registration API

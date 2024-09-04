@@ -41,25 +41,28 @@ class RegistrationApi(Resource):
         return {"message": "მომხმარებელი წარმატებით დარეგისტრირდა."}, 200
     
 @auth_ns.route('/login')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument'})
 class AuthorizationApi(Resource):
     @auth_ns.doc(parser=auth_parser)
     def post(self):
         args = auth_parser.parse_args()
 
+        # Look up the user by email
         user = User.query.filter_by(email=args["email"]).first()
         if not user:
             return {"message": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
 
+        # Check if the password matches
         if user.check_password(args["password"]):
-            access_token = create_access_token(identity=user)
-            refresh_token = create_refresh_token(identity=user)
+            # Create tokens with the user's UUID as the identity
+            access_token = create_access_token(identity=user.uuid)
+            refresh_token = create_refresh_token(identity=user.uuid)
             return {
                 "message": "წარმატებით გაიარეთ ავტორიზაცია.",
                 "access_token": access_token,
                 "refresh_token": refresh_token
             }, 200
         
+        # If the password is incorrect
         else:
             return {"message": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
 
@@ -83,7 +86,7 @@ class AcountApi(Resource):
     @auth_ns.marshal_with(user_model)
     def get(self):
         identity = get_jwt_identity()
-        user = User.query.filter_by(email=identity).first()
+        user = User.query.filter_by(uuid=identity).first()
 
         if user:
             role = Role.query.filter_by(id=user.role_id).first()
@@ -99,21 +102,18 @@ class AcountApi(Resource):
     @auth_ns.expect(user_parser)
     def put(self):
         identity = get_jwt_identity()
-        user = User.query.filter_by(email=identity).first()
+        user = User.query.filter_by(uuid=identity).first()
 
         if not user:
             return {'error': 'User not found.'}, 404
 
         args = user_parser.parse_args()
-
-        if User.query.filter_by(email=args["email"]).first():
-            return {"error": "ელ.ფოსტის მისამართი უკვე რეგისტრირებულია."}, 400
         
         # Verify old password
-        if user.check_password(args['old_password']):
-            return {'error': 'პაროლი წარმატებით განახლდა.'}, 200
-        if len(args["password"]) > 8:
+        if not user.check_password(args['old_password']):
+            return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 200
+        if len(args["password"]) < 8:
             return {"error": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
         
         else:
-            return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 400
+            return {'message': 'პაროლი წარმატებით განახლდა.'}, 400

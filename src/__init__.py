@@ -40,16 +40,16 @@ def register_extensions(app):
     @jwt.user_identity_loader
     def user_identity_lookup(user):
         try:
-            return user.email
+            return user.uuid
         except AttributeError:
             return user
         
     @jwt.user_lookup_loader
     def user_lookup_callback(_jwt_header, jwt_data):
-        user_email = jwt_data.get("sub")
+        user_uuid = jwt_data.get("sub")
         # print(f"JWT Data: {jwt_data}")
-        if user_email:
-            user = User.query.filter_by(email=user_email).first()
+        if user_uuid:
+            user = User.query.filter_by(uuid=user_uuid).first()
             return user
         return None
 

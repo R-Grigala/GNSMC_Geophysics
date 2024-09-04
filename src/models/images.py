@@ -7,7 +7,7 @@ class Images(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     path = db.Column(db.String(255), nullable=False)
     
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"), nullable=False)
     
     project = db.relationship('Projects', back_populates='images')
 

@@ -5,7 +5,7 @@ class Geophysical(db.Model, BaseModel):
     __tablename__ = "geophysical"
 
     id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id', ondelete="CASCADE"), nullable=False)
 
     vs30 = db.Column(db.Integer, nullable=False)
     ground_category_geo = db.Column(db.String(255), nullable=False)
@@ -26,7 +26,7 @@ class GeophysicSeismic(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id'), nullable=False)
+    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id', ondelete="CASCADE"), nullable=False)
     
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
@@ -48,7 +48,7 @@ class GeophysicLogging(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id'), nullable=False)
+    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id', ondelete="CASCADE"), nullable=False)
 
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
@@ -67,7 +67,7 @@ class GeophysicElectrical(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id'), nullable=False)
+    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id', ondelete="CASCADE"), nullable=False)
 
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
@@ -87,7 +87,7 @@ class GeophysicGeoradar(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id'), nullable=False)
+    geophysical_id = db.Column(db.Integer, db.ForeignKey('geophysical.id', ondelete="CASCADE"), nullable=False)
 
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)

@@ -146,10 +146,10 @@ def populate_db():
     new_geophysic_electrical.create()
 
     click.echo("Creating Role")
-    role = Role(name="admin", can_project=True, can_geohysic=True,
+    role = Role(name="Admin", is_admin=True, can_project=True, can_geohysic=True,
                  can_geologic=True, can_geodetic=True, can_hazard=True)
     role.create()
-    role = Role(name="guest")
+    role = Role(name="User")
     role.create()
 
     click.echo("Creating User")
