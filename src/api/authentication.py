@@ -80,9 +80,9 @@ class AccessTokenRefreshApi(Resource):
 
         return response
     
-@auth_ns.route('/acount')
+@auth_ns.route('/account')
 @auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Forbidden', 404: 'Not Found'})
-class AcountApi(Resource):
+class UserApi(Resource):
     @jwt_required()
     @auth_ns.doc(security='JsonWebToken')
     @auth_ns.marshal_with(user_model)
@@ -118,32 +118,29 @@ class AccountApi(Resource):
             args = user_parser.parse_args()
 
             # Change password logic
-            if args["change_password"]:
-
+            if args.get("change_password"):
                 # Verify old password
-                if not user.check_password(args["old_password"]):
+                if not user.check_password(args.get("old_password")):
                     return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 400
                 
                 # Check if new password is provided and valid
-                if not args["new_password"]:
-                    return {"error": "გთხოვთ შეიყვანოთ ახალი პაროლი."}, 400
+                new_password = args.get("new_password")
+                repeat_new_password = args.get("repeat_new_password")
 
-                # New password should not be the same as the old one
-                if args["old_password"] == args["new_password"]:
+                if not new_password or not repeat_new_password:
+                    return {"error": "გთხოვთ შეიყვანოთ ახალი პაროლი და მისი გაწვდილი."}, 400
+
+                if new_password != repeat_new_password:
+                    return {"error": "ახალი პაროლები არ ემთხვევა."}, 400
+
+                if new_password == args.get("old_password"):
                     return {"error": "ახალი პაროლი უნდა განსხვავდება ძველისგან."}, 400
 
-                # Ensure the new password is long enough
-                if len(args["new_password"]) < 8:
+                if len(new_password) < 8:
                     return {"error": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
 
                 # Update the password
-                user.password = args["new_password"]
-            else:
-                # Verify password
-                if not user.check_password(args["old_password"]):
-                    return {'error': 'პაროლი არასწორად არის შეყვანილი.'}, 400
-                
-                user.password = args["old_password"]
+                user.password = new_password
 
             if check_user.role.name == "Admin":
                 # Verify old password when not changing it

@@ -40,10 +40,13 @@ document.addEventListener("DOMContentLoaded", function() {
         // Retrieve the user's email from sessionStorage
         const userEmail = sessionStorage.getItem('user_email');
         if (userEmail) {
-            const emailSpan = document.createElement('span');
+            const emailSpan = document.createElement('a');
             emailSpan.className = 'me-2'; // Margin end for spacing
             emailSpan.textContent = userEmail;
             emailSpan.style.fontSize = 'small';
+            emailSpan.onclick = function() {
+                openUserModal();
+            };
 
             logoutItem.appendChild(emailSpan); // Append email first
         }
@@ -58,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         logoutItem.appendChild(logoutLink);
         navLinksEnd.appendChild(logoutItem);
+
     } else {
         // User is not logged in, show Login and Registration buttons
         authLinks.forEach(link => {

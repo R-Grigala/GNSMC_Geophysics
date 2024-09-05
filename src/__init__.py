@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_cors import CORS
+
 
 from src.config import Config
 from src.api import api
@@ -14,6 +16,7 @@ COMMANDS = [init_db, populate_db]
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(Config)
 
     register_extensions(app)

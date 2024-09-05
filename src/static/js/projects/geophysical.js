@@ -67,7 +67,7 @@ function openGeophysicalModal(editMode = false, geophyId = null) {
     const form = document.getElementById('GeophysicalForm');
     const projectIdElement = document.getElementById("projectId");
     const projectId = projectIdElement.getAttribute("data-project-id");
-    
+
     isEditMode = editMode;
     currentProjectId = projectId;
     geophysicalId = geophyId;
@@ -87,7 +87,7 @@ function openGeophysicalModal(editMode = false, geophyId = null) {
 }
 
 // Fetch data for editing a Geophysical record
-function fetchGeophysicalData(geophysicalId, projectId) {
+function fetchGeophysicalData(projectId, geophysicalId) {
     // Fetch the existing data for the geophysical record
     fetch(`/api/geophysical/${projectId}/${geophysicalId}`)
         .then(response => response.json())

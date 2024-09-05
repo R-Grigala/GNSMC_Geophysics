@@ -94,7 +94,8 @@ function makeApiRequest(url, options) {
                 // Unprocessable Entity - likely related to the request data
                 sessionStorage.removeItem('access_token');
                 window.location.href = '/login';
-            } else {
+            } 
+            else {
                 return response;
             }
         })
