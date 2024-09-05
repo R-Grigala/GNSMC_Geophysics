@@ -42,7 +42,7 @@ function registration(event) {
             alert(data.message);
             window.location.href = '/login';
         } else {
-            alert(data.message || 'Registration failed.');
+            alert(data.error || 'Registration failed.');
         }
     })
     .catch(error => {

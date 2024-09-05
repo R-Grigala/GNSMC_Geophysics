@@ -29,7 +29,7 @@ function login(event) {
             // Redirect to /projects page
             window.location.href = '/projects';
         } else {
-            alert(data.message || ' გაუმართავი ავტორიზაცია.');
+            alert(data.error || ' გაუმართავი ავტორიზაცია.');
         }
     })
     .catch(error => {

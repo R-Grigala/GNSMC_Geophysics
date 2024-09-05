@@ -37,16 +37,6 @@ def empty_or_none(value, name):
         return None
     return str(value)
 
-def str_to_bool(value):
-    if isinstance(value, bool):
-        return value
-    if value.lower() in ('true', '1'):
-        return True
-    elif value.lower() in ('false', '0'):
-        return False
-    else:
-        raise ValueError('Boolean value expected.')
-
 projects_parser = reqparse.RequestParser()
 
 projects_parser.add_argument("projects_name", required=True, type=str, help="Project name example: AKHN Project")

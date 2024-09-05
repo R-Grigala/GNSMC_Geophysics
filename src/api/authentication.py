@@ -7,7 +7,7 @@ from src.api.nsmodels import auth_ns, registration_parser, auth_parser, user_mod
 
 
 @auth_ns.route('/registration')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Forbidden', 404: 'Not Found'})
 class RegistrationApi(Resource):
     @auth_ns.doc(parser=registration_parser)
     def post(self):
@@ -40,7 +40,7 @@ class RegistrationApi(Resource):
         return {"message": "მომხმარებელი წარმატებით დარეგისტრირდა."}, 200
     
 @auth_ns.route('/login')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Forbidden', 404: 'Not Found'})
 class AuthorizationApi(Resource):
     @auth_ns.doc(parser=auth_parser)
     def post(self):
@@ -67,7 +67,7 @@ class AuthorizationApi(Resource):
             return {"error": "შეყვანილი პაროლი ან ელ.ფოსტა არასწორია."}, 400
 
 @auth_ns.route('/refresh')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Forbidden', 404: 'Not Found'})
 class AccessTokenRefreshApi(Resource):
     @jwt_required(refresh=True)
     @auth_ns.doc(security='JsonWebToken')
@@ -81,7 +81,7 @@ class AccessTokenRefreshApi(Resource):
         return response
     
 @auth_ns.route('/acount')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Forbidden', 404: 'Not Found'})
 class AcountApi(Resource):
     @jwt_required()
     @auth_ns.doc(security='JsonWebToken')
@@ -99,66 +99,99 @@ class AcountApi(Resource):
         else:
             return {'error': 'მომხმარებელი ვერ მოიძებნა.'}, 404
 
-@auth_ns.route('/acount/<uuid>')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
-class AcountApi(Resource):
+@auth_ns.route('/account/<string:uuid>')
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Forbidden', 404: 'Not Found'})
+class AccountApi(Resource):
     @jwt_required()
     @auth_ns.doc(security='JsonWebToken')
     @auth_ns.expect(user_parser)
     def put(self, uuid):
-        user = User.query.filter_by(uuid=uuid).first()
+        identity = get_jwt_identity()
+        check_user = User.query.filter_by(uuid=identity).first()
 
-        if not user:
-            return {'error': 'მომხმარებელი ვერ მოიძებნა.'}, 404
+        if identity == uuid or (check_user and check_user.role.name == "Admin"):
+            user = User.query.filter_by(uuid=uuid).first()
 
-        args = user_parser.parse_args()
-        
-        # Verify old password
-        if not user.check_password(args['old_password']):
-            return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 400
-        
-        if args['old_password'] == args["password"]:
-            return {"error": "ახალი პაროლი უნდა განსხვავდება ძველისგან."}, 400
+            if not user:
+                return {'error': 'მომხმარებელი ვერ მოიძებნა.'}, 404
 
-        if len(args["password"]) < 8:
-            return {"error": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
-        
-        role = Role.query.filter_by(name=args["role_name"]).first()
-        if not role:
-            return {"error": "როლი ვერ მოიძებნა."}, 400
+            args = user_parser.parse_args()
 
-        # Update existing user
-        user.name = args["name"]
-        user.lastname = args["lastname"]
-        user.password = args["password"]
-        user.role_id = role.id
+            # Change password logic
+            if args["change_password"]:
 
-        user.save()
+                # Verify old password
+                if not user.check_password(args["old_password"]):
+                    return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 400
+                
+                # Check if new password is provided and valid
+                if not args["new_password"]:
+                    return {"error": "გთხოვთ შეიყვანოთ ახალი პაროლი."}, 400
 
-        return {'message': 'მონაცემები წარმატებით განახლდა.'}, 200
+                # New password should not be the same as the old one
+                if args["old_password"] == args["new_password"]:
+                    return {"error": "ახალი პაროლი უნდა განსხვავდება ძველისგან."}, 400
+
+                # Ensure the new password is long enough
+                if len(args["new_password"]) < 8:
+                    return {"error": "პაროლი უნდა იყოს მინიმუმ 8 სიმბოლო."}, 400
+
+                # Update the password
+                user.password = args["new_password"]
+            else:
+                # Verify password
+                if not user.check_password(args["old_password"]):
+                    return {'error': 'პაროლი არასწორად არის შეყვანილი.'}, 400
+                
+                user.password = args["old_password"]
+
+            if check_user.role.name == "Admin":
+                # Verify old password when not changing it
+                role = Role.query.filter_by(name=args["role_name"]).first()
+                if not role:
+                    return {"error": "როლი ვერ მოიძებნა."}, 400
+                user.role_id = role.id
+                
+            # Update user fields
+            user.name = args["name"]
+            user.lastname = args["lastname"]
+            
+            # Save changes
+            user.save()
+
+            return {'message': 'მონაცემები წარმატებით განახლდა.'}, 200
+        else:
+            return {'error': "არ გაქვს მონაცემების განახლების ნებართვა."}, 403
     
 @auth_ns.route('/users')
-@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
-class AcountListApi(Resource):
+@auth_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Forbidden', 404: 'Not Found'})
+class AccountListApi(Resource):
     @jwt_required()
     @auth_ns.doc(security='JsonWebToken')
-    @auth_ns.marshal_with(user_model)
     def get(self):
-        users = User.query.all()
+        identity = get_jwt_identity()
+        user = User.query.filter_by(uuid=identity).first()
 
-        if not users:
-            return {'error': 'მომხმარებლები ვერ მოიძებნა.'}, 404
+        # Check if the user has admin privileges
+        if user and user.role and user.role.name == "Admin":
+            users = User.query.all()
 
-        # Append role_name to each user
-        user_list = [
-            {
-                'uuid': user.uuid,
-                'name': user.name,
-                'lastname': user.lastname,
-                'email': user.email,
-                'role_name': user.role.name if user.role else 'No Role'
-            } 
-            for user in users
-        ]
+            if not users:
+                return {'error': 'მომხმარებლები ვერ მოიძებნა.'}, 404
+
+            # Append role_name to each user
+            user_list = [
+                {
+                    'uuid': user.uuid,
+                    'name': user.name,
+                    'lastname': user.lastname,
+                    'email': user.email,
+                    'role_name': user.role.name if user.role else 'No Role'
+                } 
+                for user in users
+            ]
+            
+            return user_list, 200
         
-        return user_list, 200
+        else:
+            return {'error': "არ გაქვს მონაცემების ნახვის ნებართვა."}, 403

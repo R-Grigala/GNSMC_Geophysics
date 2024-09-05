@@ -119,8 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Check if the token is expired and redirect to login if necessary
     if (token && isTokenExpired(token)) {
-        alert("გთხოვთ ხელახლა გაიაროთ ავტორიზაცია.");
-        clearSessionData(); // Clear session data and redirect to login
+        refreshToken(); // Clear session data and redirect to login
     }
 
     // Redirect to home page if token exists and user is on the login or registration page
