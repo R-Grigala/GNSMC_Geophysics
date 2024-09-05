@@ -21,13 +21,13 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${project.geodetic_study ? "Yes" : "No"}</td>
                         <td>${project.other_study ? "Yes" : "No"}</td>
                         <td>
-                            <a class="btn btn-sm btn-primary" href="/view_project/${project.id}">View</a>
+                            <a class="btn btn-sm btn-primary" href="/view_project/${project.id}">ნახვა</a>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-info" onclick="openEditProjectModal(${project.id})">Edit</a>
+                            <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openEditProjectModal(${project.id})">
                         </td>
                         <td>
-                            <img src="/static/img/trash_icon.png" alt="Delete" class="delete-icon" onclick="confirmDelete(${project.id})" style="width: 30px; height: 30px; cursor: pointer;">
+                            <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="confirmDelete(${project.id})">
                         </td>
                     </tr>
                 `;

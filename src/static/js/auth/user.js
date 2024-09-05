@@ -8,9 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (changePasswordCheck.checked) {
             passwordFields.style.display = 'block';
             newPasswordFields.style.display = 'block';
+
+            // Make password fields required
+            document.getElementById('user_old_password').setAttribute('required', true);
+            document.getElementById('user_new_password').setAttribute('required', true);
+            document.getElementById('user_repeat_new_password').setAttribute('required', true);
+
         } else {
             passwordFields.style.display = 'none';
             newPasswordFields.style.display = 'none';
+
+            // Remove required attribute
+            document.getElementById('user_old_password').removeAttribute('required');
+            document.getElementById('user_new_password').removeAttribute('required');
+            document.getElementById('user_repeat_new_password').removeAttribute('required');
         }
     });
 });
@@ -18,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Open the modal for editing a User record
 function openUserModal() {
     const token = sessionStorage.getItem('access_token');
+    const emailText = document.getElementById('user_email');
     fetch(`/api/account`, {
         method: 'GET',
         headers: {
@@ -45,7 +57,7 @@ function openUserModal() {
             document.getElementById('userUUID').value = data.uuid;
             document.getElementById('user_name').value = data.name;
             document.getElementById('user_lastname').value = data.lastname;
-            document.getElementById('user_email').value = data.email;
+            emailText.textContent = data.email;
 
             // console.log(data);
         } else {

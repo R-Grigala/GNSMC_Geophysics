@@ -11,6 +11,10 @@
     
             <!-- Modal body -->
             <div class="modal-body">
+                <!-- Display Email as Text -->
+                <div class="mb-5 text-center">
+                    <span id="user_email" class="font-weight-normal"></span>
+                </div>
                 <form class="row mt-2" id="UserForm" enctype="multipart/form-data">
                     <input type="hidden" id="userUUID" name="uuid">
                     <div class="col">
@@ -21,10 +25,7 @@
                         <label for="user_lastname" class="form-label"><span class="text-danger me-1">*</span>მომხმარებლის გვარი:</label>
                         <input type="text" step="any" class="form-control" id="user_lastname" name="lastname" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="user_email" class="form-label">ელ.ფოსტის მისამართი:</label>
-                        <input type="email" step="any" class="form-control" id="user_email" name="email" required>
-                    </div>
+
                     <!-- Change Password Checkbox -->
                     <div class="m-3 form-check">
                         <input type="checkbox" class="form-check-input" id="changePasswordCheck">

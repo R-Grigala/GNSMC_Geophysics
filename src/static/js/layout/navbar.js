@@ -21,11 +21,11 @@ document.addEventListener("DOMContentLoaded", function() {
     navItems.forEach(item => {
         const link = document.createElement('a');
         link.href = item.endpoint;
-        link.className = currentPath === item.endpoint ? 'btn btn-sm btn-info m-1' : 'btn btn-sm btn-primary m-1';
+        link.className = currentPath === item.endpoint ? 'btn btn-sm btn-info m-2' : 'btn btn-sm btn-primary m-2';
         link.textContent = item.text;
 
         const listItem = document.createElement('li');
-        listItem.className = 'nav-item';
+        listItem.className = 'd-flex justify-content-center';
         listItem.appendChild(link);
 
         navLinksStart.appendChild(listItem);
@@ -35,25 +35,36 @@ document.addEventListener("DOMContentLoaded", function() {
     if (sessionStorage.getItem('access_token')) {
         // User is logged in, show Logout button
         const logoutItem = document.createElement('li');
-        logoutItem.className = 'nav-item d-flex align-items-center';
+        logoutItem.className = 'd-flex justify-content-center';
 
         // Retrieve the user's email from sessionStorage
         const userEmail = sessionStorage.getItem('user_email');
         if (userEmail) {
-            const emailSpan = document.createElement('a');
-            emailSpan.className = 'me-2'; // Margin end for spacing
-            emailSpan.textContent = userEmail;
-            emailSpan.style.fontSize = 'small';
+            const emailSpan = document.createElement('span');
+            emailSpan.className = 'nav-link me-4'; // Margin end for spacing
+
+            const iconImg = document.createElement('img');
+            iconImg.src = '/static/img/circle-user-solid.svg';
+            iconImg.alt = 'Email Icon'; 
+            iconImg.style.width = '30px'; 
+            iconImg.style.height = '30px'; 
+            iconImg.style.verticalAlign = 'middle';
+            iconImg.style.cursor = 'pointer';
+
+
+            emailSpan.appendChild(iconImg);
+
             emailSpan.onclick = function() {
                 openUserModal();
             };
 
             logoutItem.appendChild(emailSpan); // Append email first
+            
         }
 
         const logoutLink = document.createElement('a');
         logoutLink.href = '/login';
-        logoutLink.className = 'btn btn-sm btn-danger m-1';
+        logoutLink.className = 'btn btn-sm btn-danger m-2';
         logoutLink.textContent = 'გასვლა';
         logoutLink.onclick = function() {
             clearSessionData();

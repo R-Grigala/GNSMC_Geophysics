@@ -55,13 +55,13 @@ document.addEventListener("DOMContentLoaded", function() {
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'cover';
-        img.onerror = () => img.src = '/static/img/image_not_available.png';
+        img.onerror = () => img.src = '/static/img/image_not_available.webp';
         return img;
     }
 
     function createDeleteIcon(imageId, carouselItem) {
         const deleteIcon = document.createElement('img');
-        deleteIcon.src = '/static/img/trash_icon.png';
+        deleteIcon.src = '/static/img/trash_icon.webp';
         deleteIcon.alt = 'Trash Icon';
         deleteIcon.style.position = 'absolute';
         deleteIcon.style.width = '30px';
