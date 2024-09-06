@@ -40,14 +40,13 @@ function openUserModal() {
     })
     .then(response => {
         if (!response.ok) {
-            // Handle various HTTP status codes
             if (response.status === 401) {
-                alert('სესიის ვადა ამოიწურა. გთხოვთ, თავიდან შეხვიდეთ სისტემაში.');
+                showAlert('danger', 'სესიის ვადა ამოიწურა. გთხოვთ, თავიდან შეხვიდეთ სისტემაში.');
                 clearSessionData();
             } else if (response.status === 403) {
-                alert('არ გაქვთ უფლებები ამ მონაცემების ნახვისთვის.');
+                showAlert('danger', 'არ გაქვთ უფლებები ამ მონაცემების ნახვისთვის.');
             } else {
-                alert('მოხდა შეცდომა მონაცემების გამოთხოვისას.');
+                showAlert('danger', 'მოხდა შეცდომა მონაცემების გამოთხოვისას.');
             }
             throw new Error('Network response was not ok.');
         }
@@ -60,10 +59,8 @@ function openUserModal() {
             document.getElementById('user_lastname').value = data.lastname;
             emailText.textContent = data.email;
             roleText.textContent = data.role_name;
-
-            // console.log(data);
         } else {
-            alert('მომხმარებელი არ მოიძებნა.');
+            showAlert('danger', 'მომხმარებელი არ მოიძებნა.');
         }
     })
     .catch(error => console.error('Error fetching data:', error));
@@ -96,14 +93,16 @@ function submitUserForm(event) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error);
+            showAlert('danger', data.error);
         } else {
-            alert(data.message);
-            window.location.reload(); // Reload the page to reflect changes
+            showAlert('success', data.message);
+            setTimeout(() => {
+                window.location.reload(); // Reload the page to reflect changes
+            }, 2000);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: მომხმარებლის პროფილის რედაქტირებისას.');
+        showAlert('danger', 'Error: მომხმარებლის პროფილის რედაქტირებისას.');
     });
 }

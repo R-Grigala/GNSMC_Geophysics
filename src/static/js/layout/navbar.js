@@ -77,11 +77,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // User is not logged in, show Login and Registration buttons
         authLinks.forEach(link => {
             const authItem = document.createElement('li');
-            authItem.className = 'nav-item';
+            authItem.className = 'd-flex justify-content-center';
 
             const authLink = document.createElement('a');
             authLink.href = link.endpoint;
-            authLink.className = currentPath === link.endpoint ? 'btn btn-sm btn-info m-1' : 'btn btn-sm btn-primary m-1';
+            authLink.className = currentPath === link.endpoint ? 'btn btn-sm btn-info m-2' : 'btn btn-sm btn-primary m-2';
             authLink.textContent = link.text;
 
             authItem.appendChild(authLink);

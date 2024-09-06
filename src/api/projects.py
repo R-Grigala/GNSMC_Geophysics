@@ -162,7 +162,7 @@ class ProjectAPI(Resource):
     @projects_ns.doc(security = 'JsonWebToken')
     def delete(self, id):
 
-        if not current_user.is_admin:
+        if not current_user.check_permission('is_admin'):
             return {"error": "არ გაქვს პროექტის წაშლის ნებართვა."}, 403
         
         project = Projects.query.get(id)

@@ -36,9 +36,6 @@ class User(db.Model, BaseModel):
             return permission_attr is True
         return False
 
-    def is_admin(self):
-        return self.role.is_admin if self.role else False
-
     def __repr__(self):
         return f"<User {self.name} ({self.email})>"
     

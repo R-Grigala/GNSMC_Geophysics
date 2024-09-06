@@ -1,8 +1,7 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Fetch data from API endpoint
-    fetch('/api/projects')
-        .then(response => response.json())
-        .then(data => {
+fetch('/api/projects')
+    .then(response => response.json())
+    .then(data => {
+        if (Array.isArray(data)) {
             const projectTableBody = document.getElementById('projectTableBody');
             data.forEach(project => {
                 const row = `
@@ -27,51 +26,54 @@ document.addEventListener("DOMContentLoaded", function() {
                             <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openEditProjectModal(${project.id})">
                         </td>
                         <td>
-                            <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="confirmDelete(${project.id})">
+                            <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="openConfirmDeleteModal(${project.id})">
                         </td>
                     </tr>
                 `;
                 projectTableBody.innerHTML += row;
             });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-});
+        } else {
+            console.error('Error fetching project data from server');
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching project data:', error);
+    });
+
 
 // Send POST request for creating a new project
 function createProjectForm(event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault(); // Prevent default form submission
 
     const form = document.getElementById('addProjectForm');
     const formData = new FormData(form);
 
-    // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    // Retrieve JWT token
     const token = sessionStorage.getItem('access_token');
 
-    // makeApiRequest is in the globalAccessControl.js
+    // makeApiRequest is a utility function defined elsewhere
     makeApiRequest('/api/projects', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            'Authorization': `Bearer ${token}` // Include JWT token in the Authorization header
         },
         body: formData
     })
     .then(data => {
         if (data.message) {
-            alert(data.message); // Show success message
-            window.location.reload();
-        } else {
-            alert('Error occurred while creating the project.');
+            showAlert('success', data.message);
+            window.location.reload(); // Reload page after success
+        }else if (data.error) {
+            showAlert('danger', data.error);
+            closeModal('createProjectModal');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert(`Error: ${error.message}`);
     });
 }
 
-// Open edit Project Modal
+// Function to open the Edit Project Modal
 function openEditProjectModal(projectId) {
     fetch(`/api/project/${projectId}`)
         .then(response => response.json())
@@ -85,81 +87,96 @@ function openEditProjectModal(projectId) {
             document.getElementById('editProjLatitude').value = data.proj_latitude;
             document.getElementById('editProjLongitude').value = data.proj_longitude;
 
-            // Set the data-project-id attribute for later use
+            // Set the data-project-id attribute for form submission
             document.getElementById('editProjectForm').setAttribute('data-project-id', data.id);
 
-            var editProjectModal = new bootstrap.Modal(document.getElementById('editProjectModal'));
+            const editProjectModal = new bootstrap.Modal(document.getElementById('editProjectModal'));
             editProjectModal.show();
         })
         .catch(error => console.error('Error fetching project data:', error));
 }
 
-// Send PUT request for edit project
+// Function to handle form submission for editing a project
 function submitProjectForm(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission
 
     const formData = new FormData(document.getElementById('editProjectForm'));
-    // Retrieve the project ID from the hidden input field
-    const projectIdElement = document.getElementById("editProjectForm");
-    const projectId = projectIdElement.getAttribute("data-project-id");
+    const projectId = document.getElementById("editProjectForm").getAttribute("data-project-id");
 
-    // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    // Retrieve JWT token
     const token = sessionStorage.getItem('access_token');
 
-    // makeApiRequest is in the globalAccessControl.js
     makeApiRequest(`/api/project/${projectId}`, {
         method: 'PUT',
         headers: {
-            'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
+            'Authorization': `Bearer ${token}` // Include JWT token in the Authorization header
         },
         body: formData
     })
     .then(data => {
         if (data.error) {
-            alert(data.error);
+            showAlert('danger', data.error);
+            closeModal('editProjectModal');
+        } else if(data.message){
             window.location.reload();
-        } else {
-            alert(data.message);
-            window.location.reload();
-        } 
+        }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: პროექტის რედაქტირებისას.');
     });
 }
 
 // Function to confirm and delete a project
-function confirmDelete(projectId) {
-    const confirmed = confirm('დარწმუნებული ხართ რომ გსურთ ამ პროექტის წაშლა?');
+let projectIdToDelete = null;
 
-    if (confirmed) {
+function openConfirmDeleteModal(projectId) {
+    projectIdToDelete = projectId; // Store the project ID to delete
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    confirmDeleteModal.show();
+}
 
-        // Retrieve the JWT token from sessionStorage (or wherever you store it)
+function closeModal(modalName) {
+    const modalElement = document.getElementById(modalName);
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+        modalInstance.hide();
+    }
+    
+    // Manually remove backdrop
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        backdrop.remove();
+    }
+}
+
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    if (projectIdToDelete !== null) {
         const token = sessionStorage.getItem('access_token');
-        
-        // makeApiRequest is in the globalAccessControl.js
-        makeApiRequest(`/api/project/${projectId}`, {
+
+        makeApiRequest(`/api/project/${projectIdToDelete}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
-            },
+                'Authorization': `Bearer ${token}` // Include JWT token in the Authorization header
+            }
         })
         .then(data => {
             if (data.message) {
-                alert(data.message);
-                // Optionally, remove the row from the table
-                const row = document.querySelector(`tr[data-project-id="${projectId}"]`);
+                showAlert('success', data.message);
+                const row = document.querySelector(`tr[data-project-id="${projectIdToDelete}"]`);
                 if (row) {
                     row.remove();
                 }
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error);
+                
             }
         })
         .catch(error => {
             console.error('Error deleting project:', error);
-            alert('An error occurred while deleting the project');
+        })
+        .finally(() => {
+            closeModal('confirmDeleteModal');
+            projectIdToDelete = null; // Clear the project ID
         });
     }
-}
+});

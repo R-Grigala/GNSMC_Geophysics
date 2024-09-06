@@ -12,11 +12,11 @@ class Config(object):
     BASE_DIR = path.abspath(path.dirname(__file__) + sep + pardir)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(BASE_DIR, 'db.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + path.join(BASE_DIR, 'db.sqlite')
     
     MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', 'default_password')
     # MySQL connection URI
-    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://root:{MYSQL_PASSWORD}@127.0.0.1/iesprojects'
+    # SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://root:{MYSQL_PASSWORD}@127.0.0.1/iesprojects'
 
 
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'default_jwt_secret_key')

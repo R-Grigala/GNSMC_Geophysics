@@ -105,6 +105,29 @@ function makeApiRequest(url, options) {
         });
 }
 
+function showAlert(category, message) {
+    const alertPlaceholder = document.getElementById('alertPlaceholder');
+    
+    // Create a new alert element
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${category} alert-dismissible fade show`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Add the alert to the placeholder
+    alertPlaceholder.appendChild(alertDiv);
+    
+    // Optional: Auto-close the alert after a timeout
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.parentNode.removeChild(alertDiv);
+        }
+    }, 5000); // 5000 milliseconds = 5 seconds
+}
+
 // The DOMContentLoaded event listener
 document.addEventListener("DOMContentLoaded", function() {
     const loginPage = '/login';
