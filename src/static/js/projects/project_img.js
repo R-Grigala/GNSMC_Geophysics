@@ -42,9 +42,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const img = createImageElement(`/images/${projectId}/${imagePath}`);
         const deleteIcon = createDeleteIcon(imageId, item);
+        const zoomIcon = createZoomIcon(imagePath);
+
 
         item.appendChild(img);
         item.appendChild(deleteIcon);
+        item.appendChild(zoomIcon);
         return item;
     }
 
@@ -61,16 +64,37 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function createDeleteIcon(imageId, carouselItem) {
         const deleteIcon = document.createElement('img');
-        deleteIcon.src = '/static/img/trash_icon.webp';
+        deleteIcon.src = '/static/img/trash_icon.svg';
         deleteIcon.alt = 'Trash Icon';
         deleteIcon.style.position = 'absolute';
         deleteIcon.style.width = '30px';
         deleteIcon.style.height = '30px';
         deleteIcon.style.top = '10px';
-        deleteIcon.style.right = '150px';
+        deleteIcon.style.right = '200px';
         deleteIcon.style.cursor = 'pointer';
         deleteIcon.onclick = () => deleteImage(projectId, imageId, carouselItem);
         return deleteIcon;
+    }
+
+    function createZoomIcon(imagePath) {
+        // Create anchor element
+        const zoomLink = document.createElement('a');
+        zoomLink.href = `/images/${projectId}/${imagePath}`;
+        zoomLink.target = '_blank'; // Optional: opens in a new tab
+        zoomLink.style.position = 'absolute';
+        zoomLink.style.top = '10px';
+        zoomLink.style.right = '150px';
+
+        // Create zoom icon (img element)
+        const zoomIcon = document.createElement('img');
+        zoomIcon.src = '/static/img/zoom_icon.svg';
+        zoomIcon.alt = 'Zoom Icon';
+        zoomIcon.style.width = '30px';
+        zoomIcon.style.height = '30px';
+        zoomIcon.style.cursor = 'pointer';
+
+        zoomLink.appendChild(zoomIcon);
+        return zoomLink;
     }
 
     function createIndicator(index) {

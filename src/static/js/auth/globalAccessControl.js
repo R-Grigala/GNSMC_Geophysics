@@ -56,7 +56,6 @@ function refreshToken() {
     })
     .catch(error => {
         console.error('Error refreshing token:', error);
-        alert("გთხოვთ ხელახლა გაიაროთ ავტორიზაცია.");
         clearSessionData(); // Clear session data and redirect to login
     });
 }

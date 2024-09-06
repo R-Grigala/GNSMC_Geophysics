@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, send_from_directory
+from flask import render_template, Blueprint, send_from_directory, abort
 from os import path
 
 from src.config import Config
@@ -15,6 +15,8 @@ geophysical_blueprint = Blueprint("geophysical", __name__, template_folder=TEMPL
 @geophysical_blueprint.route("/view_geophysical/<int:id>")
 def view_geophysical(id):
     geophysical_record = Geophysical.query.get(id)
+    if not geophysical_record:
+        abort(404, description="Geophysical record not found")
     proj_id = geophysical_record.project_id
 
     # Render the template for viewing the Geophysical record
