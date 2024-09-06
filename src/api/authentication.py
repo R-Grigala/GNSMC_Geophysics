@@ -118,7 +118,7 @@ class AccountApi(Resource):
             args = user_parser.parse_args()
 
             # Change password logic
-            if args.get("change_password"):
+            if args.get('change_password'):
                 # Verify old password
                 if not user.check_password(args.get("old_password")):
                     return {'error': 'ძველი პაროლი არასწორად არის შეყვანილი.'}, 400
@@ -131,7 +131,7 @@ class AccountApi(Resource):
                     return {"error": "გთხოვთ შეიყვანოთ ახალი პაროლი და მისი გაწვდილი."}, 400
 
                 if new_password != repeat_new_password:
-                    return {"error": "ახალი პაროლები არ ემთხვევა."}, 400
+                    return {"error": "ახალი პაროლები არ ემთხვევა ერთმანეთს."}, 400
 
                 if new_password == args.get("old_password"):
                     return {"error": "ახალი პაროლი უნდა განსხვავდება ძველისგან."}, 400

@@ -24,7 +24,7 @@ class GeophysicElectricalListAPI(Resource):
     @geophysic_electrical_ns.doc(security = 'JsonWebToken')
     def post(self, geophy_id):
         
-        if not current_user.check_permission('can_geologic'):
+        if not current_user.check_permission('can_geophysic'):
             return {"error": "არ გაქვს ელექტრული პროფილის დამატების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
@@ -111,7 +111,7 @@ class GeophysicElectricalAPI(Resource):
     @geophysic_electrical_ns.doc(security = 'JsonWebToken')
     def put(self, geophy_id, id):
 
-        if not current_user.check_permission('can_geologic'):
+        if not current_user.check_permission('can_geophysic'):
             return {"error": "არ გაქვს ელექტრული პროფილის რედაქტირების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
@@ -214,7 +214,7 @@ class GeophysicElectricalAPI(Resource):
     @geophysic_electrical_ns.doc(security = 'JsonWebToken')
     def delete(self, geophy_id, id):
 
-        if not current_user.check_permission('can_geologic'):
+        if not current_user.check_permission('can_geophysic'):
             return {"error": "არ გაქვს ელექტრული პროფილის წაშლის ნებართვა."}, 403
         
         # Query the Geophysical model to get the proj_id

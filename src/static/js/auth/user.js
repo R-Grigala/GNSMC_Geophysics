@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function openUserModal() {
     const token = sessionStorage.getItem('access_token');
     const emailText = document.getElementById('user_email');
+    const roleText = document.getElementById('user_role');
     fetch(`/api/account`, {
         method: 'GET',
         headers: {
@@ -58,6 +59,7 @@ function openUserModal() {
             document.getElementById('user_name').value = data.name;
             document.getElementById('user_lastname').value = data.lastname;
             emailText.textContent = data.email;
+            roleText.textContent = data.role_name;
 
             // console.log(data);
         } else {
@@ -75,15 +77,18 @@ function submitUserForm(event) {
     event.preventDefault();
 
     const formData = new FormData(document.getElementById('UserForm'));
-    const UUIDField = document.getElementById('userUUID');
-    const url = `/api/account/`;
-    const method = isEditMode ? 'PUT' : 'POST';
+    const UUIDField = document.getElementById('userUUID').value;
+    const changePasswordCheck = document.getElementById('changePasswordCheck').checked;
+    const roleName = document.getElementById('user_role').textContent;
+
+    formData.append('change_password', changePasswordCheck);
+    formData.append('role_name', roleName);
 
     const token = sessionStorage.getItem('access_token');
 
     // makeApiRequest is in the globalAccessControl.js
-    makeApiRequest(url, {
-        method: method,
+    makeApiRequest(`/api/account/${UUIDField}`, {
+        method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`
         },
@@ -99,6 +104,6 @@ function submitUserForm(event) {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: სეისმური პროფილის დამატება რედაქტირებისას.');
+        alert('Error: მომხმარებლის პროფილის რედაქტირებისას.');
     });
 }

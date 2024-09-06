@@ -10,7 +10,6 @@ class User(db.Model, BaseModel):
 
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String(255), unique=True, default=lambda: str(uuid.uuid4()))
-    # uuid = db.Column(db.String(255), default=lambda: str(uuid.uuid4().hex)[:12])
     name = db.Column(db.String(20), nullable=False)
     lastname = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -51,7 +50,7 @@ class Role(db.Model, BaseModel):
     name = db.Column(db.String(80), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     can_project = db.Column(db.Boolean, default=False)
-    can_geohysic = db.Column(db.Boolean, default=False)
+    can_geophysic = db.Column(db.Boolean, default=False)
     can_geologic = db.Column(db.Boolean, default=False)
     can_hazard = db.Column(db.Boolean, default=False)
     can_geodetic = db.Column(db.Boolean, default=False)

@@ -12,10 +12,14 @@
             <!-- Modal body -->
             <div class="modal-body">
                 <!-- Display Email as Text -->
+                <div class="mb-1 text-center">
+                    <span id="user_role" class="font-weight-normal"></span>
+                </div>
                 <div class="mb-5 text-center">
                     <span id="user_email" class="font-weight-normal"></span>
                 </div>
-                <form class="row mt-2" id="UserForm" enctype="multipart/form-data">
+
+                <form class="row mt-2" id="UserForm" enctype="multipart/form-data" onsubmit="submitUserForm(event)">
                     <input type="hidden" id="userUUID" name="uuid">
                     <div class="col">
                         <label for="user_name" class="form-label"><span class="text-danger me-1">*</span>მომხმარების სახელი:</label>

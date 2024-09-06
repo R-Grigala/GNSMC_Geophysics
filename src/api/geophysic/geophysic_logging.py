@@ -24,7 +24,7 @@ class GeophysicLoggingListAPI(Resource):
     @geophysic_logging_ns.doc(security = 'JsonWebToken')
     def post(self, geophy_id):
                 
-        if not current_user.check_permission('can_geologic'):
+        if not current_user.check_permission('can_geophysic'):
             return {"error": "არ გაქვს გეოფიზიკური კაროტაჟის დამატების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
@@ -112,7 +112,7 @@ class GeophysicLoggingAPI(Resource):
     @geophysic_logging_ns.doc(security = 'JsonWebToken')
     def put(self, geophy_id, id):
                         
-        if not current_user.check_permission('can_geologic'):
+        if not current_user.check_permission('can_geophysic'):
             return {"error": "არ გაქვს გეოფიზიკური კაროტაჟის რედაქტირების ნებართვა."}, 403
 
         # Query the Geophysical model to get the proj_id
@@ -214,7 +214,7 @@ class GeophysicLoggingAPI(Resource):
     @geophysic_logging_ns.doc(security = 'JsonWebToken')
     def delete(self, geophy_id, id):
 
-        if not current_user.check_permission('can_geologic'):
+        if not current_user.check_permission('can_geophysic'):
             return {"error": "არ გაქვს გეოფიზიკური კაროტაჟის წაშლის ნებართვა."}, 403
         
         # Query the Geophysical model to get the proj_id
