@@ -70,6 +70,20 @@ function openUserModal() {
     modal.show();
 }
 
+function closeModal(modalName) {
+    const modalElement = document.getElementById(modalName);
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+        modalInstance.hide();
+    }
+    
+    // Manually remove backdrop
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        backdrop.remove();
+    }
+}
+
 function submitUserForm(event) {
     event.preventDefault();
 
@@ -93,12 +107,10 @@ function submitUserForm(event) {
     })
     .then(data => {
         if (data.error) {
+            closeModal('UserModal')
             showAlert('danger', data.error);
         } else {
-            showAlert('success', data.message);
-            setTimeout(() => {
-                window.location.reload(); // Reload the page to reflect changes
-            }, 2000);
+            window.location.reload(); // Reload the page to reflect changes
         }
     })
     .catch(error => {

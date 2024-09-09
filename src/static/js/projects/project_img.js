@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-                // Handle error scenario, e.g., show an error message on the UI
             });
     }
 
@@ -122,16 +121,15 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(data => {
             if (data.message) {
-                alert(data.message);
+                showAlert('success', data.message);
                 // Optionally, remove the row from the table
                 fetchImages();
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('შეცდომა სურათის წაშლის დროს.');
+            console.error('Error during deleting image:', error);
         });
     }
 
@@ -144,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const files = inputElement.files;
 
         if (files.length === 0) {
-            alert('გთხოვთ აირჩიოთ სურათები.');
+            showAlert('danger', 'გთხოვთ აირჩიოთ სურათები.');
             return;
         }
 
@@ -166,16 +164,15 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             if (data.message) {
                 inputElement.value = '';
-                alert(data.message);
+                showAlert('success', data.message);
                 // Optionally, remove the row from the table
                 fetchImages(); // Refresh carousel dynamically
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('შეცდომა სურათის ატვისთვის დროს.');
         });
     }
 
