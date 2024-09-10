@@ -26,7 +26,7 @@ fetch('/api/projects')
                             <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openEditProjectModal(${project.id})">
                         </td>
                         <td>
-                            <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="openConfirmDeleteModal(${project.id})">
+                            <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="openConfirmDeleteProjectModal(${project.id})">
                         </td>
                     </tr>
                 `;
@@ -64,7 +64,7 @@ function createProjectForm(event) {
             showAlert('success', data.message);
             window.location.reload(); // Reload page after success
         }else if (data.error) {
-            showAlert('danger', data.error);
+            showAlert('danger', data.error || 'Error: გაუმართავი პროექტის შექმნა.');
             closeModal('createProjectModal');
         }
     })
@@ -129,9 +129,9 @@ function submitProjectForm(event) {
 // Function to confirm and delete a project
 let projectIdToDelete = null;
 
-function openConfirmDeleteModal(projectId) {
+function openConfirmDeleteProjectModal(projectId) {
     projectIdToDelete = projectId; // Store the project ID to delete
-    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteProjectModal'));
     confirmDeleteModal.show();
 }
 
@@ -149,7 +149,7 @@ function closeModal(modalName) {
     }
 }
 
-document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+document.getElementById('confirmDeleteProjectButton').addEventListener('click', function() {
     if (projectIdToDelete !== null) {
         const token = sessionStorage.getItem('access_token');
 
@@ -167,15 +167,14 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
                     row.remove();
                 }
             } else if (data.error) {
-                showAlert('danger', data.error);
-                
+                showAlert('danger', data.error || 'Error: გაუმართავი პროექტის წაშლა.');
             }
         })
         .catch(error => {
             console.error('Error deleting project:', error);
         })
         .finally(() => {
-            closeModal('confirmDeleteModal');
+            closeModal('confirmDeleteProjectModal');
             projectIdToDelete = null; // Clear the project ID
         });
     }

@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openGeophysicalModal(true, ${geophysical.id})">
                         </td>
                         <td>
-                            <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="deleteGeophysical(${geophysical.id}, ${projectId})">
+                            <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="openConfirmDeleteGeophysicalModal(${projectId}, ${geophysical.id})">
                         </td>
                     </tr>
                 `;
@@ -53,6 +53,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+// Function to confirm and delete a project
+let projectIdToDelete = null;
+let geophysicalIdDelete = null;
+
+function openConfirmDeleteGeophysicalModal(projectId, geophysicalId) {
+    projectIdToDelete = projectId; // Store the project ID to delete
+    geophysicalIdDelete = geophysicalId;
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteGeophysicalModal'));
+    confirmDeleteModal.show();
+}
+
+function closeModal(modalName) {
+    const modalElement = document.getElementById(modalName);
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+        modalInstance.hide();
+    }
+    
+    // Manually remove backdrop
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        backdrop.remove();
+    }
+}
 
 let isEditMode = false;
 let currentProjectId = null;
@@ -100,7 +124,7 @@ function fetchGeophysicalData(projectId, geophysicalId) {
                 // console.log(document.getElementById('vs30').value, data.vs30)
     
             } else {
-                alert('გეოფიზიკური კვლევა არ მოიძებნა.');
+                showAlert('danger', 'გეოფიზიკური კვლევა არ მოიძებნა.');
             }
         })
         .catch(error => {
@@ -127,29 +151,25 @@ function submitGeophysicalForm(event) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error); // Handle errors
-            window.location.reload();
+            showAlert('danger', data.error || 'Error: გაუმართავი პროექტის წაშლა.');
+            closeModal('GeophysicalModal');
         } else {
-            alert(data.message);
             window.location.reload(); // Reload the page to reflect changes
         } 
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: გეოფიზიკური კვლევის დამატება რედაქტირებისას.');
     });
 }
 
 document.getElementById('GeophysicalForm').onsubmit = submitGeophysicalForm;
 
-
-function deleteGeophysical(id, projectId) {
-    if (confirm('ნამდვილად გსურთ ამ გეოფიზიკის წაშლა?')) {
-        // Retrieve the JWT token from sessionStorage (or wherever you store it)
+document.getElementById('confirmDeleteGeophysicalButton').addEventListener('click', function() {
+    if (geophysicalIdDelete !== null && projectIdToDelete !== null) {
         const token = sessionStorage.getItem('access_token');
 
         // makeApiRequest is in the globalAccessControl.js
-        makeApiRequest(`/api/geophysical/${projectId}/${id}`, {
+        makeApiRequest(`/api/geophysical/${projectIdToDelete}/${geophysicalIdDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
@@ -157,19 +177,22 @@ function deleteGeophysical(id, projectId) {
         })
         .then(data => {
             if (data.message) {
-                alert(data.message);
+                showAlert('success', data.message);
                 // Optionally, remove the row from the table
-                const row = document.querySelector(`tr[data-geophysical-id="${id}"]`);
+                const row = document.querySelector(`tr[data-geophysical-id="${geophysicalIdDelete}"]`);
                 if (row) {
                     row.remove();
                 }
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error || 'Error: გაუმართავი გეოფიზიკის წაშლა.');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error deleting record.');
+            console.error('Error deleting project:', error);
+        })
+        .finally(() => {
+            closeModal('confirmDeleteGeophysicalModal');
+            projectIdToDelete = null; // Clear the project ID
         });
     }
-}
+});

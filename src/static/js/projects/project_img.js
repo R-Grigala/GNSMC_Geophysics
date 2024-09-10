@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Optionally, remove the row from the table
                 fetchImages();
             } else if (data.error) {
-                showAlert('danger', data.error);
+                showAlert('danger', data.error || 'Error: გაუმართავი სურათის წაშლა.');
             }
         })
         .catch(error => {
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Optionally, remove the row from the table
                 fetchImages(); // Refresh carousel dynamically
             } else if (data.error) {
-                showAlert('danger', data.error);
+                showAlert('danger', data.error || 'Error: გაუმართავი სურათის დამატება.');
             }
         })
         .catch(error => {

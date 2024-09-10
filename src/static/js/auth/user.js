@@ -108,13 +108,12 @@ function submitUserForm(event) {
     .then(data => {
         if (data.error) {
             closeModal('UserModal')
-            showAlert('danger', data.error);
+            showAlert('danger', data.error || ' გაუმართავი პროფილის რედაქტირება.');
         } else {
             window.location.reload(); // Reload the page to reflect changes
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showAlert('danger', 'Error: მომხმარებლის პროფილის რედაქტირებისას.');
     });
 }
