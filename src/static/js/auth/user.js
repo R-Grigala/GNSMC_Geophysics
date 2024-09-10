@@ -70,20 +70,6 @@ function openUserModal() {
     modal.show();
 }
 
-function closeModal(modalName) {
-    const modalElement = document.getElementById(modalName);
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    if (modalInstance) {
-        modalInstance.hide();
-    }
-    
-    // Manually remove backdrop
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-        backdrop.remove();
-    }
-}
-
 function submitUserForm(event) {
     event.preventDefault();
 

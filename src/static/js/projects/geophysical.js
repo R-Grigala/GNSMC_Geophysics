@@ -64,20 +64,6 @@ function openConfirmDeleteGeophysicalModal(projectId, geophysicalId) {
     confirmDeleteModal.show();
 }
 
-function closeModal(modalName) {
-    const modalElement = document.getElementById(modalName);
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    if (modalInstance) {
-        modalInstance.hide();
-    }
-    
-    // Manually remove backdrop
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-        backdrop.remove();
-    }
-}
-
 let isEditMode = false;
 let currentProjectId = null;
 let geophysicalId = null;
@@ -151,9 +137,9 @@ function submitGeophysicalForm(event) {
     })
     .then(data => {
         if (data.error) {
-            showAlert('danger', data.error || 'Error: გაუმართავი პროექტის წაშლა.');
+            showAlert('danger', data.error || 'Error: გაუმართავი პროექტის რედაქტირება/დამატება.');
             closeModal('GeophysicalModal');
-        } else {
+        } else if(data.message){
             window.location.reload(); // Reload the page to reflect changes
         } 
     })

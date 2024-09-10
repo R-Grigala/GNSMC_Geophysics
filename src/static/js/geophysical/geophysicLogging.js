@@ -56,6 +56,15 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 });
 
+// Function to confirm and delete a logging
+let loggingIdDelete = null;
+
+function openConfirmDeleteGeophysicLoggingModal(loggingId) {
+    loggingIdDelete = loggingId; // Store the logging ID to delete
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteGeophysicLoggingModal'));
+    confirmDeleteModal.show();
+}
+
 let geophysicLoggingId = null;
 
 // Open the modal for creating or editing a GeophysicSeismic record
@@ -96,7 +105,7 @@ function fetchGeophysicLoggingData(geophysicalId, geophysicLoggingId) {
                 document.getElementById('logging_profile_length').value = data.profile_length;
 
             } else {
-                alert('გეოფიზიკური კაროტაჟი არ მოიძებნა.');
+                showAlert('danger', 'გეოფიზიკური კაროტაჟი არ მოიძებნა.');
             }
         })
         .catch(error => console.error('Error fetching data:', error));
@@ -122,31 +131,28 @@ function submitGeophysicLoggingForm(event) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error); // Handle errors
-            window.location.reload();
-        } else {
-            alert(data.message);
+            showAlert('danger', data.error || 'Error: გაუმართავი გეოფიზიკური კაროტაჟის რედაქტირება/დამატება.');
+            closeModal('GeophysicLoggingModal');
+        } else if(data.message){
             window.location.reload(); // Reload the page to reflect changes
         }  
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: გეოფიზიკური კაროტაჟის დამატება რედაქტირებისას.');
     });
 }
 
 document.getElementById('GeophysicLoggingForm').onsubmit = submitGeophysicLoggingForm;
 
-function deleteGeophysicLogging(id) {
+document.getElementById('confirmDeleteGeophysicLoggingButton').addEventListener('click', function() {
     const geophysicalIdElement = document.getElementById("geophysicalId");
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
 
-    if (confirm('ნამდვილად გსურთ გეოფიზიკური კაროტაჟის წაშლა?')) {
-        // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    if (loggingIdDelete !== null) {
         const token = sessionStorage.getItem('access_token');
         
         // makeApiRequest is in the globalAccessControl.js
-        makeApiRequest(`/api/geophysic_logging/${geophysicalId}/${id}`, {
+        makeApiRequest(`/api/geophysic_logging/${geophysicalId}/${loggingIdDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
@@ -154,19 +160,19 @@ function deleteGeophysicLogging(id) {
         })
         .then(data => {
             if (data.message) {
-                alert(data.message);
+                showAlert('success', data.message);
                 // Optionally, remove the row from the table
-                const row = document.querySelector(`tr[data-geophysicLogging-id="${id}"]`);
+                const row = document.querySelector(`tr[data-geophysicLogging-id="${loggingIdDelete}"]`);
                 if (row) {
                     row.remove();
                 }
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error || 'Error: გაუმართავი გეოფიზიკური კაროტაჟის წაშლა.');
+                closeModal("confirmDeleteGeophysicLoggingModal")
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error deleting record.');
         });
     }
-}
+});

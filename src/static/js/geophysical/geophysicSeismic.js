@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openGeophysicSeismicModal(true, ${data.id})">
                             </td>
                             <td>
-                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="deleteGeophysicSeismic(${data.id})">
+                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="openConfirmDeleteGeophysicSeismicModal(${data.id})">
                             </td>
                         </tr>
                     `;
@@ -59,6 +59,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 });
 
+// Function to confirm and delete a seismic
+let seismicIdDelete = null;
+
+function openConfirmDeleteGeophysicSeismicModal(seismicId) {
+    seismicIdDelete = seismicId; // Store the seismic ID to delete
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteGeophysicSeismicModal'));
+    confirmDeleteModal.show();
+}
 
 let isEditMode = false;
 let currentGeophysicalId = null;
@@ -107,7 +115,7 @@ function fetchGeophysicSeismicData(geophysicalId, geophysicSeismicId) {
 
                 // console.log(data);
             } else {
-                alert('სეისმური პროფილი არ მოიძებნა.');
+                showAlert('danger', 'სეისმური პროფილი არ მოიძებნა.');
             }
         })
         .catch(error => console.error('Error fetching data:', error));
@@ -132,30 +140,28 @@ function submitGeophysicSeismicForm(event) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error);
-        } else {
-            alert(data.message);
+            showAlert('danger', data.error || 'Error: გაუმართავი სეისმური პროფილის რედაქტირება/დამატება.');
+            closeModal('GeophysicSeismicModal');
+        } else if(data.message){
             window.location.reload(); // Reload the page to reflect changes
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: სეისმური პროფილის დამატება რედაქტირებისას.');
     });
 }
 
 document.getElementById('GeophysicSeismicForm').onsubmit = submitGeophysicSeismicForm;
 
-
-function deleteGeophysicSeismic(id) {
+document.getElementById('confirmDeleteGeophysicSeismicButton').addEventListener('click', function() {
     const geophysicalIdElement = document.getElementById("geophysicalId");
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
 
-    if (confirm('ნამდვილად გსურთ სეისმური პროფილის წაშლა?')) {
+    if (seismicIdDelete !== null) {
         const token = sessionStorage.getItem('access_token');
         
         // makeApiRequest is in the globalAccessControl.js
-        makeApiRequest(`/api/geophysic_seismic/${geophysicalId}/${id}`, {
+        makeApiRequest(`/api/geophysic_seismic/${geophysicalId}/${seismicIdDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -163,18 +169,18 @@ function deleteGeophysicSeismic(id) {
         })
         .then(data => {
             if (data.message) {
-                alert(data.message);
-                const row = document.querySelector(`tr[data-geophysicSeismic-id="${id}"]`);
+                showAlert('success', data.message);
+                const row = document.querySelector(`tr[data-geophysicSeismic-id="${seismicIdDelete}"]`);
                 if (row) {
                     row.remove();
                 }
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error || 'Error: გაუმართავი სეისმური პროფილის წაშლა.');
+                closeModal("confirmDeleteGeophysicSeismicModal")
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error deleting record.');
         });
     }
-}
+});

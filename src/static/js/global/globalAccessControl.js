@@ -128,6 +128,20 @@ function showAlert(category, message) {
     }, 5000); // 5000 milliseconds = 5 seconds
 }
 
+function closeModal(modalName) {
+    const modalElement = document.getElementById(modalName);
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+        modalInstance.hide();
+    }
+    
+    // Manually remove backdrop
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        backdrop.remove();
+    }
+}
+
 // The DOMContentLoaded event listener
 document.addEventListener("DOMContentLoaded", function() {
     const loginPage = '/login';

@@ -135,20 +135,6 @@ function openConfirmDeleteProjectModal(projectId) {
     confirmDeleteModal.show();
 }
 
-function closeModal(modalName) {
-    const modalElement = document.getElementById(modalName);
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    if (modalInstance) {
-        modalInstance.hide();
-    }
-    
-    // Manually remove backdrop
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-        backdrop.remove();
-    }
-}
-
 document.getElementById('confirmDeleteProjectButton').addEventListener('click', function() {
     if (projectIdToDelete !== null) {
         const token = sessionStorage.getItem('access_token');
