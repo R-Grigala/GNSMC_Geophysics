@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openGeophysicGeoradarModal(true, ${data.id})">
                             </td>
                             <td>
-                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="deleteGeophysicGeoradar(${data.id})">
+                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="openConfirmDeleteGeophysicGeoradarModal(${data.id})">
                             </td>
                         </tr>
                     `;
@@ -56,6 +56,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 });
 
+// Function to confirm and delete a georadar
+let georadarIdDelete = null;
+
+function openConfirmDeleteGeophysicGeoradarModal(georadarId) {
+    georadarIdDelete = georadarId; // Store the georadar ID to delete
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteGeophysicGeoradarModal'));
+    confirmDeleteModal.show();
+}
 
 let geophysicGeoradarId = null;
 
@@ -124,31 +132,28 @@ function submitGeophysicGeoradarForm(event) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error); // Handle errors
-            window.location.reload();
-        } else {
-            alert(data.message);
+            showAlert('danger', data.error || 'Error: გაუმართავი გეორადარის რედაქტირება/დამატება.');
+            closeModal('GeophysicGeoradarModal');
+        } else if(data.message){
             window.location.reload(); // Reload the page to reflect changes
-        }
+        }  
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: გეორადარის დამატება რედაქტირებისას.');
     });
 }
 
 document.getElementById('GeophysicGeoradarForm').onsubmit = submitGeophysicGeoradarForm;
 
-function deleteGeophysicGeoradar(id) {
+document.getElementById('confirmDeleteGeophysicGeoradarButton').addEventListener('click', function() {
     const geophysicalIdElement = document.getElementById("geophysicalId");
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
 
-    if (confirm('ნამდვილად გსურთ გეორადარის ჩანაწერის წაშლა?')) {
-        // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    if (georadarIdDelete !== null) {
         const token = sessionStorage.getItem('access_token');
-        
+
         // makeApiRequest is in the globalAccessControl.js
-        makeApiRequest(`/api/geophysic_georadar/${geophysicalId}/${id}`, {
+        makeApiRequest(`/api/geophysic_georadar/${geophysicalId}/${georadarIdDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
@@ -156,19 +161,22 @@ function deleteGeophysicGeoradar(id) {
         })
         .then(data => {
             if (data.message) {
-                alert(data.message);
+                showAlert('success', data.message);
                 // Optionally, remove the row from the table
-                const row = document.querySelector(`tr[data-geophysicGeoradar-id="${id}"]`);
+                const row = document.querySelector(`tr[data-geophysicGeoradar-id="${georadarIdDelete}"]`);
                 if (row) {
                     row.remove();
                 }
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error || 'Error: გაუმართავი გეორადარის წაშლა.');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error deleting record.');
+            console.error('Error deleting geophysicGeoradar:', error);
+        })
+        .finally(() => {
+            closeModal('confirmDeleteGeophysicGeoradarModal');
+            georadarIdDelete = null; // Clear the georadar ID
         });
     }
-}
+});

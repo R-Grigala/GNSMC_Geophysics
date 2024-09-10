@@ -176,11 +176,14 @@ document.getElementById('confirmDeleteGeophysicSeismicButton').addEventListener(
                 }
             } else if (data.error) {
                 showAlert('danger', data.error || 'Error: გაუმართავი სეისმური პროფილის წაშლა.');
-                closeModal("confirmDeleteGeophysicSeismicModal")
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error deleting geophysicSeismic:', error);
+        })
+        .finally(() => {
+            closeModal('confirmDeleteGeophysicSeismicModal');
+            seismicIdDelete = null; // Clear the seismic ID
         });
     }
 });

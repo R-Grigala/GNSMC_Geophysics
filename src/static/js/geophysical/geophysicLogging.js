@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openGeophysicLoggingModal(true, ${data.id})">
                             </td>
                             <td>
-                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="deleteGeophysicLogging(${data.id})">
+                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" onclick="openConfirmDeleteGeophysicLoggingModal(${data.id})">
                             </td>
                         </tr>
                     `;
@@ -168,11 +168,14 @@ document.getElementById('confirmDeleteGeophysicLoggingButton').addEventListener(
                 }
             } else if (data.error) {
                 showAlert('danger', data.error || 'Error: გაუმართავი გეოფიზიკური კაროტაჟის წაშლა.');
-                closeModal("confirmDeleteGeophysicLoggingModal")
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error deleting geophysicLogging:', error);
+        })
+        .finally(() => {
+            closeModal('confirmDeleteGeophysicLoggingModal');
+            loggingIdDelete = null; // Clear the seismic ID
         });
     }
 });

@@ -174,11 +174,11 @@ document.getElementById('confirmDeleteGeophysicalButton').addEventListener('clic
             }
         })
         .catch(error => {
-            console.error('Error deleting project:', error);
+            console.error('Error deleting geophysical:', error);
         })
         .finally(() => {
             closeModal('confirmDeleteGeophysicalModal');
-            projectIdToDelete = null; // Clear the project ID
+            geophysicalIdDelete = null; // Clear the project ID
         });
     }
 });

@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openGeophysicElectricalModal(true, ${data.id})">
                             </td>
                             <td>
-                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" class="delete-icon" onclick="deleteGeophysicElectrical(${data.id})">
+                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" class="delete-icon" onclick="openConfirmDeleteGeophysicLoggingModal(${data.id})">
                             </td>
                         </tr>
                     `;
@@ -55,6 +55,15 @@ document.addEventListener("DOMContentLoaded", function() {
             // Handle error scenario, e.g., show an error message on the UI
         });
 });
+
+// Function to confirm and delete a electrical
+let electricalIdDelete = null;
+
+function openConfirmDeleteGeophysicLoggingModal(electricalId) {
+    electricalIdDelete = electricalId; // Store the electrical ID to delete
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteGeophysicElectricalModal'));
+    confirmDeleteModal.show();
+}
 
 let geophysicElectricalId = null;
 
@@ -122,33 +131,29 @@ function submitGeophysicElectricalForm(event) {
     })
     .then(data => {
         if (data.error) {
-            alert(data.error); // Handle errors
-            window.location.reload();
-        } else {
-            alert(data.message);
+            showAlert('danger', data.error || 'Error: გაუმართავი ელექტრული პროფილის რედაქტირება/დამატება.');
+            closeModal('GeophysicElectricalModal');
+        } else if(data.message){
             window.location.reload(); // Reload the page to reflect changes
-        }
+        }  
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error: ელექტრული პროფილის დამატება რედაქტირებისას.');
     });
 }
 
 document.getElementById('GeophysicElectricalForm').onsubmit = submitGeophysicElectricalForm;
 
 
-function deleteGeophysicElectrical(id) {
+document.getElementById('confirmDeleteGeophysicElectricalButton').addEventListener('click', function() {
     const geophysicalIdElement = document.getElementById("geophysicalId");
     const geophysicalId = geophysicalIdElement.getAttribute("data-geophysical-id");
 
-    if (confirm('ნამდვილად გსურთ ელექტრული პროფილის წაშლა?')) {
-
-        // Retrieve the JWT token from sessionStorage (or wherever you store it)
+    if (electricalIdDelete !== null) {
         const token = sessionStorage.getItem('access_token');
         
         // makeApiRequest is in the globalAccessControl.js
-        makeApiRequest(`/api/geophysic_electrical/${geophysicalId}/${id}`, {
+        makeApiRequest(`/api/geophysic_electrical/${geophysicalId}/${electricalIdDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Include the JWT token in the Authorization header
@@ -156,19 +161,22 @@ function deleteGeophysicElectrical(id) {
         })
         .then(data => {
             if (data.message) {
-                alert(data.message);
+                showAlert('success', data.message);
                 // Optionally, remove the row from the table
-                const row = document.querySelector(`tr[data-geophysicElectrical-id="${id}"]`);
+                const row = document.querySelector(`tr[data-geophysicElectrical-id="${electricalIdDelete}"]`);
                 if (row) {
                     row.remove();
                 }
             } else if (data.error) {
-                alert(data.error);
+                showAlert('danger', data.error || 'Error: გაუმართავი ელექტრული პროფილის წაშლა.');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error deleting record.');
+            console.error('Error deleting geophysicElectrical:', error);
+        })
+        .finally(() => {
+            closeModal('confirmDeleteGeophysicElectricalModal');
+            electricalIdDelete = null; // Clear the electrical ID
         });
     }
-}
+});
