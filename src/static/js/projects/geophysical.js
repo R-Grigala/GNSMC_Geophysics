@@ -11,9 +11,13 @@ document.addEventListener("DOMContentLoaded", function() {
             const geophysicalTableBody = document.getElementById('geophysicalTableBody');
 
             data.forEach(geophysical => {
-                const archivalMaterialLink = geophysical.archival_material ? 
-                `<a href="/geophysical/archival_material/${projectId}/${geophysical.archival_material}" target="_blank">${geophysical.archival_material}</a>` : 
+                const archivalExcelLink = geophysical.archival_excel ? 
+                `<a href="/${projectId}/geophysical/archival_excel/${geophysical.archival_excel}" target="_blank">${geophysical.archival_excel}</a>` : 
                 '---';
+
+                const archivalPdfLink = geophysical.archival_pdf ? 
+                    `<a href="/${projectId}/geophysical/archival_pdf/${geophysical.archival_pdf}" target="_blank">${geophysical.archival_pdf}</a>` : 
+                    '---';
 
                 const row = `
                     <tr data-geophysical-id="${geophysical.id}">
@@ -27,7 +31,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${geophysical.electrical_profiles ? "Yes" : "No"}</td>
                         <td>${geophysical.point_number}</td>
                         <td>${geophysical.georadar ? "Yes" : "No"}</td>
-                        <td>${archivalMaterialLink}</td>
+                        <td>${archivalExcelLink}</td>
+                        <td>${archivalPdfLink}</td>
                         <td>
                             <a class="btn btn-sm btn-primary" href="/view_geophysical/${geophysical.id}">ნახვა</a>
                         </td>

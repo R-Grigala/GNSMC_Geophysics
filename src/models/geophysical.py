@@ -10,7 +10,8 @@ class Geophysical(db.Model, BaseModel):
     vs30 = db.Column(db.Integer, nullable=False)
     ground_category_geo = db.Column(db.String(255), nullable=False)
     ground_category_euro = db.Column(db.String(255), nullable=False)
-    archival_material = db.Column(db.String(255), nullable=True)
+    archival_excel = db.Column(db.String(255), nullable=True)
+    archival_pdf = db.Column(db.String(255), nullable=True)
 
     project = db.relationship('Projects', back_populates='geophysical')
     geophysic_seismic = db.relationship('GeophysicSeismic', back_populates='geophysical', cascade='all, delete-orphan')

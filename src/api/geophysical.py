@@ -8,6 +8,7 @@ from flask_jwt_extended import jwt_required, current_user
 from src.api.nsmodels import geophysical_ns, geophysical_model, geophysical_parser
 from src.models import Geophysical
 from src.config import Config
+from src.utils.utils import save_uploaded_file
 
 
 @geophysical_ns.route('/geophysical/<int:proj_id>')
@@ -44,36 +45,36 @@ class GeophysicalListAPI(Resource):
         # Parse the incoming request data
         args = geophysical_parser.parse_args()
 
-        # Extract the PDF file from the request
-        pdf_files = args.get('archival_material', [])
+        # Extract files from the request
+        pdf_files = args.get('archival_pdf', [])
+        excel_files = args.get('archival_excel', [])
 
-        # Initialize file_path and filename
-        filename = None
+        # Initialize filenames
+        pdf_filename = None
+        excel_filename = None
         server_message = "წარმატებით დაემატა გეოფიზიკა."
 
         # Handle the PDF file upload
         if pdf_files:
-            # Check if there is at least one file
-            if len(pdf_files) > 0:
-                pdf_file = pdf_files[0]  # Get the first file in the list
+            pdf_filename = save_uploaded_file(
+                pdf_files[0],
+                os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_pdf'),
+                ['application/pdf'],
+                '.pdf'
+            )
+            if not pdf_filename:
+                server_message += ' არ აიტვირთა საარქივო PDF-ის ფაილი.'
 
-                # Ensure the file is a PDF
-                if pdf_file.mimetype == 'application/pdf':
-                    # Generate a UUID4 and take the first 12 characters
-                    filename = str(uuid.uuid4()).replace('-', '')[:12] + '.pdf'
-
-                    # Define the directory to save the file
-                    upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_material')
-                    if not os.path.exists(upload_folder):
-                        os.makedirs(upload_folder)
-
-                    # Construct the full file path
-                    file_path = os.path.join(upload_folder, filename)
-
-                    # Save the PDF file to the server
-                    pdf_file.save(file_path)
-                else:
-                    server_message =  'წარმატებით დაემატა გეოფიზიკა, მაგრამ არ აიტვირთა საარქივო ფაილი.'
+        # Handle the Excel file upload
+        if excel_files:
+            excel_filename = save_uploaded_file(
+                excel_files[0],
+                os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_excel'),
+                ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'],
+                '.xlsx'
+            )
+            if not excel_filename:
+                server_message += ' არ აიტვირთა საარქივო Excel-ის ფაილი.'
 
         # Create the Geophysical record
         new_geophysical = Geophysical(
@@ -81,7 +82,8 @@ class GeophysicalListAPI(Resource):
             vs30=args['vs30'],
             ground_category_geo=args['ground_category_geo'],
             ground_category_euro=args['ground_category_euro'],
-            archival_material=filename
+            archival_pdf=pdf_filename,
+            archival_excel=excel_filename
         )
         new_geophysical.create()
 
@@ -125,45 +127,55 @@ class GeophysicalAPI(Resource):
         # Parse the incoming request data
         args = geophysical_parser.parse_args()
 
-        # Extract the PDF file from the request
-        pdf_files = args.get('archival_material', [])
+        # Extract files from the request
+        pdf_files = args.get('archival_pdf', [])
+        excel_files = args.get('archival_excel', [])
 
-        # Initialize file_path and filename
-        filename = None
+        # Initialize filenames
+        pdf_filename = geophysical.archival_pdf
+        excel_filename = geophysical.archival_excel
         server_message = "წარმატებით განახლდა გეოფიზიკა."
 
         # Handle the PDF file upload
         if pdf_files:
-            # Check if there is at least one file
-            if len(pdf_files) > 0:
-                pdf_file = pdf_files[0]  # Get the first file in the list
+            upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_pdf')
+            pdf_filename = save_uploaded_file(
+                pdf_files[0],
+                upload_folder,
+                ['application/pdf'],
+                '.pdf'
+            )
+            if pdf_filename:
+                # If there's an existing archival_pdf, delete it
+                if geophysical.archival_pdf:
+                    old_file_path = os.path.join(upload_folder, geophysical.archival_pdf)
+                    if os.path.exists(old_file_path):
+                        os.remove(old_file_path)
 
-                # Ensure the file is a PDF
-                if pdf_file.mimetype == 'application/pdf':
-                    # Define the directory to save the file
-                    upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_material')
-                    if not os.path.exists(upload_folder):
-                        os.makedirs(upload_folder)
+                geophysical.archival_pdf = pdf_filename
+            else:
+                server_message += ' არ აიტვირთა საარქივო PDF-ის ფაილი.'
+            
 
-                    # If there's an existing archival material, delete it
-                    if geophysical.archival_material:
-                        old_file_path = os.path.join(upload_folder, geophysical.archival_material)
-                        if os.path.exists(old_file_path):
-                            os.remove(old_file_path)
+        # Handle the Excel file upload
+        if excel_files:
+            upload_folder = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical', 'archival_excel')
+            excel_filename = save_uploaded_file(
+                excel_files[0],
+                upload_folder,
+                ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'],
+                '.xlsx'
+            )
+            if excel_filename:
+                # If there's an existing archival_excel , delete it
+                if geophysical.archival_excel:
+                    old_file_path = os.path.join(upload_folder, geophysical.archival_excel)
+                    if os.path.exists(old_file_path):
+                        os.remove(old_file_path)
 
-                    # Generate a UUID4 and take the first 12 characters
-                    filename = str(uuid.uuid4()).replace('-', '')[:12] + '.pdf'
-
-                    # Construct the full file path
-                    file_path = os.path.join(upload_folder, filename)
-
-                    # Save the PDF file to the server
-                    pdf_file.save(file_path)
-
-                    # Update the archival_material field with the new filename
-                    geophysical.archival_material = filename
-                else:
-                    server_message =  'წარმატებით განახლდა გეოფიზიკა, მაგრამ არ აიტვირთა საარქივო ფაილი.'
+                geophysical.archival_excel = excel_filename    
+            else:
+                server_message += ' არ აიტვირთა საარქივო Excel-ის ფაილი.'
 
         # Update other fields
         geophysical.vs30 = args['vs30']
@@ -188,7 +200,7 @@ class GeophysicalAPI(Resource):
             return {"error": "გეოფიზიკა არ მოიძებნა."}, 404
 
         # Delete the associated PDF file if it exists
-        if geophysical.archival_material:
+        if geophysical.archival_pdf or geophysical.archival_excel:
             geophysical_directory = os.path.join(Config.BASE_DIR, 'src', 'temp', str(proj_id), 'geophysical')
 
             # Delete the entire project directory if it exists

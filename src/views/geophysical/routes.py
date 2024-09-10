@@ -24,11 +24,16 @@ def view_geophysical(id):
 
 
 # Route to serve archival material (like PDFs) for a specific project ID
-@geophysical_blueprint.route('/geophysical/archival_material/<int:proj_id>/<filename>')
-def archival_material(proj_id, filename):
-    directory = f'temp/{proj_id}/geophysical/archival_material/'
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/archival_excel/<filename>')
+def archival_excel(proj_id, filename):
+    directory = f'temp/{proj_id}/geophysical/archival_excel/'
     return send_from_directory(directory, filename)
 
+# Route to serve archival material (like PDFs) for a specific project ID
+@geophysical_blueprint.route('/<int:proj_id>/geophysical/archival_pdf/<filename>')
+def archival_pdf(proj_id, filename):
+    directory = f'temp/{proj_id}/geophysical/archival_pdf/'
+    return send_from_directory(directory, filename)
 
 # Route to serve seismic archival images for a specific Geophysical record
 @geophysical_blueprint.route('/<int:proj_id>/geophysical/<int:geophy_id>/seismic/archival_img/<filename>')

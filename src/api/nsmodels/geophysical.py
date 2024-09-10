@@ -18,7 +18,8 @@ geophysical_model = api.model('Geophysical', {
     'electrical_profiles': fields.Boolean(required=True, description='Whether electrical profiles are included'),
     'point_number': fields.Integer(required=True, description='Number of points'),
     'georadar': fields.Boolean(required=True, description='Whether georadar is included'),
-    'archival_material': fields.String(description='Archival material')
+    'archival_excel': fields.String(description='The URL of the archival Excel file'),
+    'archival_pdf': fields.String(description='The URL of the archival PDF')
 })
 
 geophysical_parser = reqparse.RequestParser()
@@ -26,5 +27,6 @@ geophysical_parser = reqparse.RequestParser()
 geophysical_parser.add_argument('vs30', type=int, required=True,  help="VS30 Value example: 600")
 geophysical_parser.add_argument('ground_category_geo', type=str, required=True, help='Geological ground category: II')
 geophysical_parser.add_argument('ground_category_euro', type=str, required=True, help='European ground category: B')
-geophysical_parser.add_argument("archival_material", required=False, type=FileStorage, location="files", action="append", help="Upload archival material (PDF)")
+geophysical_parser.add_argument("archival_excel", required=False, type=FileStorage, location="files", action="append", help="Upload archival EXCEL (XLS/XLSX)")
+geophysical_parser.add_argument("archival_pdf", required=False, type=FileStorage, location="files", action="append", help="Upload archival PDF (PDF)")
 
