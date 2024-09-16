@@ -6,3 +6,4 @@ from src.api.nsmodels.geophysic_details import geophysic_logging_ns, geophysic_l
 from src.api.nsmodels.geophysic_details import geophysic_electrical_ns, geophysic_electrical_model, geophysic_electrical_parser
 from src.api.nsmodels.geophysic_details import geophysic_georadar_ns, geophysic_georadar_model, geophysic_georadar_parser
 from src.api.nsmodels.authentication import auth_ns, registration_parser, auth_parser, user_model, user_parser
+from src.api.nsmodels.filters import filter_ns, filter_parser, filter_model

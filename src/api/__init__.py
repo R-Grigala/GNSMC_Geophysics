@@ -7,3 +7,4 @@ from src.api.geophysic.geophysic_logging import GeophysicLoggingListAPI, Geophys
 from src.api.geophysic.geophysic_electrical import GeophysicElectricalListAPI, GeophysicElectricalAPI
 from src.api.geophysic.geophysic_georadar import GeophysicGeoradarListAPI, GeophysicGeoradarAPI
 from src.api.authentication import RegistrationApi, AuthorizationApi, AccessTokenRefreshApi
+from src.api.filters import FilterAPI
