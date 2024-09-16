@@ -3,7 +3,7 @@ from src.extensions import api
 import werkzeug
 
 # from src.api.nsmodels.geological import geological_model
-# from src.api.nsmodels.geophysical import geophysical_model
+from src.api.nsmodels.geophysical import geophysical_vs30_model
 
 projects_ns = api.namespace('Projects', description='API endpoint for Projects related operations', path='/api')
 
@@ -28,7 +28,7 @@ projects_model = projects_ns.model('Projects', {
     'geodetic_study': fields.Boolean(required=False, description='Geodetic study', example=False),
     'other_study': fields.Boolean(required=False, description='Other study', example=False),
     # 'geological': fields.List(fields.Nested(geological_model))
-    # 'geophysical': fields.List(fields.Nested(geophysical_model))
+    'geophysical': fields.List(fields.Nested(geophysical_vs30_model))
     # 'images': fields.List(fields.Nested(projects_img_model), description='List of images')
 })
 

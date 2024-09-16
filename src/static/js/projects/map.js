@@ -1,4 +1,5 @@
 var stations = [];
+var map;
 
 function initMap() {
     var latlng = new google.maps.LatLng(42.264, 43.322);
@@ -13,7 +14,7 @@ function initMap() {
         zoomControl: true,
         zoomControlOptions: {style: google.maps.ZoomControlStyle.SMALL}
     };
-    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+    map = new google.maps.Map(document.getElementById("map"), myOptions);
     fetchAndSetMarkers(map);
 }
 
@@ -48,14 +49,14 @@ function attachInfoWindow(marker, project) {
         content: `
             <div class="text-center">
                 <strong>პროექტის სახელი: ${project.projects_name}</strong><br>
-                ხელშეკრულების ნომერი: ${project.contract_number}<br>
+                ხელშეკრულების ნომერი: ${project.contract_number || '----'}<br>
                 დაწყების დღე: ${project.start_time}<br>
                 დასრულების დღე: ${project.end_time}<br>
-                დამკვეთი: ${project.contractor}<br>
+                დამკვეთი: ${project.contractor || '----'}<br>
                 განედი: ${project.proj_latitude}<br>
                 გრძედი: ${project.proj_longitude}<br>
-                VS30: 600<br>
-                PGA 10%: 0.25<br>
+                VS30: ${project.geophysical.length > 0 ? project.geophysical[0].vs30 : '----'}<br>
+                PGA 10%: ----<br>
                 <a style="display:block; margin-top:20px" href="/view_project/${project.id}">დეტალურად</a>
             </div>`
     });

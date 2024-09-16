@@ -22,11 +22,15 @@ geophysical_model = api.model('Geophysical', {
     'archival_pdf': fields.String(description='The URL of the archival PDF')
 })
 
+geophysical_vs30_model = api.model('Geophysical', {
+    'vs30': fields.Integer(required=True, description='VS30 value'),
+})
+
 geophysical_parser = reqparse.RequestParser()
 
-geophysical_parser.add_argument('vs30', type=int, required=True,  help="VS30 Value example: 600")
-geophysical_parser.add_argument('ground_category_geo', type=str, required=True, help='Geological ground category: II')
-geophysical_parser.add_argument('ground_category_euro', type=str, required=True, help='European ground category: B')
+geophysical_parser.add_argument('vs30', type=int, required=True, default=500, help="VS30 Value")
+geophysical_parser.add_argument('ground_category_geo', type=str, required=True, default="II", help='Geological ground category')
+geophysical_parser.add_argument('ground_category_euro', type=str, required=True, default="B", help='European ground category')
 geophysical_parser.add_argument("archival_excel", required=False, type=FileStorage, location="files", action="append", help="Upload archival EXCEL (XLS/XLSX)")
 geophysical_parser.add_argument("archival_pdf", required=False, type=FileStorage, location="files", action="append", help="Upload archival PDF (PDF)")
 

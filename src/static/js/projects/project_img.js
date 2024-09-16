@@ -153,6 +153,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const token = sessionStorage.getItem('access_token');
 
+        uploadingSpinner.style.display = 'flex'; // Show spinner
+
         // makeApiRequest is in the globalAccessControl.js
         makeApiRequest(`/api/project/${projectId}/images`, {
             method: 'POST',
@@ -173,6 +175,10 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => {
             console.error('Error:', error);
+        })
+        .finally(() => {
+            // Hide the spinner after the upload is complete
+            uploadingSpinner.style.display = 'none';
         });
     }
 

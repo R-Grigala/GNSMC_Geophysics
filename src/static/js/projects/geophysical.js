@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
             data.forEach(geophysical => {
                 const archivalExcelLink = geophysical.archival_excel ? 
                 `<a href="/${projectId}/geophysical/archival_excel/${geophysical.archival_excel}" target="_blank">${geophysical.archival_excel}</a>` : 
-                '---';
+                '----';
 
                 const archivalPdfLink = geophysical.archival_pdf ? 
                     `<a href="/${projectId}/geophysical/archival_pdf/${geophysical.archival_pdf}" target="_blank">${geophysical.archival_pdf}</a>` : 
-                    '---';
+                    '----';
 
                 const row = `
                     <tr data-geophysical-id="${geophysical.id}">
