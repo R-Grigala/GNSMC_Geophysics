@@ -16,7 +16,7 @@ class Config(object):
     
     MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', 'default_password')
     # MySQL connection URI
-    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://root:{MYSQL_PASSWORD}@127.0.0.1/iesprojects'
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://root:{MYSQL_PASSWORD}@localhost/iesprojects'
 
 
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'default_jwt_secret_key')
