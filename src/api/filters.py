@@ -12,9 +12,9 @@ from src.models import Projects, Geophysical  # Import your models
 from src.config import Config
 
 
-@filter_ns.route('/filter')
+@filter_ns.route('/filter_project')
 @filter_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
-class FilterAPI(Resource):
+class FilterProjectAPI(Resource):
 
     @jwt_required()
     @filter_ns.doc(parser=filter_parser)
@@ -29,6 +29,9 @@ class FilterAPI(Resource):
         contract_number = args.get("contract_number")
         vs30_min = args.get("vs30_min")
         vs30_max = args.get("vs30_max")
+        pga_values = args.get("pga", [])
+
+        # print("vs30_min:", vs30_min, "vs30_max:", vs30_max, "pga_values:", pga_values)
 
         start_time = None
         end_time = None
@@ -75,10 +78,7 @@ class FilterAPI(Resource):
         # Apply VS30 range filter if provided
         if vs30_min and vs30_max:
             project_query = project_query.filter(
-                and_(
-                    Geophysical.vs30 >= vs30_min,
-                    Geophysical.vs30 <= vs30_max
-                )
+                Geophysical.vs30.between(vs30_min, vs30_max)
             )
         elif vs30_min:
             project_query = project_query.filter(Geophysical.vs30 >= vs30_min)
@@ -99,7 +99,6 @@ class FilterAPI(Resource):
             project.hazard_study = False
             project.geodetic_study = False
             project.other_study = False
-
 
         # Return the filtered projects
         return filtered_projects, 200
