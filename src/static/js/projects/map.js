@@ -1,4 +1,4 @@
-var stations = [];
+var markers = [];
 var map;
 
 function initMap() {
@@ -15,22 +15,14 @@ function initMap() {
         zoomControlOptions: {style: google.maps.ZoomControlStyle.SMALL}
     };
     map = new google.maps.Map(document.getElementById("map"), myOptions);
-    fetchAndSetMarkers(map);
 }
 
-function fetchAndSetMarkers(map) {
-    fetch('/api/projects')
-        .then(response => response.json())
-        .then(data => {
-            projects = data;
-            setMarkers(map);
-        })
-        .catch(error => console.error('Error fetching data:', error));
-}
+function updateMapMarkers(projects) {
+    // Remove existing markers from the map
+    markers.forEach(marker => marker.setMap(null));
+    markers = []; // Clear the markers array
 
-function setMarkers(map) {
-    for (var i = 0; i < projects.length; i++) {
-        var project = projects[i];
+    projects.forEach(project => {
         var marker = new google.maps.Marker({
             position: {lat: parseFloat(project.proj_latitude), lng: parseFloat(project.proj_longitude)},
             map: map,
@@ -41,7 +33,8 @@ function setMarkers(map) {
             }
         });
         attachInfoWindow(marker, project);
-    }
+        markers.push(marker); // Add marker to the array
+    });
 }
 
 function attachInfoWindow(marker, project) {
