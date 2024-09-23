@@ -146,7 +146,7 @@ function closeModal(modalName) {
 document.addEventListener("DOMContentLoaded", function() {
     const loginPage = '/login';
     const registrationPage = '/registration';
-    const homePage = '/projects';
+    const homePage = '/';
     const currentPage = window.location.pathname;
     const token = sessionStorage.getItem('access_token');
 

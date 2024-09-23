@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Define static navigation items
     const navItems = [
-        { endpoint: '/projects', text: 'მთავარი' },
+        { endpoint: '/', text: 'მთავარი' },
         // Add other static links as needed
     ];
 

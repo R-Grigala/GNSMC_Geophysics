@@ -7,10 +7,6 @@ TEMPLATES_FOLDER = path.join(Config.BASE_DIR, "src","templates", "projects")
 projects_blueprint = Blueprint("projects", __name__, template_folder=TEMPLATES_FOLDER)
 
 
-@projects_blueprint.route("/projects")
-def projects():
-    return render_template("projects.html")
-
 @projects_blueprint.route("/view_project/<int:id>")
 def view_projects(id):
     return render_template("view_project.html", project_id=id)

@@ -12,5 +12,6 @@ api = Api(
     title='IesProjects',
     version='1.0',
     description='IesProjects API',
-    authorizations=Config.AUTHORIZATION
+    authorizations=Config.AUTHORIZATION,
+    doc='/api'
 )
