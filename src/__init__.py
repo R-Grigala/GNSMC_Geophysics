@@ -26,6 +26,9 @@ def create_app():
     register_extensions(app)
     register_blueprints(app)
     register_commands(app)
+
+    # Register error handlers
+    register_error_handlers(app)
     
 
     return app
@@ -67,3 +70,10 @@ def register_blueprints(app):
 def register_commands(app):
     for command in COMMANDS:
         app.cli.add_command(command)
+        
+# Custom error handler for 404
+def register_error_handlers(app):
+    @app.errorhandler(404)
+    def page_not_found(e):
+        # You can return a JSON response or render a custom HTML template
+        return render_template('404.html'), 404

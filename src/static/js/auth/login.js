@@ -27,7 +27,7 @@ function login(event) {
             sessionStorage.setItem('user_email', email);
 
             // Redirect to /projects page
-            window.location.href = '/projects';
+            window.location.href = '/';
         } else {
             showAlert('danger', data.error || ' გაუმართავი ავტორიზაცია.');
         }
