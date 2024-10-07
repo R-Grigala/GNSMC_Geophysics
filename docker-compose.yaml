@@ -1,0 +1,41 @@
+services:
+  flask:
+    build: .
+    container_name: iesprojects_flask
+    ports:
+      - "5000:5000"
+    environment:  # გარემოს ცვლადები
+      MY_SECRET_KEY: ${MY_SECRET_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./uploads:/app/uploads  # ატვირთული ფაილების დირექტორია სერვერზე
+    restart: always
+    depends_on:
+      - db  # ველოდებით, სანამ db დაიწყება
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"  # SSL ტრაფიკისთვის
+    depends_on:
+      - flask
+
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./database:/var/lib/mysql   # მონაცემების შენახვა ადგილობრივ დირექტორიაში
+    ports:
+      - 3306:3306
+    restart: always   

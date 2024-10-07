@@ -3,7 +3,7 @@ from os import path
 
 from src.config import Config
 
-TEMPLATES_FOLDER = path.join(Config.BASE_DIR, "src","templates", "projects")
+TEMPLATES_FOLDER = path.join(Config.BASE_DIR, Config.TEMPLATES_FOLDERS, "projects")
 projects_blueprint = Blueprint("projects", __name__, template_folder=TEMPLATES_FOLDER)
 
 
@@ -13,5 +13,5 @@ def view_projects(id):
 
 @projects_blueprint.route('/images/<int:proj_id>/<filename>')
 def project_image(proj_id, filename):
-    directory = f'temp/{proj_id}/images/'
+    directory = path.join(Config.UPLOAD_FOLDER, str(proj_id), 'images') 
     return send_from_directory(directory, filename)
