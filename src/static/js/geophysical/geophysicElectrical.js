@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     const row = `
                         <tr data-geophysicElectrical-id="${data.id}">
+                            <td>${data.latitude}</td>    
                             <td>${data.longitude}</td>
-                            <td>${data.latitude}</td>
                             <td>${data.profile_length}</td>
                             <td>${archivalImgLink}</td>
                             <td>${archivalExcelLink}</td>
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <img src="/static/img/pen-solid.svg" alt="Edit" style="width: 20px; height: 20px; cursor: pointer;" onclick="openGeophysicElectricalModal(true, ${data.id})">
                             </td>
                             <td>
-                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" class="delete-icon" onclick="openConfirmDeleteGeophysicLoggingModal(${data.id})">
+                                <img src="/static/img/trash-solid.svg" alt="Delete" style="width: 20px; height: 20px; cursor: pointer;" class="delete-icon" onclick="openConfirmDeleteGeophysicElectricalModal(${data.id})">
                             </td>
                         </tr>
                     `;
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // Function to confirm and delete a electrical
 let electricalIdDelete = null;
 
-function openConfirmDeleteGeophysicLoggingModal(electricalId) {
+function openConfirmDeleteGeophysicElectricalModal(electricalId) {
     electricalIdDelete = electricalId; // Store the electrical ID to delete
     const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteGeophysicElectricalModal'));
     confirmDeleteModal.show();

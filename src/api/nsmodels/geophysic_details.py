@@ -4,14 +4,15 @@ from werkzeug.datastructures import FileStorage
 
 
 # For GeophysicSeismic API
-
 geophysic_seismic_ns = api.namespace('GeophysicSeismic', description='API endpoint for GeopysicSeismic related operations', path='/api')
 
 geophysic_seismic_model = api.model('GeophysicSeismic', {
     'id': fields.Integer(readOnly=True, description='The unique identifier of a seismic profile'),
     'geophysical_id': fields.Integer(required=True, description='The ID of the related geophysical record'),
-    'longitude': fields.Float(required=True, description='The longitude of the seismic profile'),
-    'latitude': fields.Float(required=True, description='The latitude of the seismic profile'),
+    'first_latitude': fields.Float(required=True, description='The first longitude of the seismic profile'),
+    'first_longitude': fields.Float(required=True, description='The first longitude of the seismic profile'),
+    'second_latitude': fields.Float(required=True, description='The second latitude of the seismic profile'),
+    'second_longitude': fields.Float(required=True, description='The second longitude of the seismic profile'),
     'profile_length': fields.Float(required=True, description='The profile length'),
     'vs30': fields.Integer(required=True, description='The Vs30 value'),
     'ground_category_geo': fields.String(required=True, description='The geological ground category'),
@@ -23,8 +24,10 @@ geophysic_seismic_model = api.model('GeophysicSeismic', {
 
 geophysical_seismic__parser = reqparse.RequestParser()
 
-geophysical_seismic__parser.add_argument('longitude', type=float, required=True,  help="The longitude of the seismic profile: 41.4256")
-geophysical_seismic__parser.add_argument('latitude', type=float, required=True,  help="The latitude of the seismic profile: 43.513")
+geophysical_seismic__parser.add_argument('first_latitude', type=float, required=True,  help="The latitude of the seismic profile: 43.513")
+geophysical_seismic__parser.add_argument('first_longitude', type=float, required=True,  help="The longitude of the seismic profile: 41.4256")
+geophysical_seismic__parser.add_argument('second_latitude', type=float, required=True,  help="The latitude of the seismic profile: 43.613")
+geophysical_seismic__parser.add_argument('second_longitude', type=float, required=True,  help="The longitude of the seismic profile: 41.5256")
 geophysical_seismic__parser.add_argument('profile_length', type=float, required=True,  help="The profile length: 100")
 geophysical_seismic__parser.add_argument('vs30', type=int, required=True,  help="VS30 Value example: 600")
 geophysical_seismic__parser.add_argument('ground_category_geo', type=str, required=True, help='Geological ground category: II')
@@ -36,7 +39,6 @@ geophysical_seismic__parser.add_argument("archival_pdf", required=False, type=Fi
 
 
 # For GeophysicLogging API
-
 geophysic_logging_ns = api.namespace('GeophysicLogging', description='API endpoint for GeophysicLogging related operations', path='/api')
 
 geophysic_logging_model = geophysic_logging_ns.model('GeophysicLogging', {
@@ -62,7 +64,6 @@ geophysic_logging_parser.add_argument("archival_pdf", required=False, type=FileS
 
 
 # For GeophysicElectrical API
-
 geophysic_electrical_ns = api.namespace('GeophysicElectrical', description='API endpoint for GeophysicElectrical related operations', path='/api')
 
 geophysic_electrical_model = geophysic_electrical_ns.model('GeophysicElectrical', {
@@ -88,7 +89,6 @@ geophysic_electrical_parser.add_argument("archival_pdf", required=False, type=Fi
 
 
 # For GeophysicGeoradar API
-
 geophysic_georadar_ns = api.namespace('GeophysicGeoradar', description='API endpoint for GeophysicGeoradar related operations', path='/api')
 
 geophysic_georadar_model = geophysic_electrical_ns.model('GeophysicGeoradar', {

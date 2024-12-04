@@ -1,26 +1,21 @@
 from flask_restx import Resource
 from datetime import datetime
-import os
-import uuid
-import shutil
-import mimetypes
-from flask_jwt_extended import jwt_required, current_user
+from flask_jwt_extended import jwt_required
 from sqlalchemy import and_
 
 from src.api.nsmodels import filter_ns, filter_parser, filter_model
-from src.models import Projects, Geophysical  # Import your models
-from src.config import Config
+from src.models import Projects, Geophysical
 
 
 @filter_ns.route('/filter_project')
 @filter_ns.doc(responses={200: 'OK', 400: 'Invalid Argument', 401: 'JWT Token Expires', 403: 'Unauthorized', 404: 'Not Found'})
 class FilterProjectAPI(Resource):
-
     @jwt_required()
     @filter_ns.doc(parser=filter_parser)
     @filter_ns.doc(security='JsonWebToken')
     @filter_ns.marshal_list_with(filter_model)
     def post(self):
+        '''გავფილტროთ პროექტები სხვადასხვა პარამეტრებით'''
         # Parse the filter arguments
         args = filter_parser.parse_args()
 
