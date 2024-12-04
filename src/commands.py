@@ -161,7 +161,7 @@ def populate_db():
         name="Roma",
         lastname="Grigalashvili",
         email="roma.grigalashvili@iliauni.edu.ge",
-        password="Grigalash1",
+        password="Grigalash77",
         role_id=1
     )
     admin_user.create()

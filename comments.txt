@@ -27,6 +27,19 @@ sudo chown -R $USER:$USER /home/iesflask/IesProjects/database/
 
 
 docker exec -it mysql /bin/sh
+docker exec -it mysql mysql -u root -p
+
+# Flask Migrations
+docker exec -it iesprojects_flask /bin/sh 
+# Reset Migrations:
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade
+
+# Re-run Migration Commands:
+flask db migrate
+flask db upgrade
+
 docker-compose up --build nginx
 
 
@@ -54,3 +67,33 @@ docker-compose ps
 ეს მეთოდი merge პროცესს იყენებს, რაც იმას ნიშნავს, რომ შენს ცვლილებებს არ გადააწერს და არ გადააკეთებს მათი ისტორიის თანმიმდევრობას. 
 rebase-ის გარეშე უფრო მარტივად შეგიძლია შენარჩუნო არსებული კომიტების ისტორია
 git pull --no-rebase origin master
+
+
+# For Github
+git add .
+git commit -m "Your commit message"
+git push origin master
+
+
+# For Docker container
+
+Flask სერვისის მასშტაბირება ორი კონტეინერისთვის
+
+# Load Balancing
+ნაბიჯები პირველი Flask კონტეინერის განახლებისთვის:
+გაჩერეთ პირველი Flask კონტეინერი (მაგალითად, iesprojects-flask-1):
+
+docker stop iesprojects-flask-1
+
+გავაკეთოთ rebuild და გაუშვით პირველი Flask კონტეინერი:
+
+docker-compose up --build -d flask
+ამ ბრძანებით პირველი კონტეინერი გააკეთებს rebuild და გაუშვებს ხელახლა, ხოლო მეორე Flask კონტეინერი (მაგალითად, iesprojects-flask-2) კვლავ იმუშავებს.
+
+მეორე Flask კონტეინერის განახლება:
+ახლა გააჩერეთ მეორე Flask კონტეინერი (მაგალითად, iesprojects-flask-2):
+
+docker stop iesprojects-flask-2
+გავაკეთოთ კონტეინერის rebuild და გაუშვით მეორე Flask კონტეინერი:
+
+docker-compose up --build -d flask
